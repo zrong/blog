@@ -1,0 +1,65 @@
+Number,int和NaN
+
+自从AS3中加入了int后，我使用int的次数就多过Number。并不是为了降低那一点点的内存占用，而是实在用整数的机会比较多。本文讨论的，就是使用int的地方，却必须使用Number的情况。
+
+听起来比较拗口，那看看下面这个例子吧：
+
+<pre lang="actionscript">
+public function move($x:int, $y:int=NaN):void
+{
+	if(isNaN($y))
+		$y = $x;
+	this.x += $x;
+	this.y += $y;
+}
+</pre>
+
+想来上面这种情况大家可能会碰到。x和y相同的情况比较多，所以为了偷懒，我就不想提供y参数。y在这里可以是任何整数值，所以我不能将它的默认值设置成一个特殊的整数值（比如-1），然后通过比较来判断是不是让y与x的值相等。
+
+在这里，NaN就是一个最好的选择。NaN不是任何数字，所以处理起来就简单许多了。只需要判断y是不是默认值NaN，就可以处理后面的情况。
+
+不过，上面这个例子是错误的。如果执行，在不提供y参数的时候，y的值永远是0。
+
+可以看看下面这个完整的例子，比上面的部分代码更能说明问题：
+
+<pre lang="actionscript">
+package
+{
+import flash.display.Sprite;
+public class TestNaN extends Sprite
+{
+	public function TestNaN()
+	{
+		test();
+		test(null);
+		test(undefined);
+		test(1);
+	}
+
+	public function test($num:int=NaN):void
+	{
+		trace($num);
+	}
+}
+}
+</pre>
+
+运行后得到的结果是：
+
+>[trace] 0  
+>[trace] 0  
+>[trace] 0  
+>[trace] 1  
+
+而将test方法的$num参数的类型从int改成Number，就能得到我们需要的结果：
+
+>[trace] NaN  
+>[trace] 0  
+>[trace] NaN  
+>[trace] 1  
+
+原因是什么？这又回到了很久很久以前在AS3刚刚出来的时候，对默认值的强制类型转换的一些讨论。原因很简单：**Number和int的类型转换的处理方式不同**。
+
+有兴趣的话，还可以研究下Class()转换与as转换。也有很多有趣的地方。
+
+这篇07年的文章也值得一看：<a href="http://www.zhuoqun.net/html/y2007/654.html" target="_blank">AS3中的强制类型转换</a>
