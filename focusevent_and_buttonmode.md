@@ -12,7 +12,7 @@
 
 那么SimpleButton会如何？我没试，懒得试了……
 
-把下面的代码中的 `_sprite.buttonMode = true;` 一行注释掉，可以看到效果。
+把下面的代码中的 `_sprite.buttonMode = true;` 一行注释掉，可以看到(或者说看不到？)效果。
 
 <pre lang="actionscript">
 package
