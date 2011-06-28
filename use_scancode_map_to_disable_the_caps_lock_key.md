@@ -39,3 +39,9 @@
 如果你不喜欢看文档，还可以看这张图：
 
 ![Scancode Map分布图](use_scancode_map_to_disable_the_caps_lock_key/scan_codes.png)
+
+**参考文章**
+
+* <http://429006.com/article/technology/1532.htm>
+* <http://www.experts-exchange.com/OS/Microsoft_Operating_Systems/Windows/A_2155-Keyboard-Remapping-CAPSLOCK-to-Ctrl-and-Beyond.html>
+* <http://hi.baidu.com/dopod100/blog/item/fe23a37e4f4e093f0dd7da62.html>
