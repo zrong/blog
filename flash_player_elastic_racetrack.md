@@ -1,8 +1,8 @@
-[转]Flash Player 执行模型之可变跑道
-原文地址：<http://blogs.adobe.com/xwlin/2010/04/flash_player_101_-_adobe_max_2009_1.html>
-转载地址：<http://blog.csdn.net/zlxluofeng/article/details/5516349>
-演讲人: Lee Thomason (lthomaso@adobe.com)
-翻译: 林晓伟 (xwlin@adobe.com)
+[转]Flash Player 执行模型之可变跑道  
+原文地址：<http://blogs.adobe.com/xwlin/2010/04/flash_player_101_-_adobe_max_2009_1.html>  
+转载地址：<http://blog.csdn.net/zlxluofeng/article/details/5516349>  
+演讲人: Lee Thomason (lthomaso@adobe.com)  
+翻译: 林晓伟 (xwlin@adobe.com)  
 
 上一篇我们介绍了Flash Player的代码库是如何归并一体以及对Flash平台的后期开发产生的影响，在第二节里，我们将重点讨论Flash Player的体系结构及其对开发人员的影响。
 
@@ -16,7 +16,7 @@
 
 基本的跑道理论没有发生改变，在Flash Player执行一帧的周期里，前一部分时间用于执行代码，剩余时间用于渲染显示列表中的对象。每个执行阶段都可以根据实际需求增加执行时间来执行更多代码或做更多的渲染工作，而跑道的总长度也将相应增长。
 
-[!flash_player_elastic_racetrack/eastic_racktrack.png]
+![传统的FlashPlayer可变跑道模型](flash_player_elastic_racetrack/eastic_racktrack.png)
 
 在前一模型基础上发生改变的是每一阶段在一个微观周期里的样子以及他们怎样形成一帧。
 
@@ -28,13 +28,13 @@ AVM2是由Flash Player中一个叫做Marshal的元帅级组件所操控，Marsha
 1. 最后的用户代码执行 - 侦听上述第三步特殊事件的用户代码此时被执行。
 1. Player更改显示列表。
 
-[!flash_player_elastic_racetrack/avm2_marshalled_slice.png]
+![AVM2元帅切片](flash_player_elastic_racetrack/avm2_marshalled_slice.png)
 
 Marshal如此反复的执行20毫秒时间片并在运行中决定下一步操作。一个时间片中执行的所有这些操作最终归纳为上述两段式跑道(代码执行，图像渲染)也就是我们所说的一帧。用户代码和失效操作填充在代码执行区，渲染操作填充在跑道的渲染区段。需要指出的是相关操作只能在Marshal预定的时间内发生，如果你的用户代码很短，那么Marshal仍然会在执行完用户代码后等待一段时间然后进入渲染阶段。
 
 为了更好阐述哪些action被如何执行以及可变跑道如何被创建，请参考如下示例，分别描述了以5fps, 25fps和50fps帧速率工作的swf中时间片是如何被处理的。
 
-[!flash_player_elastic_racetrack/flash_frames_synthetize.jpg]
+![Flash帧合成](flash_player_elastic_racetrack/flash_frames_synthetize.jpg)
 
 以上示例可以看出，不同的帧速率下，一个帧周期中的可变跑道会执行不同操作，例如对于5fps的swf，每帧处理10个用户action，1个失效action，1个渲染action；帧速率25fps的swf，每帧处理2个用户action，1个失效action，1个渲染action；对于50fps的swf，每帧只能处理1个用户action，1个失效action，1个渲染action。需要指出的很重要的一点是，某些事件只可能能发生在某些特定的时间片里，比如，Event.ENTER_FRAME事件只能在某一帧的初始时间片中被调度。
 
