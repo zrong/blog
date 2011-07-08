@@ -1,4 +1,9 @@
 [转]Flash Player 执行模型之可变跑道  
+
+[本文源码](https://github.com/zrong/blog/blob/master/flash_player_elastic_racetrack.md)
+
+[本文地址](http://zengrong.net/post/1365.htm)
+
 原文地址：<http://blogs.adobe.com/xwlin/2010/04/flash_player_101_-_adobe_max_2009_1.html>  
 转载地址：<http://blog.csdn.net/zlxluofeng/article/details/5516349>  
 演讲人: Lee Thomason (lthomaso@adobe.com)  
