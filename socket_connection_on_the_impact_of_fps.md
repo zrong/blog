@@ -1,3 +1,4 @@
+本文源码：<https://github.com/zrong/blog/blob/master/socket_connection_on_the_impact_of_fps.md>
 原文地址：<http://zengrong.net/post/1270.htm>
 
 ##SWF帧频（FPS）对Socket连接的影响

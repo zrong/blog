@@ -24,7 +24,7 @@ Flash Player从版本10.1开始加入了<a href="http://help.adobe.com/zh_CN/as3
 
 开发环境：
 
-+ 客户端：Flex SDK 4.1
++ 客户端：Flex SDK 4.5.1
 + 服务端：Flash Media Server 4.0
 
 以上结论是只测试了FMS为服务器的情况，没有测试Socket的情况，想来应该没什么区别。
