@@ -38,6 +38,7 @@ Demo的使用方法（服务端以FMS为例）：
 ![发布流](flashplayer_crash_on_netstream_play/img/nspub.png)
 4. 运行NSPlay.swf，单击“连接”按钮，查看log信息确认连接正常。此时会看到发布端的摄像头视频。如果FlashPlaye没有崩溃的话，就向着麦克风吹口气……呼……整个世界清静了……
 ![播放流](flashplayer_crash_on_netstream_play/img/nsplay.png)
+
 下面只贴出了 `PreloaderNSPlay.as` 的源码，需要整个项目源码可以在这里下载：<https://github.com/zrong/blog/tree/master/flashplayer_crash_on_netstream_play/project>
 
 <pre lang="actionscript" line="1" colla="+" file="PreloaderNSPlay.as">
