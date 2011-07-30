@@ -1,0 +1,62 @@
+<project name="ns" default="buildAndDebug"> 
+	<!-- 使用 ant -Dmain=A 来编译不同的主文件，本例将默认编译Emcee.as文件。如果提供了参数值，就编译${参数值}.as文件 -->
+
+	<!-- 载入配置文件 -->
+	<property environment="env"/>
+	<property file="build.properties" />
+	<property name="main" value="NSPublish" />
+	
+	<!-- 确定flexTasks.jar的位置 -->
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar"/>
+	
+	<!-- 建立调试版本 -->
+	<target name="build" depends="init">
+		<antcall target="build_mxmlc">
+			<param name="isDebug" value="true" />
+		</antcall>
+	</target>
+
+	<!-- 建立调试版本并打开调试器 -->
+	<target name="buildAndDebug" depends="init">
+		<antcall target="build_mxmlc">
+			<param name="isDebug" value="true" />
+		</antcall>
+		<antcall target="fdb" />
+	</target>
+
+	<!-- 部署用的发布版本 -->
+	<target name="release" depends="init">
+		<antcall target="build">
+			<param name="isDebug" value="false" />
+		</antcall>
+	</target>
+
+	<!-- 清理部署目录中的内容 -->
+	<target name="init">
+		<delete dir="${DEPLOY_DIR}/${main}.swf" />
+	</target>
+
+	<!-- 编译主播界面 -->
+	<target name="build_mxmlc">
+		<mxmlc file="${SRC_DIR}/${main}.as" output="${DEPLOY_DIR}/${main}.swf">
+	        <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
+	        <source-path path-element="${SRC_ZRONG}" />
+			<compiler.library-path dir="${basedir}" append="true">
+				<include name="libs" />
+			</compiler.library-path>
+			<!-- 必须加上这行，如果不加，当使用[Embed]的标签的时候，就会出现VerifyError: Error #1014: 无法找到类 。 原因应该是没有将mx.core包编译进入。官方文档说这个属性默认是true， 不要相信它-->
+			<static-link-runtime-shared-libraries>true</static-link-runtime-shared-libraries>
+			<!-- 编译成可调试的版本 -->
+			<compiler.debug>${isDebug}</compiler.debug>			
+		</mxmlc>
+	</target>
+	
+	<!-- 打开调试器进行调试 -->
+	<target name="fdb">
+		<!-- 不能直接调用fdb，因为这样不会打开新的命令行窗口，必须使用/K或者/C参数，加上start来启动fdb -->
+		<exec executable="cmd" spawn="true" osfamily="windows">
+			<arg line="/K start fdb ${DEPLOY_DIR}/${main}.swf" />
+		</exec>
+	</target>
+</project>
+
