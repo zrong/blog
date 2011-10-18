@@ -29,7 +29,17 @@
 ![转换前的PNG图像](convert_transparent_image_to_jpg_in_java/exportUnit.png)
 ![转换后的JPEG图像](convert_transparent_image_to_jpg_in_java/exportUnit.jpg)
 
-出现这种错误的原因，是强行将32位的ARGB图像转换成了24位的RGB图像，转换过程中没有指定正确的色彩转换方式。要解决这个问题，我找到了4种不同的方法：
+出现这种错误的原因，是强行将32位的ARGB图像转换成了24位的RGB图像，转换过程中没有指定正确的色彩转换方式。下面的2种方法都可以解决这个问题。
+
+要使用这2种方法，可以在writeJPEG方法中加入下面的判断：
+
+	<pre lang="JAVA">
+	//如果图像是透明的，就丢弃Alpha通道
+	if(__image.getTransparency() == Transparency.TRANSLUCENT)
+		__image = get24BitImage(__image);
+		//__image = get24BitImage(__image, Color.BLACK);
+	</pre>
+
 
 ##第一种方法，删除32位ARGB颜色中的Alpha通道
 
@@ -91,4 +101,3 @@
 		return __image; 
 	}
 	</pre>
-	
