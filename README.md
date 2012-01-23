@@ -14,3 +14,6 @@
 * [Vim多行匹配以及排除字符串](http://zengrong.net/post/1429.htm)
 * [在JAVA中将透明的图像转换成JPEG格式](http://zengrong.net/post/1462.htm)
 * [对RTMP视频流进行BitmapData.draw()出错的解决办法](http://zengrong.net/post/1483.htm)
+* [Signals框架介绍（一）基本用法](http://zengrong.net/post/1504.htm)
+* [Signals框架介绍（二）高级事件](http://zengrong.net/post/1507.htm)
+* [Signals框架介绍（三）原生事件](http://zengrong.net/post/1510.htm)
