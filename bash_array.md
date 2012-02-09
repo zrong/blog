@@ -1,4 +1,4 @@
-Bash数组操作教程
+[Bash数组操作教程](http://zengrong.net/post/1518.htm)
 
 ##一、定义数组
 
@@ -152,16 +152,16 @@ done
 
 使用for循环读取数组：
 
-<pre lang="BASH">
-adobe=('Flash' 'Flex' 'Photoshop' 'Dreamweaver' 'Premiere')
-len=${#adobe[@]}
-for ((i=0;i<$len;i++));do
-	echo ${adobe[$i]}
-done
-# 打印
-# Flash 
-# Flex 
-# Photoshop 
-# Dreamweaver 
-# Premiere
-</pre>
+	<pre lang="BASH">
+	adobe=('Flash' 'Flex' 'Photoshop' 'Dreamweaver' 'Premiere')
+	len=${#adobe[@]}
+	for ((i=0;i<$len;i++));do
+		echo ${adobe[$i]}
+	done
+	# 打印
+	# Flash 
+	# Flex 
+	# Photoshop 
+	# Dreamweaver 
+	# Premiere
+	</pre>
