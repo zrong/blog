@@ -1,0 +1,22 @@
+[PuTTYcyg的替代者mintty](http://zengrong.net/post/1553.htm)
+
+上次写了[PuTTYcyg的替代者FuTTY](http://zengrong.net/post/1506.htm)之后，一直使用它。今天由于安装gcc，发现[cygwin](http://zengrong.net/?s=cygwin)升级到了1.7，自带了[mintty](http://code.google.com/p/mintty/)，这个终端比futty更好用。
+
+minitty既能支持cygwin，也可以支持[MinGW](http://www.mingw.org/)。
+
+这个终端修改自putty 0.60，我最喜欢的特性就是它能将对终端的配置保存在.minittyrc文件中。而futty、putty和puttycyg都是将配置文件保存在注册表中的。
+
+特性如下（基于[mintty主页](http://code.google.com/p/mintty/)介绍翻译）：<!--more-->
+
+* Xterm兼容；
+* 原生windows用户界面，选项简洁；
+* 复制粘贴更容易；
+* 支持文本、文件和文件夹的拖放；
+* Ctrl＋单击可以打开文件或URL；
+* 支持多种编码，包含UTF－8；
+* 多字节字符显示（支持中文），支持Windows输入法；
+* 在Vista和windows7上支持窗口透明和玻璃效果；
+* 支持256色；
+* 支持全屏模式；
+* 存储配置文件在文本文件中，不需要注册表；
+* 程序小巧，滚动快速。
