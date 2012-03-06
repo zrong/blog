@@ -18,7 +18,7 @@
 <TR>
   <TD>更多软件支持？</TD>
   <TD>支持绝大多数的GNU软件</TD>
-  <TD>支持常用软件，git<sup>1</sup>、Vim等软件需要独立支持</TD></TR>
+  <TD>支持常用软件，git、Vim等软件需要独立支持(详细介绍见下方）</TD></TR>
 <TR>
   <TD>更类Linux？</TD>
   <TD>Cygwin在Windows中就好像Wine在Linux中</TD>
@@ -40,9 +40,9 @@
 </TR>
 </TABLE>
 
-1. Git for Windows是建立在MinGW的基础之上的。但如果已经安装过MinGW，希望在已有的MingGW上获得Git的功能，则会比较麻烦，详见下方的3篇文章：
+Git for Windows是建立在MinGW的基础之上的。但如果已经安装过MinGW，希望在已有的MingGW上获得Git的功能，则会比较麻烦，详见下方的3篇文章：
 
-	* [Installing Git under MinGW (+MSys)](http://stackoverflow.com/questions/5885393/using-msysgit-from-mingw-and-vice-versa)
-	* [Using msysGit from MinGW and vice versa](http://groups.google.com/group/msysgit/browse_thread/thread/dbe50a1755c6000d?tvc=2&pli=1)
+* [Installing Git under MinGW (+MSys)](http://stackoverflow.com/questions/5885393/using-msysgit-from-mingw-and-vice-versa)
+* [Using msysGit from MinGW and vice versa](http://groups.google.com/group/msysgit/browse_thread/thread/dbe50a1755c6000d?tvc=2&pli=1)
 
-最终，我还是决定继续Cygwin。git、Vim和中文是主要原因。
+**最终，我还是决定继续Cygwin。git、Vim和中文是主要原因。**
