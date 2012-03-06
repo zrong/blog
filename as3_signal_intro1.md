@@ -1,6 +1,9 @@
-#Signals框架介绍1-基本用法
+#Signals框架介绍（一）基本用法
 
-注意：本文参考[An introduction to AS3 Signals](http://www.developria.com/2010/10/an-introduction-to-as3-signals.html)写成，但不是翻译。
+注意：本文参考[An introduction to AS3 Signals](http://www.developria.com/2010/10/an-introduction-to-as3-signals.html)写成，但不是翻译，有增删改。
+
+* 第二部分：[Signals框架介绍（二）高级事件](http://zengrong.net/post/1507.htm)
+* 第三部分：[Signals框架介绍（三）原生事件](http://zengrong.net/post/1510.htm)
 
 <hr /> 
 

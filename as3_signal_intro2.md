@@ -1,0 +1,192 @@
+#Signals框架介绍（二）高级事件
+
+注意：本文参考[An introduction to AS3 Signals](http://www.developria.com/2010/10/an-introduction-to-as3-signals.html)写成，但不是翻译，有增删改。
+
+* 第一部分：[Signals框架介绍（一）基本用法](http://zengrong.net/post/1504.htm)
+* 第三部分：[Signals框架介绍（三）原生事件](http://zengrong.net/post/1510.htm)
+
+<hr>
+
+也许你现在又想起了AS3内置事件框架的好处，希望使用currentTarget？或者希望支持冒泡？OK，Signals也能满足你那多变的心……（貌似是我自己多变罢了ˇ^ˇ）
+
+###高级事件
+
+使用DeluxeSignal可以实现更高级的事件传递。还是基于闹钟的例子进行修改，将原来AlarmClock中的Signal改为DeluxSignal：
+
+[AlarmClock.as]
+
+	<pre lang="ActionScript">
+	public function AlarmClock()
+	{
+		//将自己作为引用传递给DeluxeSignal，同时增加GenericEvent的传递
+		alarm = new DeluxeSignal(this, GenericEvent, Date);
+	}
+ 
+	public var alarm:DeluxeSignal;
+ 
+	public function ring():void
+	{
+		alarm.dispatch(new GenericEvent(), new Date());
+	}
+	</pre>
+
+修改Wakeup.as中的处理器函数，让它能够接受到传递的2个参数。
+
+[Wakeup.as]
+
+	<pre lang="ActionScript">
+	private function handler_ring($evt:GenericEvent, $date:Date):void
+	{
+		trace('currentTarget：',$evt.currentTarget);
+		trace('target：',$evt.target);
+		trace('signal：',$evt.signal);
+		trace('起床了！！！也不看看几点了：'+$date.toString());
+	}
+	</pre>
+
+在这里出现的GenericEvent，并非继承自flash.events.Event，而是实现了Signals自己的IEvent接口，与AS3的事件机制毫无关系。取一个貌似兄弟的名称，是为了方便大家理解罢了。它所提供的currentTarget和target属性，也是由IEvent自身提供。
+
+运行修改后的例子，可以看到如下输出：
+
+>[trace] currentTarget： [object AlarmClock]
+>[trace] target： [object AlarmClock]
+>[trace] signal： [object DeluxeSignal]
+>[trace] 起床了！！！也不看看几点了：Mon Jan 23 17:07:16 GMT+0800 2012
+
+现在，是不是可以对currentTarget“为所欲为”了呢？
+
+###冒泡事件
+
+Signals一样可以冒泡，而且并不依赖AS3自带的事件机制。当然，发送和接收冒泡事件的对象必须处于显示列表中。
+
+为了让AlarmClock能够被加入显示列表，我们让AlarmClock继承Sprite。而抛出冒泡事件就非常简单，只需要在实例化GenericEvent的同时传递true参数即可。看看AlarmClock类被修改的部分吧：
+
+[AlarmClock.as]
+
+	<pre lang="ActionScript">
+	public class AlarmClock extends Sprite
+	{
+		public function ring():void
+		{
+			alarm.dispatch(new GenericEvent(true), new Date());
+		}
+	}
+	</pre>
+
+接收事件的类，必须实现IBubbleEventHandler接口，在onEventBubbled中处理冒泡事件。同时，要将\_alarm实例加入显示列表。
+
+为了方便查看冒泡效果，可以将addOnce所在的一行注释掉，只接收冒泡事件。
+
+[Wakeup.as]
+
+	<pre lang="ActionScript">
+	public class Wakeup extends Sprite implements IBubbleEventHandler
+	{
+		public function Wakeup()
+		{
+			_alarm  = new AlarmClock();
+			addChild(_alarm);
+			//_alarm.alarm.addOnce(handler_ring);
+			_alarm.ring();
+		}
+
+		public function onEventBubbled($evt:IEvent):Boolean
+		{
+			trace('冒泡 currentTarget：',$evt.currentTarget);
+			trace('冒泡 target：',$evt.target);
+			trace('冒泡 signal：',$evt.signal);
+			//返回false代表不再继续冒泡
+			return false;
+		}
+	}
+	</pre>
+
+运行修改后的例子，可以看到如下输出：
+
+>[trace] 冒泡 currentTarget： [object Wakeup]
+>[trace] 冒泡 target： [object AlarmClock]
+>[trace] 冒泡 signal： [object DeluxeSignal]
+
+###完整的类
+
+**[AlarmClock.as]**
+
+	<pre lang="ActionScript" line="1" coloa="+">
+	package
+	{
+	import flash.display.Sprite;
+	import org.osflash.signals.Signal;
+	import org.osflash.signals.DeluxeSignal;
+	import org.osflash.signals.events.GenericEvent;
+	 
+	/**
+	* Signals闹钟范例
+	* @author Aiden Tailor(http://www.developria.com/2010/10/an-introduction-to-as3-signals.html)
+	* @author zrong(zengrong.net)
+	*/
+	 
+	public class AlarmClock extends Sprite
+	{
+		public function AlarmClock()
+		{
+			alarm = new DeluxeSignal(this, GenericEvent, Date);
+		}
+	 
+		public var alarm:DeluxeSignal;
+
+		public function ring():void
+		{
+			//使用冒泡的方式发布闹钟的响铃事件
+			alarm.dispatch(new GenericEvent(true), new Date());
+		}
+	}
+	}
+	</pre>
+
+**[Wakeup.as]**
+
+	<pre lang="ActionScript" line="1" coloa="+">
+	package
+	{
+	import flash.display.Sprite;
+	import org.osflash.signals.events.GenericEvent;
+	import org.osflash.signals.events.IBubbleEventHandler;
+	import org.osflash.signals.events.IEvent;
+	 
+	[SWF(width=500,height=300,frameRate=30,backgroundColor=0xFFFFFF)]
+	/**
+	 * 测试闹钟
+	 * @author Aiden Tailor(http://www.developria.com/2010/10/an-introduction-to-as3-signals.html)
+	 * @author zrong(zengrong.net)
+	 */
+	public class Wakeup extends Sprite implements IBubbleEventHandler
+	{
+		public function Wakeup()
+		{
+			_alarm  = new AlarmClock();
+			addChild(_alarm);
+			_alarm.alarm.addOnce(handler_ring);
+			_alarm.ring();
+		}
+	 
+		private var _alarm:AlarmClock;
+	 
+		private function handler_ring($evt:GenericEvent, $date:Date):void
+		{
+			trace('currentTarget：',$evt.currentTarget);
+			trace('target：',$evt.target);
+			trace('signal：',$evt.signal);
+			trace('起床了！！！也不看看几点了：'+$date.toString());
+		}
+		
+		public function onEventBubbled($evt:IEvent):Boolean
+		{
+			trace('冒泡 currentTarget：',$evt.currentTarget);
+			trace('冒泡 target：',$evt.target);
+			trace('冒泡 signal：',$evt.signal);
+			//返回false代表不再继续冒泡
+			return false;
+		}
+	}
+	}
+	</pre>
