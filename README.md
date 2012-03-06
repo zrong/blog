@@ -18,3 +18,5 @@
 * [Signals框架介绍（二）高级事件](http://zengrong.net/post/1507.htm)
 * [Signals框架介绍（三）原生事件](http://zengrong.net/post/1510.htm)
 * [Cygwin与MingGW，如何选择？](http://zengrong.net/post/1557.htm)
+* [使用gcc -mno-cygwin参数编译失败的解决办法](http://zengrong.net/post/1556.htm)
+* [cygwin升级到1.7后，git gui和gitk报错](http://zengrong.net/post/1554.htm)
