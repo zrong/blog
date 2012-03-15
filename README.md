@@ -20,3 +20,4 @@
 * [Cygwin与MingGW，如何选择？](http://zengrong.net/post/1557.htm)
 * [使用gcc -mno-cygwin参数编译失败的解决办法](http://zengrong.net/post/1556.htm)
 * [cygwin升级到1.7后，git gui和gitk报错](http://zengrong.net/post/1554.htm)
+* [pacman升级到4.0之后的错误处理](http://zengrong.net/post/1564.htm)
