@@ -1,0 +1,13 @@
+[Adobe游戏方面的一周新闻：会议，演示和精挑细选的信息](http://zengrong.net/post/1566.htm)
+原文地址：[A Big Week of News for Adobe’s Gaming Efforts: Conferences, Demos and Screenings Galore](http://blogs.adobe.com/digitalmedia/2012/03/a-big-week-of-news-for-adobes-gaming-efforts-conferences-demos-and-screenings-galore/)
+
+
+在[Mobile World大会的AIR预览](https://blogs.adobe.com/digitalmedia/2012/02/mobile-gaming-gets-a-performance-boost-adobe-air-3-2-with-2d-and-3d-hardware-acceleration-announced/)之后，本周的游戏活动让我们更加兴奋。在本周末的[Flash游戏高层会议](http://www.flashgamingsummit.com/)上，Adobe游戏传教士Lee Brimelow、Flash运行时产品经理Thibault Imbert和几百名与会者[讨论了AIR3.2中的新特性以及Adobe游戏的发展方向](http://partners-ar.adobeconnect.com/p84glz9113f/)。开发者现在可以在超过五亿部支持Stage 3D技术的手机和平板电脑上开发游戏，这些手机和平板设备包含苹果iOS、Andorid、Barnes & Noble’s Color NOOK、亚马逊的Kindle Fire和黑莓平台。开发者可以利用以前的Stage 3D代码，而不必从头开始。
+
+AIR 3.2在移动平台上的渲染性能是AIR2的1000倍，它允许游戏开发者在屏幕上渲染包含几百万个对象的动画，并保持60FPS以确保动画流畅。开发者能使用单一的工作流程优化他们的应用，而且能使用设备特有原生扩展。这些原生扩展可以实现振动控制、陀螺仪、双屏幕或整合苹果游戏中心的支付系统。AIR让更多的开发者能容易的提交自己的应用到移动市场。在去年，Android市场和AppStore中的AIR应用程序的数量已经增长了7倍以上！
+
+Adobe游戏团队也将参加本周在旧金山举行的[游戏开发者大会（GDC）](http://gdconf.com/)，在那里，我们将展示多种基于新的浏览器桌面游戏和移动平台游戏，这些游戏的提供者是Adobe的重要合作伙伴Rovio、Zynga、GameFly、EPIC、SpilGames等等。[Soundquest](http://www.youtube.com/watch?v=H2ApW_YZZo8)、[Delta Strike](http://www.youtube.com/user/Pro3Games?feature=mhee#p/a/u/0/prVUqbgKh0w)和[Sherwood Dungeon](http://www.maidmarian.com/sherwoodalpha.html)这几个高性能、跨平台的游戏使用了新的flash技术，它们将在Adobe的展位中展示。展位中基于AIR的移动平台游戏包括[Waste Invaders](http://vimeo.com/37725174)、[Spaced Away](http://spacedaway.com/)和[Winter on Whale Island](http://v.youku.com/v_show/id_XMzU3MjczOTI0.html)，还有[Machinarium](https://blogs.adobe.com/digitalmedia/2011/09/flash-based-machinarium-game-is-now-1-ipad-app-delivered-using-adobe-air/)，这是一个iPad游戏。并且，我们的朋友[NVIDIA](http://www.nvidia.com/page/home.html)和[AMD](http://blogs.amd.com/fusion/2012/02/27/adobe-flash-player-11-2-is-coming-see-how-amd-technology-can-make-it-fly/)也将展示它们使用Flash建立的演示。那么，来看看我们在北大厅的展位吧，编号2328。
+
+Flash Player 11.2将在本月迟些时候发布，Adobe正致力于确保Flash技术提供的质量水平能满足游戏开发者的需要，使Flash能够成为真正的web游戏机。通过Stage 3D，Flash播放器已经 在web上带来了主机质量的硬件加速图形能力，这比任何平台做的更多。[Flash Player 11.2包含鼠标锁定和扩展GPU支持](http://tv.adobe.com/watch/adc-presents/introducing-flash-player-112/)，我们[最近发布的路线图](http://www.adobe.com/devnet/flashplatform/whitepapers/roadmap.html)演示了即将推出的直接针对游戏开发者的功能，为客户提供新的功能，我们将继续作出投资。[正如我们以前所沟通的](http://blogs.adobe.com/flashplayer/2011/09/updates-from-the-lab.html)，Adobe将产品化“Archemy”，这是一个允许用户在Flash运行时中安全的执行高性能的C和C++代码Adobe研究项目。Archemy的商业版本将提供超越实验室版本的更好性能和生产力，它包括完整的调试支持，并减少了75％的代码量。
+
+还有一件事，我们高兴的宣布，一个专注于游戏开发者的新站点<http://gaming.adobe.com>已经上线。它有一个使用Flash和AIR的[游戏展台](http://gaming.adobe.com/showcase/)，以及更多开发者资源，比如教程和关于如何使用Flash技术开发游戏的信息。去看看吧，然后告诉我们你的想法。游戏！
