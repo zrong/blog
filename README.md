@@ -22,3 +22,4 @@
 * [cygwin升级到1.7后，git gui和gitk报错](http://zengrong.net/post/1554.htm)
 * [pacman升级到4.0之后的错误处理](http://zengrong.net/post/1564.htm)
 * [Adobe游戏方面的一周新闻：会议，演示和精挑细选的信息](http://zengrong.net/post/1566.htm)
+* [让旧版本的Flash支持更新的Flash Player功能](http://zengrong.net/post/1568.htm)
