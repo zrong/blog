@@ -1,6 +1,11 @@
-Flex - 使用ConstraintLayout创建复杂的表单布局
+[Flex - 使用ConstraintLayout创建复杂的表单布局](http://zengrong.net/post/1572.htm)
+
+原文地址：[Flex - Complex Form layouts with ContraintLayout](http://blog.devinholloway.com/2012/03/flex-complex-form-layouts-with.html)
+
 Form容器默认使用FormLayout布局排列子表单项。FormLayout继承自VerticalLayout，它对FormItem容器进行纵向排列。如果你想实现纵向的排列表单，这当然好，但是很多时候往往不是这样。看看下面的例子。
-<ConstraintForm.swf>
+
+<flex_complex_form_layouts_with_contraintlayout/ConstraintForm.swf>
+
 通常情况下，我看到开发者在实现一个表单布局的时候，会放弃FormLayout布局而是使用一堆嵌套的HGroup和VGroup，尽管这种做法有点傻X，效果也不太理想。
 还记得Flex 3中的ConstraintRows和ConstraintColumns么？它们在Flex 4中换了个ConstraintLayout的马甲又出现了，这个Layout可以用在Form中。我发现许多Flex开发者不知道这件事，这不奇怪，因为它们在官方文档中的说明少得可怜。而且，如果使用Google搜索它，你只能得到MX组件的相关内容。
 上面的表单在Spark Form容器中使用ConstraintLayout替代了FormLayout，这个Layout为FormItem容器提供了类似于网格布局的功能，同时实现跨行、跨列。

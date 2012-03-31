@@ -23,3 +23,5 @@
 * [pacman升级到4.0之后的错误处理](http://zengrong.net/post/1564.htm)
 * [Adobe游戏方面的一周新闻：会议，演示和精挑细选的信息](http://zengrong.net/post/1566.htm)
 * [让旧版本的Flash支持更新的Flash Player功能](http://zengrong.net/post/1568.htm)
+[Flex - 使用ConstraintLayout创建复杂的表单布局](http://zengrong.net/post/1572.htm)
+[如何创建游戏的续作](http://zengrong.net/post/1574.htm)

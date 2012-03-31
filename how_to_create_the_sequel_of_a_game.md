@@ -1,4 +1,4 @@
-如何创建游戏的续作
+[如何创建游戏的续作](http://zengrong.net/post/1574.htm)
 
 英文原文地址：[How to create the sequel of a game](http://www.emanueleferonato.com/2012/03/26/how-to-create-the-sequel-of-a-game/)
 
@@ -20,13 +20,13 @@
 
 看：
 
-sam01.png
+<how_to_create_the_sequel_of_a_game/sam01.png>
 
 在物理世界中，左边的红色箱子并没有碰到右边的哪个，但是在玩家看来它们碰到了，所以玩家希望能移除它们。
 
 在续作中，我没有使用定制的接触侦听器类来实现碰撞检测，而是使用了一些技巧来实现了一种容差的“所见即所得”效果。
 
-same02.png
+<how_to_create_the_sequel_of_a_game/sam02.png>
 
 在这张图中，箭头所指的两个箱子没有接触，但是它们之间距离很紧，玩家期望（或者至少希望）它们接触。于是，我让它们接触。除了这种容差处理，还有另外3个要点：
  
