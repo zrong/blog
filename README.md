@@ -25,3 +25,4 @@
 * [让旧版本的Flash支持更新的Flash Player功能](http://zengrong.net/post/1568.htm)
 [Flex - 使用ConstraintLayout创建复杂的表单布局](http://zengrong.net/post/1572.htm)
 [如何创建游戏的续作](http://zengrong.net/post/1574.htm)
+[Adobe数字出版套件(DPS)中PDF与JPG/PNG图像格式的不同](http://zengrong.net/post/1581.htm)
