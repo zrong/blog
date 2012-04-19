@@ -1,0 +1,25 @@
+[Gitweb和WebSVN](http://zengrong.net/post/1594.htm)
+
+我个人的版本库目前全部用Git，但公司的版本库则全部都是SVN，所以我是SVN＋Git通用，只用命令行。
+
+为了便于查看，我会为git和SVN搭建一个web查看环境，这方面就要依赖GitWeb和[WebSVN](http://www.websvn.info/)。
+
+关于这两者的配置和安装，Google中有非常多的教程（当然有优秀的教程和稀烂的教程，看你怎么找了），我不再给出详细的步骤，只说一下自己在配置中碰到的问题和注意事项。<!--more-->
+
+## Gitweb
+
+Gitweb已经包含在git的安装包和源码中了，因此稍微配置一下就可以使用。这里有一篇面向ArchLinux的配置方法：<https://wiki.archlinux.org/index.php/Gitweb>。
+
+Linux内核代码就可以使用Gitweb查看：<http://git.kernel.org/>，界面虽然简陋，但该有的功能一样都不少。
+
+Gitweb的优点在于它可以递归的显示指定目录下的所有仓库。我的习惯是为每个项目的子项目建立独立的版本库方便管理。因此需要在总库下建立目录来分离每个项目。Gitweb会自动将总库下面的所有字库递归地读取出来进行显示。
+
+例如，我的总库保存在`/home/git`下，A项目有3个子项目，分别是a1、a2和a3，对应路径为`/home/git/A/a1.git;/home/git/A/a2.git;/home/git/A/a3.git`。如果使用Gitweb指定版本库的根目录为`/home/git`，那么Gitweb会自动将`a1/a2/a3`子版本库都读取出来。
+
+如果在配置完成后，Gitweb的首页依然显示404 project not find，而你又确定路径正确，那么最大的可能就是你的版本库的权限没有设置正确。如果希望Gitweb能显示你的版本库，则为你所有的版本库加入读权限和执行权限。
+
+## WebSVN
+
+和Gitweb相比，WebSVN的界面就漂亮了许多。在这里可以看到一个WebSVN的Demo：<http://demo.websvn.info/>
+
+WebSVN使用PHP写成，配置上非常容易。如果将WebSVN布署在SVN所在的服务器上，在配置的时候甚至都不需要SVN的访问权限，就可以在网页上完整地查看SVN版本库。

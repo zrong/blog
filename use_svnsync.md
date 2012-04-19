@@ -1,0 +1,88 @@
+[使用svnsync实现已有版本库的镜像](http://zengrong.net/post/1598.htm)
+svn不支持分布式开发，所以把svn版本库保存在一台服务器上是不安全的。制作一个镜像svn版本库有多种方式，我采用subversion自带的svnsync程序。
+
+此教程基于Archlinux。windows用户请注意路径表示法。
+
+源版本库路径：http://192.168.16.10/svn/project1
+镜像版本库路径：/var/svn/project1<!--more-->
+
+## 一、建立镜像版本库
+
+<pre lang="BASH">
+# 创建版本库
+svnadmin create /var/svn/project1
+# 创建钩子
+cp /var/svn/project1/hooks/pre-revprop-change.tmpl /var/svn/project1/hooks/pre-revprop-change
+# 给予钩子运行权限
+chmod a+x /var/svn/project1/hooks/pre-revprop-change
+# 编辑pre-revprop-change钩子，将最后一行的 `exit 1` 改为 `exit 0`
+vim /var/svn/project1/hooks/pre-revprop-change
+</pre>
+
+## 二、初始化镜像库
+
+<pre lang="BASH">
+svnsync init file:///var/svn/project1/ http://192.168.16.10/svn/project1
+</pre>
+
+然后按照提示输入密码，提示信息可能如下：
+
+>认证领域: <http://192.168.16.10> Subversion Repositories
+>“zrong”的密码:
+>认证领域: <http://192.168.16.10> Subversion Repositories
+>用户名: zrong
+>“zrong”的密码:xxxx
+>复制版本 0 的属性。
+
+## 三、同步
+
+<pre lang="BASH">
+# 以后的同步也使用这段代码进行
+svnsync sync file:///var/svn/project1
+<pre>
+
+如果系统提示要保存明文密码，输入yes就可以了。这里我没有研究如何对密码进行加密。
+
+接下来进入同步流程，同步的提示可能如下：
+
+>已提交版本 1。
+>复制版本 1 的属性。
+>传输文件数据....................................
+>已提交版本 1。
+
+这个时间可能会很长，具体要看网速和原始版本库的大小。如果版本库中有带的的二进制文件，则进度会更慢。在svnsync同步的过程中，应该保证原始的svn数据库不要进行提交操作，否则可能会造成同步失败，同步失败会引起镜像版本库的锁定。下面会讲解如何解锁。
+
+## 四、解锁
+
+如果在同步的时候遇到下面的提示，可能是由于原始版本库同时正在提交：
+
+>从目标版本库获得锁失败，当前被“xxxxx”持有
+
+如果是在svn中，可以使用`svn cleanup`来解除锁定。但是svnsync并没有这个功能。我们可以使用下面的代码来解除锁定：
+
+<pre lang="BASH">
+svn propdel svn:sync-lock --revprop -r 0 file:///var/svn/project1/
+# 删除属性 “svn:sync-lock” 于版本库版本 0
+</pre>
+
+
+## 五、修改原始版本库的地址
+
+如果原始版本库的地址改变了（比如说换了域名或者IP地址），在svn中可以使用 `svn relocate` 来实现，但在svnsync中，就必须用propset来实现了，具体代码如下：
+
+<pre lang="BASH">
+svn propget svn:sync-from-url –-revprop -r 0 file:///var/svn/project1/
+# 这个操作会显示原始版本库的地址（假如你忘了原始地址就很有用）
+# http://192.168.16.10/svn/project1
+
+# 设置新的版本库地址
+svn propset svn:sync-from-url –-revprop -r 0 http://10.0.0.9/svn/project1 file:///var/svn/project1/
+# 再次同步
+svnsync sync file:///var/svn/project1/
+</pre>
+
+**参考文章：**
+
+* <http://blog.csdn.net/nuoyazhizhou/article/details/5259876>
+* <http://www.emreakkas.com/linux-tips/how-to-change-svnsync-url-for-source-repository>
+
