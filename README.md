@@ -29,3 +29,4 @@
 * [Gitweb和WebSVN](http://zengrong.net/post/1594.htm)
 * [升级CentOS 5.x中的PHP 5.1到5.3](http://zengrong.net/post/1595.htm)
 * [使用svnsync实现已有版本库的镜像](http://zengrong.net/post/1598.htm)
+* [AIR对Mobile设备位图取色的问题](http://zengrong.net/post/1600.htm)

@@ -1,0 +1,38 @@
+[AIR对Mobile设备位图取色的问题](http://zengrong.net/post/1600.htm)
+
+在网页游戏开发中，我经常使用bitmapData.getPixel32来获得单击的部位的透明度值，以此来确定是否交互。
+
+在电PC平台中，这个用法是很靠谱的：
+
+<pre lang="actionscript">
+public function checkOpaque($x:Number,$y:Number):Boolean
+{
+	//如果没有图像，当然是透明的
+	if(!this.bitmapData) return false;
+	var __argb:uint = this.bitmapData.getPixel32($x,$y);
+	//否则就判断透明度
+	return  (__argb>>24&0xFF) > 0;
+}
+</pre>
+
+但是，到了Mobile平台上，这个方法就有问题，使用getPixel32获得透明部分的像素值，得到的是16777216！
+
+这个值其实是2的24次方。也就是说，在Mobile平台上，getPixel32只能支持到24bit色彩！
+
+那么，是不是我的设置不正确呢？在AIR项目配置文件中，可以设置[colorDepth](http://help.adobe.com/en_US/air/build/WSfffb011ac560372f-5d0f4f25128cc9cd0cb-7ffc.html#WS54ddc2cc39d08a621542610c132b1bbd829-8000)，默认值为16bit，将其设置为32bit，还是没有作用。
+
+所以只能把判断函数改成这样了：
+
+<pre lang="actionscript">
+public function checkOpaque($x:Number,$y:Number):Boolean
+{
+	//如果没有图像，当然是透明的
+	if(!this.bitmapData) return false;
+	var __argb:uint = this.bitmapData.getPixel32($x,$y);
+	trace('单击的像素的颜色：', __argb.toString(16));
+	//手机上可能最大只能支持到24bit颜色，所以当颜色等于24bit颜色的最大值的时候，直接认为像素是透明的
+	if(__argb == 0x1000000) return false;
+	//否则就判断透明度
+	return  (__argb>>24&0xFF) > 0;
+}
+</pre>
