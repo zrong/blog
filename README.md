@@ -30,3 +30,6 @@
 * [升级CentOS 5.x中的PHP 5.1到5.3](http://zengrong.net/post/1595.htm)
 * [使用svnsync实现已有版本库的镜像](http://zengrong.net/post/1598.htm)
 * [AIR对Mobile设备位图取色的问题](http://zengrong.net/post/1600.htm)
+* [在Eclipse中使用Vim](http://zengrong.net/post/1602.htm)
+* [【转】Linux的五个查找命令](http://zengrong.net/post/1604.htm)
+* [在cygwin中调用JAVA程序](http://zengrong.net/post/1610.htm)
