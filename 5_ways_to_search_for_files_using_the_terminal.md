@@ -1,4 +1,4 @@
-[转]Linux的五个查找命令
+[【转】Linux的五个查找命令](http://zengrong.net/post/1604.htm)
 
 本文转自：[阮一峰的网络日志](http://www.ruanyifeng.com/blog/2009/10/5_ways_to_search_for_files_using_the_terminal.html)
 
@@ -8,7 +8,7 @@
 
 使用电脑的时候，经常需要查找文件。
 
-在Linux中，有很多方法可以做到这一点。国外网站[LinuxHaxor](http://www.linuxhaxor.net/?p=904)总结了五条命令，你可以看看自己知道几条。大多数程序员，可能经常使用其中的2到3条，对这5条命令都很熟悉的人应该是不多的。
+在Linux中，有很多方法可以做到这一点。国外网站[LinuxHaxor](http://www.linuxhaxor.net/?p=904)总结了五条命令，你可以看看自己知道几条。大多数程序员，可能经常使用其中的2到3条，对这5条命令都很熟悉的人应该是不多的。<!--more-->
 
 ## 1. find
 
