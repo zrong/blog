@@ -33,3 +33,5 @@
 * [在Eclipse中使用Vim](http://zengrong.net/post/1602.htm)
 * [【转】Linux的五个查找命令](http://zengrong.net/post/1604.htm)
 * [在cygwin中调用JAVA程序](http://zengrong.net/post/1610.htm)
+* [ANEToolkit](http://zengrong.net/anetoolkit)
+* [读写FREByteArray](http://zengrong.net/post/1628.htm)
