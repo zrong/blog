@@ -1,4 +1,4 @@
-原文：<http://zengrong.net/post/1644.htm>
+[NetworkInfo for iOS](http://zengrong.net/post/1644.htm)
 我在Android上使用[flash.net.NetworkInfo](http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/NetworkInfo.html)实现了socket连接在网络状态改变时的自动重连机制，但却发现在iOS设备上不支持flash.net.NetworkInfo。
 
 Adobe的[API文档](http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/NetworkInfo.html)中说，NetworkInfo需要[AIR Profile Support](http://help.adobe.com/en_US/air/build/WS144092a96ffef7cc16ddeea2126bb46b82f-8000.html)支持，我在该文档中找到mobileDevice Profile，发现NetworkInfo一栏的值为Check，也就是说，必须由开发者使用NetworkInfo.isSupported来检测设备是否支持NetworkInfo。

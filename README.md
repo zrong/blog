@@ -35,3 +35,6 @@
 * [在cygwin中调用JAVA程序](http://zengrong.net/post/1610.htm)
 * [ANEToolkit](http://zengrong.net/anetoolkit)
 * [读写FREByteArray](http://zengrong.net/post/1628.htm)
+* [NetworkInfo for iOS](http://zengrong.net/post/1644.htm)
+* [BUG？AIR打包的iOS程序在整数比较上的问题](http://zengrong.net/post/1654.htm)
+* [在ANE插件中启动AIR开发的Android应用](http://zengrong.net/post/1663.htm)
