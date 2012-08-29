@@ -41,3 +41,4 @@
 * [Android SDK中找不到Arrays.copyOf？](http://zengrong.net/post/1664.htm)
 * [在ANE中连接Socket服务器的注意事项](http://zengrong.net/post/1667.htm)
 * [如何知道某个Activity是否在前台？](http://zengrong.net/post/1680.htm)
+* [改变AIR for Android的消息通知栏图标](http://zengrong.net/post/1681.htm)
