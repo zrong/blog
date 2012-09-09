@@ -40,5 +40,8 @@
 * [在ANE插件中启动AIR开发的Android应用](http://zengrong.net/post/1663.htm)
 * [Android SDK中找不到Arrays.copyOf？](http://zengrong.net/post/1664.htm)
 * [在ANE中连接Socket服务器的注意事项](http://zengrong.net/post/1667.htm)
+* [如何知道某个Activity是否在前台？](http://zengrong.net/post/1680.htm)
+* [改变AIR for Android的消息通知栏图标](http://zengrong.net/post/1681.htm)
+* [Android中SharedPreferences的模式](http://zengrong.net/post/1687.htm)
 * [vimpress使用解惑](http://zengrong.net/post/1691.htm)
 * [不重新编译，让官方网站下载的Vim支持Python](http://zengrong.net/post/1690.htm)
