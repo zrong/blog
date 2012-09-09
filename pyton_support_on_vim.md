@@ -1,0 +1,62 @@
+"=========== Meta ============
+"StrID : 1690
+"Title : 不重新编译，让官方网站下载的Vim支持Python
+"Cats  : 技术
+"Status: publish
+"Preview: http://zengrong.net/?p=1690
+"Tags  : Python, vim, WordPress
+"========== Content ==========
+在为Vim安装<a href="http://www.vim.org/scripts/script.php?script_id=1953" title="VimPress">VimPress</a>插件的时候，发现它需要Python支持。查了一些资料，原来在编译Vim的时候，是可以将Python语言整个编译进入Vim中的。这样的Vim可以直接使用Python语言来写扩展。
+
+除了编译嵌入方式，在Windows系统中，Vim还可以以动态链接的方式支持Python。
+
+Vim的帮助文件中这样描述：
+
+<blockquote>
+  <p>Vim 可以用四种方式编译 (:version 输出结果):
+  1. 无 Python 支持     (-python、-python3)
+  2. 只有 Python 2 支持       (+python 或 +python/dyn、-python3)
+  3. 只有 Python 3 支持       (-python、+python3 或 +python3/dyn)
+  4. Python 2 和 3 支持       (+python/dyn、+python3/dyn)</p>
+</blockquote>
+
+我的Vim是在<a href="http://zengrong.net">Vim官方网站</a>下载的32位windows版。怎么知道我的Vim有没有包含Python支持呢？<!--more-->
+
+使用<code>:version</code>命令可以查看Vim编译时候的选项，看看输出的信息中是否包含上面帮助中描述的选项，就能知道自己使用的Vim对Python的支持情况。
+
+在Vim官方网站下载的32位Vim 7.3.46版，是带有+python/dyn和+python3/dyn选项的。所以我们只需要再安装Python环境就行了。
+
+安装的过程也很纠结，许多地方需要注意。我辗转Stack Overflow和Google数次才搞定。下面是具体的过程。
+
+我的计算机环境：
+
+<ul>
+<li>Window 7 64bit</li>
+<li>Vim 7.3.46 32bit</li>
+</ul>
+
+<ol>
+<li>访问下载Pyton安装包，使用Python2还是Python3取决于你自己。
+但要注意，一定要下载和自己Vim匹配的版本。例如我的Windows虽然是64bit，但是由于Vim是32bit，这里就必须下载32bit的Python安装包。
+Python官方网站非常贴心的为中文用户准备了一个“下载”链接。你一定要点击那个链接下载。否则，你会被GFW干掉。</li>
+<li>安装过程没有什么好说。我选择的路径是<code>d:\Python2.7</code>。</li>
+<li>设置环境变量中的PATH变量，将你的Python安装路径加到PATH末尾。
+我永久性鄙视Windows的环境变量配置界面，都多少年了，还搞那么个小框，居然还不能拉大！</li>
+<li>重启电脑。重启的原因是我们需要让新的环境变量生效。虽然有很多非官方的方法可以让环境变量的改变立即生效，但某些时候貌似不靠谱。我再次永久性鄙视微软。</li>
+<li>进入Vim界面，输入<code>echo has("python")</code>，如果输出1，代表你的配置成功了。</li>
+</ol>
+
+如果配置没有成功，仔细检查以下几条：
+
+<ol>
+<li>你的Vim是否是在官方网站下载的Vim 32bit版本？</li>
+<li>你的Vim编译信息中是否包含+python/dyn或者+python3/dyn？检验方法见上文。</li>
+<li>你下载的Python版本是否和Vim版本不匹配？他们必须同时是32bit或者64bit版才行。</li>
+<li>你是否正确设置了环境变量？可以使用<code>ctrl+r</code>然后输入<code>python</code>回车试试。如果能显示python提示符，说明你的设置正确。</li>
+<li>设置了环境变量后，是否重启了计算机？</li>
+</ol>
+
+如果试了所有的办法均不奏效，那就重新编译一个支持Python的Vim吧！
+
+祝你成功！
+
