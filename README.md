@@ -45,3 +45,4 @@
 * [Android中SharedPreferences的模式](http://zengrong.net/post/1687.htm)
 * [vimpress使用解惑](http://zengrong.net/post/1691.htm)
 * [不重新编译，让官方网站下载的Vim支持Python](http://zengrong.net/post/1690.htm)
+* [在64位操作系统上使用FlashDevelop的Debug功能](http://zengrong.net/post/1692.htm)
