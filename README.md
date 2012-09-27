@@ -43,3 +43,5 @@
 * [如何知道某个Activity是否在前台？](http://zengrong.net/post/1680.htm)
 * [改变AIR for Android的消息通知栏图标](http://zengrong.net/post/1681.htm)
 * [Android中SharedPreferences的模式](http://zengrong.net/post/1687.htm)
+* [FlashDevelop的快捷键设置](http://zengrong.net/post/1694.htm)
+* [生成Google Play需要的p12自签名数字证书](http://zengrong.net/post/1695.htm)
