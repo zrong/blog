@@ -48,3 +48,5 @@
 * [在64位操作系统上使用FlashDevelop的Debug功能](http://zengrong.net/post/1692.htm)
 * [FlashDevelop的快捷键设置](http://zengrong.net/post/1694.htm)
 * [生成Google Play需要的p12自签名数字证书](http://zengrong.net/post/1695.htm)
+* [Flex编译器参数中-swf-version与-target-player之关系](http://zengrong.net/post/1486.htm)
+* 
