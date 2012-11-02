@@ -90,6 +90,8 @@ repo bar/foo
 	R           =   carol
 </pre>
 
+此时`foo` 版本库的访问地址为 `git@host:bar/foo`。
+
 ### 更多内容
 
 * <https://github.com/sitaramc/gitolite>
