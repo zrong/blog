@@ -68,12 +68,6 @@ repo foo
 	R           =   carol
 </pre>
 
-### 更多内容
-
-* <https://github.com/sitaramc/gitolite>
-* <http://sitaramc.github.com/gitolite/master-toc.html>
-* <https://github.com/sitaramc/gitolite/wiki>
-
 上面的配置的含义是：
 
 * 有一个名为 `foo` 的版本库；
@@ -95,3 +89,10 @@ repo bar/foo
 	RW          =   bob
 	R           =   carol
 </pre>
+
+### 更多内容
+
+* <https://github.com/sitaramc/gitolite>
+* <http://sitaramc.github.com/gitolite/master-toc.html>
+* <https://github.com/sitaramc/gitolite/wiki>
+
