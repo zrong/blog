@@ -52,3 +52,4 @@
 * [CyanogenMod Rom加入Google Apps官方套件](http://zengrong.net/post/1709.htm)
 * [在PHP中读取二进制文件](http://zengrong.net/post/1715.htm)
 * [在Ant中替换尖括号](http://zengrong.net/post/1717.htm)
+* [安装gitolite](http://zengrong.net/post/1720.htm)
