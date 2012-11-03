@@ -53,3 +53,5 @@
 * [在PHP中读取二进制文件](http://zengrong.net/post/1715.htm)
 * [在Ant中替换尖括号](http://zengrong.net/post/1717.htm)
 * [安装gitolite](http://zengrong.net/post/1720.htm)
+* [Msys/MinGW与Cygwin/gcc](http://zengrong.net/post/1723.htm)
+* [使用Git、Git GUI和TortoiseGit笔记](http://zengrong.net/post/1722.htm)
