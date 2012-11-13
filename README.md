@@ -55,4 +55,5 @@
 * [安装gitolite](http://zengrong.net/post/1720.htm)
 * [Msys/MinGW与Cygwin/gcc](http://zengrong.net/post/1723.htm)
 * [使用Git、Git GUI和TortoiseGit笔记](http://zengrong.net/post/1722.htm)
+* [Git乱码解决方案](http://zengrong.net/post/1249.htm)
 * [PowerManager使用注意事项](http://zengrong.net/post/1738.htm)
