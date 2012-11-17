@@ -57,3 +57,4 @@
 * [使用Git、Git GUI和TortoiseGit笔记](http://zengrong.net/post/1722.htm)
 * [Git乱码解决方案](http://zengrong.net/post/1249.htm)
 * [PowerManager使用注意事项](http://zengrong.net/post/1738.htm)
+* [Git查看、删除远程分支](http://zengrong.net/post/1746.htm)
