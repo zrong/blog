@@ -58,3 +58,4 @@
 * [Git乱码解决方案](http://zengrong.net/post/1249.htm)
 * [PowerManager使用注意事项](http://zengrong.net/post/1738.htm)
 * [Git查看、删除远程分支](http://zengrong.net/post/1746.htm)
+* [让AIR3.5支持iPhone5（去掉黑边）](http://zengrong.net/post/1752.htm)
