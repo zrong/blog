@@ -59,3 +59,5 @@
 * [PowerManager使用注意事项](http://zengrong.net/post/1738.htm)
 * [Git查看、删除远程分支](http://zengrong.net/post/1746.htm)
 * [让AIR3.5支持iPhone5（去掉黑边）](http://zengrong.net/post/1752.htm)
+* [阿里云经济A型服务器配置](http://zengrong.net/post/1761.htm)
+* [小内存服务器MySQL出现Out of memory错误的问题](http://zengrong.net/post/1762.htm)
