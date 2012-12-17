@@ -62,3 +62,4 @@
 * [阿里云经济A型服务器配置](http://zengrong.net/post/1761.htm)
 * [小内存服务器MySQL出现Out of memory错误的问题](http://zengrong.net/post/1762.htm)
 * [ubuntu server挂载swap文件](http://zengrong.net/post/1763.htm)
+* [在AIR3.5中，iOS上的SharedObject的行为改变](http://zengrong.net/post/1766.htm)
