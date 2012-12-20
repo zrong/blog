@@ -63,3 +63,4 @@
 * [小内存服务器MySQL出现Out of memory错误的问题](http://zengrong.net/post/1762.htm)
 * [ubuntu server挂载swap文件](http://zengrong.net/post/1763.htm)
 * [在AIR3.5中，iOS上的SharedObject的行为改变](http://zengrong.net/post/1766.htm)
+* [升级Flash Builder 4.6中的AIR SDK](http://zengrong.net/post/1767.htm)
