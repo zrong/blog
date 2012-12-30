@@ -1,5 +1,9 @@
 [使用Git、Git GUI和TortoiseGit笔记](http://zengrong.net/post/1722.htm)
 
+<span style="color:red;">2012-12-26更新</span>：在TortoiseGit中使用SSH host
+<span style="color:red;">2012-12-30更新</span>：在安装的时候选择TortoiseGit使用的SSH客户端
+<hr>
+
 **注意：** 本文不讲解任何关于Git提交、合并等等使用细节和语法，只记录作者在使用Git相关工具中碰到的问题和选择的经验。本文只是个人意见的集中，不代表适合所有人。如果你是 “被惯坏了的那批”，请不要介意。:-)
 
 ### 关于命令行
@@ -32,11 +36,11 @@
 
 Git自带GUI界面。使用 `git gui` 命令可以打开它。在这个界面中可以完成commit、merge、push、pull等等常用操作。
 
-![gitgui](use_tortoisegit/gitgui.png)
+![gitgui](/wp-content/uploads/2012/11/gitgui.png)
 
 使用 `gitk` 可以打开查看Git版本库历史，在 `git gui` 中也有菜单可以打开它。
 
-![gitk](use_tortoisegit/gitk.png)
+![gitk](/wp-content/uploads/2012/11/gitk.png)
 
 个人以为，完全可以不用安装TortoiseGit，对于绝大多数程序猿来说，这个界面已经足够了。
 
@@ -54,7 +58,7 @@ Git自带GUI界面。使用 `git gui` 命令可以打开它。在这个界面中
 
 如果你不安装msysGit，那么在运行TortoiseGit的时候会弹出这个提示：
 
-![need_git](use_tortoisegit/need_msysgit.png)
+![need_git](/wp-content/uploads/2012/11/need_git.png)
 
 为什么TortoiseGit不像TortoiseSVN一样，把SVN命令行工具集成在安装包中呢？我猜想是以下几点原因：
 
@@ -75,22 +79,47 @@ msysGit使用一种很BT也很NB的方式来安装。先安装一个最小的[Mi
 如果本机安装过[Cygwin](http://zengrong.net/post/tag/Cygwin)，那么在安装msysGit的时候，cygwin的bin目录不能位于PATH环境变量中，否则msysGit会拒绝安装。
 其实，如果你不在意Cygwin提供的Git版本比较老，你完全可以不安装Git for Windows或者msysGit，直接在TortoiseGit中设置Git.exe的路径为Cygwin的bin目录即可。
 
-![gitpath](use_tortoisegit/gitexepath.png)
+![gitpath](/wp-content/uploads/2012/11/gitexepath.png)
 
 由于Cygwin目前的Git版本较老，在运行TortoiseGit的时候你会得到这个提示：
 
-![gitold](use_tortoisegit/git1710.png)
+![gitold](/wp-content/uploads/2012/11/git1710.png)
 
 关于Cygwin、MinGW以及msysGit的关系和选择，可以看这篇文章：[Cygwin与MinGW，如何选择？](http://zengrong.net/post/1557.htm)
 还有这篇转载的文章：[Msys/MinGW与Cygwin/gcc](http://zengrong.net/post/1723.htm)
 
 ### TortoiseGit的密钥
 
-我认为TortoiseGit最大的问题，就是在于它使用ppk密钥格式，而不是使用OpenSSH密钥格式。
+<del>我认为TortoiseGit最大的问题，就是在于它使用ppk密钥格式，而不是使用OpenSSH密钥格式。
 
 因为linux系统是默认使用OpenSSH的，所以Git在基于命令行的时候是使用OpenSSH格式的密钥。
 同理，[gitolite](http://zengrong.net/post/1720.htm)这种服务器端程序使用的是OpenSSH格式的密钥。
-所以，必须将原有的OpenSSH密钥转换成PPK密钥才能在TortoiseGit中使用。
+所以，必须将原有的OpenSSH密钥转换成PPK密钥才能在TortoiseGit中使用。</del>
+
+在安装TortoiseGit的时候，你可以选择使用Putty还是OpenSSH作为SSH客户端。安装程序中说，Putty和Windows配合得更好。
+
+![gitold](/wp-content/uploads/2012/11/choose_ssh_client.png)
+
+如何选择？我分别给出它们的特点：
+
+**Putty**
+
+1. Putty有GUI界面，可以通过[配置sessions来访问不同的git服务器端口](http://zengrong.net/post/1775.htm)；
+2. Putty有GUI程序(Putty Key Generator)来生成密钥；
+3. 如果使用Putty作为SSH客户端，那么传输速度可能会比较慢（个人感觉，当然也[有人和我有一样的感觉](http://www.iteye.com/topic/1124117)）；
+4. Putty不能直接使用原有的OpenSSH密钥，必须将其转换成PPK密钥才行。
+
+**OpenSSH**
+
+1. OpenSSH是Git命令行程序默认使用的SSH客户端程序；
+2. Git for Windows默认就包含了OpenSSH程序；
+3. 你可以利用已有的OpenSSH密钥，不用做转换（例如我原来用cygwin的时候积累了一堆OpenSSH密钥，现在只需要在~/.ssh下做一个符号链接就能用了）；
+4. GitHub/bitbucket等Host使用的都是OpenSSH密钥；
+5. 大多数Linux发行版默认使用OpenSSH作为服务端；
+6. 你可以方便的使用命令行程序来实现自动化处理。
+
+看完上面的特点，如果你还是选择了Putty作为客户端的话，那么需要转换原有的OpenSSH密钥（如果有的话）；
+如果你依然义无反顾选择了OpenSSH作为客户端的话，我相信你已经知道如何生成、修改、配置SSH了，看来我也不必罗嗦 :D
 
 #### 转换OpenSSH密钥到ppk格式
 
@@ -98,7 +127,7 @@ msysGit使用一种很BT也很NB的方式来安装。先安装一个最小的[Mi
 
 打开该程序，选择 `Conversions->Import Key` 命令将OpenSSH **私钥** 导入界面中，然后点击 `Save private key` 按钮将密钥保存成ppk格式。建议在 `Key comment` 中输入说明，否则密钥多了很难分辨。至于密码，为了方便可以不设置。
 
-![putty_key_generator](use_tortoisegit/putty_key_generator.png)
+![putty_key_generator](/wp-content/uploads/2012/11/putty_key_generator.png)
 
 #### 生成OpenSSH和ppk格式的密钥
 
@@ -110,6 +139,10 @@ msysGit使用一种很BT也很NB的方式来安装。先安装一个最小的[Mi
 * 点击 `Save public key` 按钮将密钥保存成 **ppk格式公钥**；
 * 点击 `Conversions->Export OpenSSH Key` 按钮将密钥保存成 **OpenSSH格式私钥**；
 * 获取上图红框中的所有文本内容，粘贴到文本编辑软件中，保存为一个单行的文件，这就是 **OpenSSH格式公钥**；
+
+#### 在TortoiseGit中使用SSH host
+
+如果使用Putty作为TortoiseGit的SSH客户端，那么就不能使用OpenSSH的 ~/.ssh/config 来定义使用不同的端口和密钥访问SSH，而是需要使用 PuTTY Session。这篇文章进行了详细讲解：http://zengrong.net/post/1775.htm
 
 ### 换行符的问题 autocrlf and safecrlf
 

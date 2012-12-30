@@ -1,5 +1,8 @@
 [在TortoiseGit中使用SSH host](http://zengrong.net/post/1775.htm)
 
+<span sytle="color:red;">2012-12-30更新：</span>修改由于理解错误造成的描述错误
+<hr>
+
 ## git命令行与OpenSSH
 
 在OpenSSH中，我们可以很方便的通过编辑 `~/.ssh/config` 文件来为git指定不同的host，达到使用不同的端口，不同的密钥访问git服务的目的。看看下面这个例子：
@@ -28,9 +31,9 @@ host bitbucket_release
 
 ## TortoiseGit与PuTTY
 
-那[TortoiseGit](http://code.google.com/p/tortoisegit/)怎么办？我在TortoiseGit依赖的 `Git for windows` 环境中进行了如上设置，但没有起作用。TortoiseGit并不认识 `~/.ssh/conifg` 配置文件。
+那[TortoiseGit](http://code.google.com/p/tortoisegit/)怎么办？
 
-这是因为TortoiseGit基于 [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) 进行验证。我们需要在PuTTY中进行类似的设置。步骤如下：
+在安装TortoiseGit的时候，可以选择使用OpenSSH客户端还是使用Putty客户端。如果使用的是Putty客户端，那么上面的设置不会起作用，我们必须在PuTTY中进行类似的设置。步骤如下：
 
 1. TortoiseGit并没有自带PuTTY客户端，你需要先去[下载一个](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)。
 2. 在 `Session` 界面，设置 `Host Name` 和 `Port`：
