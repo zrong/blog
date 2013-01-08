@@ -66,3 +66,5 @@
 * [升级Flash Builder 4.6中的AIR SDK](http://zengrong.net/post/1767.htm)
 * [在Flash Builder 4.7的纯AS项目中使用Flex SDK](http://zengrong.net/post/1768.htm)
 * [在TortoiseGit中使用SSH host](http://zengrong.net/post/1775.htm)
+* [从Apache到Lighttpd](http://zengrong.net/post/1786.htm)
+* [Cygwin的包管理器：apt-cyg](http://zengrong.net/post/1792.htm)
