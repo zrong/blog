@@ -69,3 +69,4 @@
 * [从Apache到Lighttpd](http://zengrong.net/post/1786.htm)
 * [Cygwin的包管理器：apt-cyg](http://zengrong.net/post/1792.htm)
 * [使用Cygwin在Windows中以服务方式安装Lighttpd](http://zengrong.net/post/1793.htm)
+* [使用bash从SVN和Git中获取顺序版本号](http://zengrong.net/post/1798.htm)
