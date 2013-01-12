@@ -5,7 +5,7 @@
 ## for SVN
 <pre lang="BASH">
 # 获取XML版本的svn信息，这样可以避免不同语言的问题
-__xml=`svn info --xml --incremental $sgass`
+__xml=`svn info --xml --incremental`
 # 我们可以获取到2个版本号，一个是最新版本库版本号，一个是自己的提交版本号。删除自己提交的版本号。
 __revision=`echo "$__xml"|sed '/revision/!d'|sed '$d'`
 # 提取出版本号的数字部分
