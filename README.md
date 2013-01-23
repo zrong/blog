@@ -66,3 +66,8 @@
 * [升级Flash Builder 4.6中的AIR SDK](http://zengrong.net/post/1767.htm)
 * [在Flash Builder 4.7的纯AS项目中使用Flex SDK](http://zengrong.net/post/1768.htm)
 * [在TortoiseGit中使用SSH host](http://zengrong.net/post/1775.htm)
+* [从Apache到Lighttpd](http://zengrong.net/post/1786.htm)
+* [Cygwin的包管理器：apt-cyg](http://zengrong.net/post/1792.htm)
+* [使用Cygwin在Windows中以服务方式安装Lighttpd](http://zengrong.net/post/1793.htm)
+* [使用bash从SVN和Git中获取顺序版本号](http://zengrong.net/post/1798.htm)
+* [在bash中替换屏幕上显示的行](http://zengrong.net/post/1799.htm)
