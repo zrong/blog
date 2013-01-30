@@ -71,3 +71,4 @@
 * [使用Cygwin在Windows中以服务方式安装Lighttpd](http://zengrong.net/post/1793.htm)
 * [使用bash从SVN和Git中获取顺序版本号](http://zengrong.net/post/1798.htm)
 * [在bash中替换屏幕上显示的行](http://zengrong.net/post/1799.htm)
+* [cygwin技巧2则：whereis和updatedb](http://zengrong.net/post/1807.htm)
