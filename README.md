@@ -75,3 +75,4 @@
 * [cygwin技巧2则：whereis和updatedb](http://zengrong.net/post/1807.htm)
 * [在Cygwin中编译Git](http://zengrong.net/post/1817.htm)
 * [在Cygwin下编译tmux（失败）](http://zengrong.net/post/1823.htm)
+* [使用ANE整合Facebook](http://zengrong.net/post/1831.htm)
