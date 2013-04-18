@@ -77,3 +77,4 @@
 * [在Cygwin下编译tmux（失败）](http://zengrong.net/post/1823.htm)
 * [使用ANE整合Facebook](http://zengrong.net/post/1831.htm)
 * [AIR 3.7 Bug:You uploaded an unsigned APK](http://zengrong.net/post/1838.htm)
+* [Google Play Payment Declined](http://zengrong.net/post/1841.htm)
