@@ -151,3 +151,8 @@ public class fonts extends Sprite
 * [纯AS3项目载入嵌入字体swf的范例](as3_embed_font/LoadEmbedFont.7z)
 
 
+<table>
+	<tr>
+		<td></td>
+	</tr>
+</table>
