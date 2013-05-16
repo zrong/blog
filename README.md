@@ -79,3 +79,4 @@
 * [AIR 3.7 Bug:You uploaded an unsigned APK](http://zengrong.net/post/1838.htm)
 * [Google Play Payment Declined](http://zengrong.net/post/1841.htm)
 * [在AIR模拟器模式中设置Screen DPI属性](http://zengrong.net/post/1844.htm)
+* [Ant编译的jar文件，ANE不识别](http://zengrong.net/post/1855.htm)
