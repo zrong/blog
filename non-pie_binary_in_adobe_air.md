@@ -1,0 +1,72 @@
+[Non-PIE Binary in Adobe AIR](http://zengrong.net/post/1856.htm)
+
+今天从韩国合作伙伴那里得知，几天前提审到AppStore的游戏得到了Apple的警告：
+
+>Dear developer,
+
+>We have discovered one or more issues with your recent delivery for "ì?€?￡?ì ?ê?°". Your delivery was successful, but you may wish to correct the following issues in your next delivery: Non-PIE Binary - The executable 'AVOCIOS.app' is not a Position Independent Executable. Please ensure that your build settings are configured to create PIE executables. If you would like to update your binary for this app, you can reject this binary from the Binary Details page in iTunes Connect. Note that rejecting your binary will remove your app from the review queue and the review process will start over from the beginning when you resubmit your binary.
+
+>Regards,
+
+>The App Store team</blockquote>
+
+提审AppStore都N次了，这个Non-PIE Binary问题我从未碰到过。从Google搜到的消息，也都是从5月开始的。看来是Apple修改了政策。<!--more-->
+
+首先搜到的是Apple老巢的文章：[Non-PIE Binary - The executable is not a Position Independent Executable.](https://discussions.apple.com/message/21974337#21974337)
+
+这篇文章里面谈到，需要设置 `Target->Build Setting` 如下：
+
+>deployment target>=4.3
+>Generate Position-Dependent Code=NO
+>Generate Position-Dependent Executable=NO
+
+但是，我们是AIR有没有！强大的AIR不需要XCode（你以为我不想要啊），怎么设置？
+
+接着，在Starling论坛上找到了这个：[AIR, iOS, PIE disabled warning ](http://forum.starling-framework.org/topic/air-ios-pie-disabled-warning)
+
+我对其中这段话是深以为然啊！:-)
+
+>Adobe Gaming SDK is bad... outdated APIs (testflight), poorly designed and bugged sample projects...
+
+这篇讨论中提到，在使用了Adobe Gaming SDK中的 `StageAd ANE` 之后，出现了这个警告。无论Adobe是不是躺枪，ANE在编译的时候是否加入了PIE支持都是值得怀疑的。
+
+我的项目中并没有使用Adobe提供的ANE，而是自己实现的一套。这套ANE一直比较稳定，很长时间没有修改过。看来确实如果上面推测的那样，Apple修改了审核政策，导致老的ANE出现了Non-PIE Binary警告。
+
+如果按照这个思路，重新编译一下ANE，在 `Build Setting` 中进行上面的设定，应该就能解决问题。
+
+<del datetime="2013-05-17T03:16:16+00:00">但愿是这样，我尝试之后再更新本文。</del>
+
+OK，正在我准备重新打包ANE的时候，我在Adobe老巢找到这篇讨论：[Build for iPhone5 and AppStore](http://forums.adobe.com/message/5300898)。看标题和内容，都与本文无关，而且这是一张去年的老帖。
+
+但是，可能是某个论坛新手看到这贴顺眼，把它挖坟弄出来，在帖子后面补上了关于Non-PIE的问题，看看 [55楼](http://forums.adobe.com/message/5295481#5295481)。
+
+然后，一群网友开始吐槽这个问题，大家都遇到了，不论是AIR3.4、3.5……3.7，无一不中枪。还有兄弟 `was an all night battle` 来测试，有比这更惨的么？另外还有网友用Flash CC也碰到这问题，Flash CC啊！那可是天朝都买不到的东西。
+
+更有趣的是， [60楼](http://forums.adobe.com/message/5299627#5299627) 的一个家伙没明白 ` Position Independent Executable` 这句话的意思，以为是屏幕方向问题，跳出来做了一堆搞笑解释。
+
+最后，Adobe的人实在看不下去了，在 [64楼](http://forums.adobe.com/message/5300022#5300022) 跳出来做了解释，承认了是AIR的问题：
+
+>Hi All,
+
+>Thanks for reporting.
+>PIE has nothing to do with Orientation of the applications, it's related to security aspects of the application. Currently, AIR applications are not being generated as PIE binaries, but looks like Apple now encourages to do so. We're investigating it.
+
+>Thanks
+>Pahup
+>Adobe AIR
+
+然后他继续说：
+
+>This is just a warning as of now, we've not seen any apps being rejected because of this.
+
+我艹，这真是不是你自家的程序你不担心啊。这就好像楼上厕所漏水到我家，然后楼上的说： **没关系，我这几天不用厕所，你等等看** （我说真的这就是昨天发生在我家的真事）。
+
+Apple虽然说了这次放你通过，但别人也说了下次不改的话老子拒你没商量。我可不敢没事去捋Apple的猫须。
+
+## So, I have to be patient.
+
+下面是几个扩展参考：
+
+* [Non-PIE Binary - The executable is not a Position Independent Executable.](http://stackoverflow.com/questions/16455416/non-pie-binary-the-executable-project-name-is-not-a-position-independent-e)一文中提到了可以使用 `otool` 工具来检测PIE支持。
+* [Position Independent Executables](http://securityblog.redhat.com/2012/11/28/position-independent-executables-pie/)一文详细介绍了PIE是什么；
+* [otool 与dylib](http://blog.csdn.net/dadalan/article/details/4335833)介绍了otool的用法。
