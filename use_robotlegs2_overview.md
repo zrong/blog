@@ -23,9 +23,16 @@
 
 ## 前言
 
-我的框架使用和选择过程比较有趣，先后经历了“没框架-PrueMVC-自己写框架-没框架-Robotlegs“的过程。
+我的框架使用和选择过程比较有趣，以下按时间顺序排列：
 
-而使用了 [Robotlegs](http://www.robotlegs.org/) 之后，就没有再换过其他框架。Robotlegs小巧，易上手，使用也方便，非常适合中小型项目的开发。
+1. 不用框架
+2. 自己写框架
+3. 使用PureMVC两年
+4. 自己写框架
+5. 不用框架
+6. Robotlegs
+
+使用了 [Robotlegs](http://www.robotlegs.org/) 之后，我就没有再换过其他框架，也没有再自己写框架。Robotlegs小巧，易上手，使用也方便，非常适合中小型项目的开发。
 
 Robotlegs2的开发进程一直很慢，但前段时间开发突然加速，接连发布了几个beta版本。到了现在的b6版本，整个框架已经比较稳定了。
 
@@ -39,6 +46,12 @@ Robotlegs2相对于Robotlegs1来说，是完全的重写。甚至说是两个不
 **我承认，上面的特点等于没说。**
 
 每个重写的版本，大抵上都有类似的特点。因此，要深入理解Robotlegs2的特性，必须依赖实例。本系列教程也是基于实例来讲解。
+
+## SwiftSuspender
+
+[SwiftSuspender](https://github.com/tschneidereit/Swiftsuspenders)是Robotlegs默认使用的注入器。在v1版本中，它是外置的。我们可以用其他注入器来替代它。
+
+但是到了v2版本，该注入器已经被包含在了Robotlegs框架之中，而且不可替换。
 
 ## Robotlegs1
 
@@ -55,11 +68,19 @@ Robotlegs2相对于Robotlegs1来说，是完全的重写。甚至说是两个不
 * [Robotlegs最佳实践](https://github.com/robotlegs/robotlegs-documentation/blob/master/best-practices-zh-cn.textile)
 * [ActionScript Developer's Guide to Robotlegs](http://shop.oreilly.com/product/0636920021216.do)
 
-## SwiftSuspender
+## 什么人不需要阅读本教程
 
-[SwiftSuspender](https://github.com/tschneidereit/Swiftsuspenders)是Robotlegs默认使用的注入器。在v1版本中，它是外置的。我们可以用其他注入器来替代它。
+* “精通”一门面向对象编程语言的人   
+无论你是真精通还是假精通……大师，给小弟留点面子；
+* 不知道设计模式是什么  
+当你不知道什么是单例模式、中介模式、MVC模式的时候，最好是先去找本 [Head First 设计模式](http://book.douban.com/subject/2243615/) 看看先。
+* 经常问别人 “addChildAt 的第2个参数怎么用” 之类问题的人  
+朋友，程序员是个很危险的职业，或许卖水果更适合你。
 
-但是到了v2版本，该注入器已经被包含在了Robotlegs框架之中，而且不可替换。
+## 阅读本教程需要什么基础知识
+
+1. 你需要了解设计模式，最好在自己的项目中使用过它们；
+2. 你独立开发过一个项目，或者正打算独立开发一个项目。
 
 ## 小结
 
