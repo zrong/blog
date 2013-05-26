@@ -10,7 +10,7 @@ Robotlegs2在架构设计上，框架仅实现了生命周期管理、Logger、�
 
 ## Timer-MVCBundle-Sample概述
 
-Timer-MVCBundle-Sample是本章的实例名称。这个实例实现了一个简单的定时器。看看定时器的三个状态：
+Timer-MVCBundle-Sample是本章的实例名称。这个实例实现了一个简单的定时器。看看定时器的3个状态：
 
 1. 初始状态，设置时、分，类名为TimerSetView。按Start按钮开始倒计时。
 
@@ -24,14 +24,16 @@ Timer-MVCBundle-Sample是本章的实例名称。这个实例实现了一个简�
 
 刚才看到的后缀为View的类，我叫它们“视图类”，所有的视图类，都位于 `view` 包中，并实现 `ITimerView` 接口。 `ITimerView` 中并没有包含任何方法签名。实现这个接口，是为了方便进行类型匹配。
 
-视图类用于我们能看到的定时器的三个状态，每个状态对应一个视图。定时器运行的过程中所显示的状态，在这三个视图之间切换。
+视图类用于我们能看到的定时器的3个状态，每个状态对应一个视图。定时器运行的过程中所显示的状态，在这3个视图之间切换。上节 `Timer-MCBundle-Sample` 已经介绍了这3个状态以及对应的类名。
 
-视图类都是显示对象的子类，三个视图也就是三个显示对象。在一个视图显示的时候，它会被加到舞台上，其他的视图则移出舞台。
+视图类都是显示对象的子类，3个视图也就是3个显示对象。在一个视图显示的时候，它会被加到舞台上，其他的视图则移出舞台。
 
-在这个项目中，我使用了[MinialComps](http://www.minimalcomps.com/)组件。视图类继承其中的VBox或者HBox。如下图：
+在这个项目中，我使用了[MinialComps](http://www.minimalcomps.com/)组件。视图类继承其中的VBox或者HBox。3个视图类如下图：
 
 每个视图类都有一个带有Mediator后缀的类，这是视图类的中介类。中介类负责管理视图事件，接收和传递系统事件等等。所有的中介类都继承 Robotlegs2 提供的 `Mediator` 类。如下图：
 
 ### Model
 
-这个项目中，有2个Model。
+这个项目中，有2个Model：`TimerModel` 和 `ViewModel`。
+
+`TimerModel` 实现 `ITimerModel` 接口。由于项目过于简单，`ITimerModel` 中不包含任何需要具体实现的方法。但是在注入的时候使用接口依然是必要的。
