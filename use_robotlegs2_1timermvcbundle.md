@@ -1,4 +1,6 @@
-Robotlegs2中文教程-1使用MVCBundle
+[Robotlegs2中文教程-1使用MVCBundle](http://zengrong.net/post/1866.htm)
+
+本系列全部文章：[using robotlegs2](http://zengrong.net/post/tag/usingrobotlegs2)
 
 ## 目的
 
@@ -25,7 +27,8 @@ Timer-MVCBundle-Sample是本章的实例名称。这个实例实现了一个简�
 
 ## 项目依赖
 
-本项目依赖 [minimalcomps][u1] 组件库和 [robotlegs 2.0.0b6][u5]。
+* 本项目依赖 [minimalcomps][u1] 组件库和 [robotlegs 2.0.0b6][u5]。
+* [本项目源码下载][u6]
 
 ## 项目结构
 
@@ -71,9 +74,9 @@ Timer-MVCBundle-Sample是本章的实例名称。这个实例实现了一个简�
 
 ## 项目详解
 
-### 初始化Robotlegs
+### 初始化Robotlegs2
 
-先来看看主类的全部内容（省略了package和import）：
+先来看看主类 `Robotlegs2TimerExample` 的全部内容（省略了package和import）：
 
 <pre lang="ActionScript">
 [SWF(width=200,height=200)]
@@ -107,7 +110,7 @@ public class Robotlegs2TimerExample extends Sprite
 
 Style和Component都是 [minimalcomps][u1] 中的类，具体用法可参考该[组件源码][u2]。需要注意的是，如果需要显示中文，那么需要将 `Style.embedFonts` 设置为 `false`，具体原因可参考 [MinimalComps简介－一个超轻量级的纯AS组件库][u3]。
 
-让我们来看 `init` 方法的具体内容。`Context` 类是Robotlegs初始化的核心。在本项目的初始化当中，我们使用了 `Context` 的 `install` 和 `configuare` 方法。这两个方法都会返回 `Context` 自身，因此我们可以进行链式调用。
+让我们来看 `init` 方法的具体内容。`Context` 类是Robotlegs2初始化的核心。在本项目的初始化当中，我们使用了 `Context` 的 `install` 和 `configuare` 方法。这两个方法都会返回 `Context` 自身，因此我们可以进行链式调用。
 
 链式调用是JAVA和JavaScript中常用的调用方式，能减少代码量，让代码看起来更干净。当然，如果你不愿意用它，依然可以使用旧的方式。例如，上面的链式调用可以改成这样：
 
@@ -134,7 +137,59 @@ _content.configure(AppConfig, new ContextView(this));
 
 需要注意的是，对于ContextView的配置，必须放在所有配置的最后。具体原因，请关注本系列后续文章。
 
-`ContextView` 保存根显示对象的引用。我们可以将它注入到需要的地方，方便访问它。
+`ContextView` 是Robotlegs2提供的类，它没有实现任何接口，只是用于保存根显示对象的引用。我们可以将它注入到需要的地方，以方便访问根显示对象。
+
+### Injector
+
+`init()` 的最后一句直接发布 `TEvent.CHANGE_STATE` 事件，`ChangeStateCmd` 会处理这个事件，它获取 `TimerSetView` 的实例，将其添加到舞台上。
+
+注意这一句的作用：
+
+<pre lang="Actionscript">
+(_context.injector.getInstance(IEventDispatcher) as IEventDispatcher)....
+</pre>
+
+最外层的括号中的内容，是为了获取一个 `IEventDispatcher` 的实例。`IEventDispatcher` 是AS3原生的用于发布事件的接口。 Robotlegs2中使用它作为 `MVCBundle` 的事件核心。
+
+它以单例的形式存在，我们使用 `injector.getInstance` 方法，就可以得到这个单例。
+
+injector是SwiftSuspenders提供的注入器。Robotlegs2使用这个注入器来实现注入，我们也可以使用它来获取Robotlegs2中注册过的各种资源。在 `Context` 中包含一个它的引用。我们既可以使用 `_context.injector` 的方式获取它，也可以使用注入的方式获取它。
+
+例如，我们要得到 `TimerModel` 的单例，可以这样做(注意我使用的是接口）：
+
+<pre lang="ActionScript">
+[Inject]
+public var injector:Injector;
+
+//获取到ITimerModel的单例，调用它的start方法让计时器开始运行
+(injector.getInstance(ITimerModel) as ITimerModel).start();
+</pre>
+
+那么，既然 `ITimerModel` 已经在Robotlegs2中注册（这个注册是在AppConfig中完成的，后面会讲到），更简单的方法是这样的：
+
+<pre lang="ActionScript">
+[Inject]
+public var timerModel:ITimerModel;
+
+timerModel.start();
+</pre>
+
+可是，我们为什么不在 `Robotlegs2TimerSample` 中直接注入 `IEventDispatcher` ，而要用 `injector` 来获取呢？例如像这样：
+
+<pre lang="ActionScript">
+[Inject]
+public var eventDispatcher:IEventDispatcher;
+
+private function init():void
+{
+	................
+	eventDispatcher.dispatchEvent(new TEvent(TEvent.CHANGE_STATE, TimerSetView));
+}
+</pre>
+
+这样的代码会出现运行时错误，原因是 `eventDispatcher` 的值为 `null` 。
+
+这是因为在默认情况下， **只有被注入器初始化的类，才能被注入** 。主类 `Robotlegs2TimerSample` 是无法被注入器初始化的，因此在主类中进行注入，在默认情况下是不会成功的。
 
 ### AppConfig
 
@@ -185,11 +240,28 @@ public class AppConfig implements IConfig
 }
 </pre>
 
+`AppConfig` 实现了 `IConfig` 接口。Robotlegs2在对该接口进行配置的时候，会自动调用它的 `configuare` 方法进行注册。
+
 我们来仔细看看这个类中注入的4个对象。
 
-injector是SwiftSuspenders提供的注入器。Robotlegs使用这个注入器来实现注入。最终用户可以使用它来进行单例注入，例如映射Model。
+injector上面讲过一些，这里继续。使用它，可以进行单例映射。`toSingleton()` 方法和 `asSingleton()` 方法的不同之处在于，前者针对接口映射，我们可以方便在该方法的参数中替换具体实现；后者针对具体实现映射，它不能被替换。
 
-mediatorMap用来实现视图类和Mediator的映射。如果你用过Robotlegs1，你会发现mediatorMap的映射语法改变了不少。mediatorMap抛弃了原来使用参数来映射的方式，改用链式调用，在我看来，这样的改动让语法更加简洁，且容易记忆。
+如果你用过Robotlegs1，你会发现injector的映射语法改变了不少。它抛弃了原来使用参数来映射的方式，改用链式调用，在我看来，这样的改动让语法更加简洁，且容易记忆。
+
+**注意**
+
+>本系列文章在必要的时候会对Robotlegs1和2进行比较，这是为了方便使用过Robotlegs1的读者进行更深入的理解。如果你以前没有使用过Robotlegs1，可以跳过这些内容。
+
+例如，在Robotlegs1中，要实现本例中的两个单例映射，需要这样调用：
+
+<pre lang="ActionScript">
+injector.mapSingletonOf(ITimerModel, TimerModel);
+injector.mapSingleton(ViewModel);
+</pre>
+
+mediatorMap用来实现视图类和Mediator的映射。以 `mediatorMap.map(TimerSetView).toMediator(TimerSetMediator)` 为例，这句实现了在 `TimerSetView` 被添加到舞台的时候， `TimerSetMediator` 会自动创建并完成初始化，同时进行需要的注入。
+
+在Robotlegs1中，mediatorMap的调用方式也做了与injector类似的修改。这并不奇怪，因为mediatorMap的映射就是使用injector实现的。
 
 例如，在Robotlegs1中，实现 `TimerSetView` 与 `TimerSetMediator` 的映射，需要这样调用：
 
@@ -197,11 +269,9 @@ mediatorMap用来实现视图类和Mediator的映射。如果你用过Robotlegs1
 mediatorMap.mapView(TimerActionView, TimerActionMediator);
 </pre>
 
-**注意**
+commandMap用来实现事件与Command的映射。以 `commandMap.map(TEvent.TIMER_START, TEvent).toCommand(TimerStartCmd)` 为例，这句实现了在 `TEvent.TIMER_START` 事件发生的时候， `TimerStartCmd` 被自动创建，同时进行需要的注入，然后执行其 `execute` 方法。
 
->本系列文章在必要的时候会对Robotlegs1和2进行比较，这是为了方便使用过Robotlegs1的读者进行更深入的理解。如果你以前没有使用过Robotlegs1，可以跳过这些内容。
-
-commandMap用来实现事件与Command的映射。在Robotlegs1中，要实现 `TEvent.TIMER_START` 与 `TimerStartCmd` 的映射，需要这样调用：
+在Robotlegs1中，要实现 `TEvent.TIMER_START` 与 `TimerStartCmd` 的映射，需要这样调用：
 
 <pre lang="ActionScript">
 commandMap.mapEvent(TEvent.TIMER_START, TimerStartCmd);
@@ -215,8 +285,47 @@ logger.info("logger in {0}, {1}", [this, "done"]);
 //638 INFO Context-0-9f [class AppConfig] logger in [object AppConfig], done
 </pre>
 
-如果你用过Robotlegs1，那么你会发现它和原来的Context很相似。
+AppConfig实际上是分担了一部分Context的功能。我们可以把不同模块，不同需求的Config进行分离，让程序之间的耦合更加松散。
 
+在Robotlegs1中，我们一般把映射放在 `Context` 的 `startup` 方法中，这样在项目逐渐庞大的时候，Context就无可避免的庞大起来：
+
+<pre lang="ActionScript">
+..........
+//========================================
+// 注入Model和Service
+//========================================
+injector.mapSingletonOf(SocketServiceBase, SocketService);
+injector.mapSingleton(SocketDataDispatcherModel);
+injector.mapSingleton(StateModel);
+injector.mapSingleton(HTTPService2);
+injector.mapSingleton(UpdateService);
+
+//----界面信号
+signalCommandMap.mapSignalClass(FightEndSign, FightEndCmd);
+signalCommandMap.mapSignalClass(GuideAniEndSign, GuideAniEndCmd);
+signalCommandMap.mapSignalClass(GuideHelpSign, GuideHelpCmd);
+signalCommandMap.mapSignalClass(GuideCheckOpen8Sign, GuideCheckOpen8Cmd);
+signalCommandMap.mapSignalClass(CheckMausoleumSign, CheckMausoleumCmd);
+signalCommandMap.mapSignalClass(ExitMausoleumSign, ExitMausoleumCmd);
+
+//----其他不便分类的信号
+signalCommandMap.mapSignalClass(NecessarySocketInitDataDoneSign, NecessarySocketInitDataDoneCmd);
+signalCommandMap.mapSignalClass(SetDefaultPreferenceSign, SetDefaultPreferenceCmd);
+signalCommandMap.mapSignalClass(ActiveSign, ActiveCmd);
+signalCommandMap.mapSignalClass(ChargeInWebSign, ChargeInWebCmd);
+
+//========================================
+// 所有的子滑动界面注册
+//========================================
+//LoginModuleContent和RegisterModuleContent与接入商相关，因此在子Context类中注册
+mediatorMap.mapView(FightDeployModuleContent, FightDeployModuleContentMediator, null, false, false);
+mediatorMap.mapView(FightSpyModuleContent, FightSpyModuleContentMediator, null, false, false);
+mediatorMap.mapView(ChooseServerModuleContent, ChooseServerModuleContentMediator, null, false, false);
+mediatorMap.mapView(AccelerateCoolingModule,AccelerateCoolingModuleMediator,null,false,false);
+........
+</pre>
+
+未完待续
 
 [i1]: image/use_robotlegs2/timer_mvcbundle1.png
 [i2]: image/use_robotlegs2/timer_mvcbundle2.png
@@ -231,3 +340,4 @@ logger.info("logger in {0}, {1}", [this, "done"]);
 [u3]: http://zengrong.net/post/1142.htm
 [u4]: http://www.robotlegs.org/
 [u5]: https://github.com/robotlegs/robotlegs-framework/tree/v2.0.0b6
+[u6]: https://github.com/zrong/robotlegs2-samples/tree/master/timer-mvcbundle
