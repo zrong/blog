@@ -8,7 +8,7 @@
 
 Robotlegs2在架构设计上，框架仅实现了生命周期管理、Logger、消息调度、插件管理器、配置管理器等核心功能，其他功能全部使用插件实现。而MVCBundle，就是Robotlegs2提供的一个插件和配置集合，这个集合包含所有MVC需要的插件和功能。
 
-本章不会研究Robotlegs2在结构上的设计，而是从最终用户的角度来使用MVCBundle。若希望了解Robotlegs2的架构，请关注本系列后续文章。
+本章不会研究Robotlegs2在结构上的设计，而是从最终用户的角度来使用MVCBundle。若希望了解Robotlegs2的架构，请关注本系列后续文章。<!--more-->
 
 本章也不会详细介绍MVCBundle的所有用法，那样会导致本文篇幅过长。下一章会进行详细介绍。
 
@@ -325,7 +325,159 @@ mediatorMap.mapView(AccelerateCoolingModule,AccelerateCoolingModuleMediator,null
 ........
 </pre>
 
-未完待续
+## 运行流程
+
+### 1 这段代码是项目的界面入口
+
+<pre lang="Actionscript">
+(_context.injector.getInstance(IEventDispatcher) as IEventDispatcher).dispatchEvent(new TEvent(TEvent.CHANGE_STATE, TimerSetView));
+</pre>
+
+`IEventDispatcher` 发布了一个事件 `TEvent.CHANGE_STATE`，同时传递了一个视图类 `TimerSetView`。由于我们前面已经将该事件映射到了 `ChangeStateCmd`，因此，`ChangeStateCmd` 中的 `execute()` 方法被执行。
+
+### 2 ChangeStateCmd做了什么？
+
+让我们看看 `ChangeStateCmd` 的全部内容：
+
+<pre lang="actionscript">
+public class ChangeStateCmd extends Command 
+{
+	[Inject]
+	public var evt:TEvent;
+	
+	[Inject]
+	public var logger:ILogger;
+	
+	[Inject]
+	public var contextView:ContextView;
+	
+	[Inject]
+	public var viewModel:ViewModel;
+	
+	override public function execute():void
+	{
+		logger.debug(evt.info);
+		logger.debug(contextView.view.numChildren);
+		if(contextView.view.numChildren > 0)
+		{
+			var __currentView:ITimerView = contextView.view.getChildAt(0) as ITimerView;
+			if(__currentView)
+			{
+				contextView.view.removeChild(__currentView as DisplayObject);
+			}
+		}
+		var __newView:DisplayObject = viewModel.getView(evt.info) as DisplayObject;
+		center(__newView);
+		contextView.view.addChild(__newView);
+		logger.debug("get view:{0}", [__newView]);
+	}
+	
+	private function center($view:DisplayObject):void
+	{
+		$view.x = (contextView.view.stage.stageWidth - $view.width) / 2;
+		$view.y = (contextView.view.stage.stageHeight - $view.height) / 2;
+	}
+}
+</pre>
+
+在 `ChangeStateCmd` 中，我们需要得到 `TEvent` 传来的视图类，使用其创建视图实例，然后将实例添加到舞台上。
+
+注入的 `evt` 实例，也就是前面 `TEvent.CHANGE_STATE` 事件传来的事件实例。在这次的调用这，`evt.info` 的值，就是 `TimerSetView`。
+
+`execute()` 方法先移除已存在的视图实例，然后根据 `evt.info` 的值获取一个新的实例，并将其添加到舞台。
+
+所有的视图类，都实现了 `ITimerView` 接口。因此在这里可以通过判断 `ITimerView` 的实现情况，来了解实例的创建是否成功。
+
+创建实例的工作在 `ViewModel` 中完成，可查看源码了解，此处不深入讲解。
+
+`TimerSetView` 视图实例被添加到舞台的时候，`TimerSetViewMediator` 会自动创建。
+
+### 3 `TimerSetViewMediator` 做了什么？
+
+让我们来看看 `TimerSetViewMediator` 的全部内容：
+
+<pre lang="actionscript">
+public class TimerSetMediator extends Mediator 
+{
+	[Inject]
+	public var logger:ILogger;
+	
+	[Inject]
+	public var v:TimerSetView;
+	
+	public function TimerSetMediator() 
+	{
+	}
+	
+	override public function initialize():void
+	{
+		super.initialize();
+		logger.info("initialize");
+		v.startBtn.addEventListener(MouseEvent.CLICK, handler_start);
+	}
+	
+	override public function destroy():void
+	{
+		v.startBtn.removeEventListener(MouseEvent.CLICK, handler_start);
+		super.destroy();
+		logger.info("destory");
+	}
+	
+	private function handler_start(e:Event):void 
+	{
+		logger.debug("click");
+		eventDispatcher.dispatchEvent(new TEvent(TEvent.TIMER_START, {minute:v.minute, second:v.second}));
+		eventDispatcher.dispatchEvent(new TEvent(TEvent.CHANGE_STATE, TimerActionView));
+	}
+}
+</pre>
+
+`v` 被自动注入，它就是刚才我们创建的 `TimerSetView` 视图实例。
+
+`initialize()` 方法在注入完成之后自动执行。因此，该方法适合进行 `v` 的视图侦听器。在本类中，加入了用户按下“Start”按钮时的鼠标事件侦听。
+
+`TimerSetView` 的实例从舞台移除的时候， `TimerSetViewMediator` 被销毁。 `destroy()` 方法在此时执行。我们在这里移除“Start”按钮的鼠标事件侦听。
+
+在单击“Start”按钮的时候，我们发布了两个系统事件 —— 1. `TEvent.TIMER_START`，并传递当前选择的分、秒；2. `TEvent.CHANGE_STATE`，切换到 `TimerActionView` 视图。
+
+由于前面我们已经将 `TEVent.TIMER_START` 映射到了 `TimerStartCmd` ，因此 `TimerStartCmd` 中的 `execute()` 方法将被执行。
+
+### 4 启动计时器
+
+让我们来看看 `TimerStartCmd` 的全部内容：
+
+<pre lang="actionscript">
+public class TimerStartCmd extends Command 
+{
+	[Inject]
+	public var timerModel:ITimerModel;
+	
+	[Inject]
+	public var evt:TEvent;
+	
+	override public function execute():void
+	{
+		timerModel.minute = evt.info.minute;
+		timerModel.second = evt.info.second;
+		timerModel.start();
+	}
+	
+}
+</pre>
+
+在这里，我们更新了 `TimerModel` 中保存的分、秒，然后启动了计时器。
+
+### 5 请继续
+
+到此，我已经把主要流程讲完。至于后面的计时器时间到，或者中断计时器等操作，和前面的流程类似。大家可以继续在 `TimerModel` 和 `TimerActionMediator` 中找到它们的具体实现。
+
+## 小结
+
+本章使用一个简单的计时器例子，讲解了Robotlegs2中的MVCBundle的使用。拥有Robotlegs1使用经验的同学，现在应该已经可以转移到Robotlegs2上来了。
+
+即使你从没有用过Robotlegs，那么也可以从本文开始，从头学习Robotlegs2。
+
+下一章，我们将深入MVCBundle中，分析其中的Extension组成，并试图抛弃MVCBundle，使用更底层的方式来重新构架我们的计时器范例。
 
 [i1]: image/use_robotlegs2/timer_mvcbundle1.png
 [i2]: image/use_robotlegs2/timer_mvcbundle2.png

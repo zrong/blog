@@ -14,7 +14,7 @@
 先列个提纲，根据撰写进度会不断修改。
 
 * 概述
-* MVBundle的使用
+* [使用MVCBundle](http://zengrong.net/post/1866.htm)
 * Context与Config
 * Extension与Bundle
 * hook
