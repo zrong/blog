@@ -1,13 +1,16 @@
-[Robotlegs2中文教程-概述](http://zengrong.net/post/1859.htm)
-====
+## 起因
 
-## 废话
-
-好久没写长文了，感觉平时写代码多了，在遣词造句上逐渐生疏起来。博客也慢慢写得七零八落，只有自己能看懂了。
+好久没写长文了，感觉平时写代码多了，在遣词造句上逐渐生疏起来。博客也慢慢写得七零八落，彻底沦为只有自己能看懂的个人笔记（当然，对我来说这并没有什么不好 :)）。
 
 趁介绍Robotlegs2的机会，锻炼一下文笔，看看自己还有没有被废掉。
 
-本系列教程会比较长，完整目录会在这里更新：[use robotlegs2](http://zengrong.net/post/tag/userobotlegs2)。<!--more-->
+本文开始的时候，Robotlegs2的版本为b6。此时，网上完全找不到像样的中文介绍，更别说文档了。即使是在Robotlegs2官网知识库，也没有系统的学习资料，只有爱好者们写的一些Sample，或者框架作者以及资深用户在回答网友问题的时候形成了一些有用的资料。当然，还有框架源码中可爱的README以及源码注释。
+
+Robotlegs2有一个漫长的发展期。正因为这个“漫长”，导致了网上找到的一些依赖“旧版本”的Robotlegs2制作的sample无法在新版本上运行。前段时间，Robotlegs的作者闭关了一段时间，框架的进展突然加速，接连发布了几个beta版本。到了现在的b6版本，整个框架已经比较稳定了。
+
+我在 [Github](https://github.com/robotlegs/robotlegs-framework) 上watch了Robotlegs2项目，每天都能收到关于框架的最近进展与issue。框架的两个作者关于功能的讨论相当活跃和激烈，即使是在我写本文的过程当中，某几个类的位置都发生过变动。两个作者甚至在讨论修改SwiftSuspender的问题。因此，在 [框架release](https://github.com/robotlegs/robotlegs-framework/issues/milestones) 之前，我不会深入到源码级别进行介绍。
+
+本系列教程会比较长，完整目录会在这里更新：[using robotlegs2](http://zengrong.net/post/tag/usingrobotlegs2)。<!--more-->
 
 ## 提纲
 
@@ -33,8 +36,6 @@
 6. Robotlegs
 
 使用了 [Robotlegs](http://www.robotlegs.org/) 之后，我就没有再换过其他框架，也没有再自己写框架。Robotlegs小巧，易上手，使用也方便，非常适合中小型项目的开发。
-
-Robotlegs2的开发进程一直很慢，但前段时间开发突然加速，接连发布了几个beta版本。到了现在的b6版本，整个框架已经比较稳定了。
 
 Robotlegs2相对于Robotlegs1来说，是完全的重写。甚至说是两个不同的框架都不为过。v2的主要特点如下（来自官方网站） ：
 
