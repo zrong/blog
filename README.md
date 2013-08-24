@@ -86,3 +86,4 @@
 * [在Visual Studio Express 2012中创建一个cocos2d-x的win32项目](http://zengrong.net/post/1898.htm)
 * [修改Visual Studio Express 2012新建C++文件编码](http://zengrong.net/post/1900.htm)
 * [怎样学习Flash？](http://zengrong.net/post/1909.htm)
+* [在cocos2d-x中使用DragonBones](http://zengrong.net/post/1911.htm)
