@@ -1,0 +1,68 @@
+[在Visual Studio Express 2012中创建一个cocos2d-x的win32项目](http://zengrong.net/post/1898.htm)
+
+好吧，这个月快忙死了，各种心理上和生理上的创伤以及无休止的工作让人疲惫，不过还好我没死掉。
+
+那么继续开始写文吧，Cocos2d-X实在太有趣了。
+
+下面的内容基于 Visual Studio Express 2012 和 cocos2d-x 2.1.4。
+
+看完了Cocos2d-x的几个范例之后，我准备自己创建一个玩一下，可是失败。
+
+大致的流程是这样的：
+
+1. 创建一个空的C++项目；
+2. 设置项目的C/C++属性，将先前编译出的libcocos2d.dll等文件所在目录添加到“附加包含目录”；
+3. 设置项目的“链接器”属性，将上面的目录再添加到“附加依赖项”；
+4. 设置项目的“链接器-输入”属性，加入libcocos2d.lib等文件；
+5. 查看HelloCpp项目，将其中包含的头文件也加入到“附加包含目录”中。
+
+如果添加的目录过多，可以先自定义一个路径宏，在添加的时候会方便点，定义的方法可以看这里： [用户定义的宏][vs] 。
+
+但这样做，是无法成功编译的。
+
+于是，我找到Cocos2d-x官方wiki的文章，准备使用winzard的方式来创建一个项目： [Cocos2d-x Application Wizard for Visual Studio User Guide][wizard]
+
+可是，第一步执行 Build-win32.bat 的时候，就失败了，报错如下：
+
+	Solution file error MSB5009: Error parsing the nested project section in solution file.
+
+[有网友说用VS Express 2012重新打开 cocos2d-win32.vc2012.sln 文件再保存，就不会出错][reopen] 。我照了……然后……确实没错了！
+
+于是开始编译，但编译完毕之后，出现了下面的提示：
+
+	599 File(s) copied
+	13 File(s) copied
+	15 File(s) copied
+	109 File(s) copied
+	18 File(s) copied
+	12 File(s) copied
+	586 File(s) copied
+	71 File(s) copied
+	File not found - WatermelonWithMe
+	0 File(s) copied
+	File not found - Published files iOS
+	0 File(s) copied
+	Can't find the binary "TestCpp.exe", is there build error?
+
+是的，也许我的TestCpp项目有问题，导致了无法编译，放下吧。
+
+于是（第二个于是）我开始测试 install-templates-msvc.bat ，给我的VS装个模版总可以吧……
+
+可这个也失败：
+
+	Input Error: Can not find script file "D:\cocos2dx\2.1.4\template\msvc\InstallWi
+	zardForVS2012Express.js".
+
+翻开bat的源码，再看看 template 目录，根本就没有这个js文件嘛！又有网友说了，[以前是有的，现在真没有][js] 。
+
+于是（第三个了），我找到这篇：[How to create a multi-platform project in one command line][python] ，项目终于创建成功！
+
+而且，这是个多平台项目，当然，无关的项目直接删掉就好了。
+
+于是（还有完没完！！），于是就没有于是了……
+
+[vs]: http://msdn.microsoft.com/zh-cn/library/vstudio/f2t8ztwy%28v=vs.110%29.aspx
+[wizard]: http://www.cocos2d-x.org/projects/cocos2d-x/wiki/Cocos2d-x_Application_Wizard_for_Visual_Studio_User_Guide
+[reopen]: http://stackoverflow.com/questions/17563542/getting-error-on-running-build-win32-in-cocos-2dx
+[js]: http://www.cocos2d-x.org/boards/6/topics/16290
+[python]: http://www.cocos2d-x.org/projects/cocos2d-x/wiki/How_to_create_a_multi-platform_project_in_one_command_line

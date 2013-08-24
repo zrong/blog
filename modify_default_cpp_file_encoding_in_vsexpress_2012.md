@@ -1,0 +1,66 @@
+[修改Visual Studio Express 2012新建C++文件编码](http://zengrong.net/post/1900.htm)
+
+我突然发现Visual Studio Express 2012（后简称为VS）建立的源文件是cp936（GB2312）编码，这个以后在Linux和Mac下面编译起来可能会有麻烦。
+
+## 初步解决
+
+于是，我尝试将已有项目中的文件改成了UTF-8格式，并设置保存格式为UTF-8，大概有这样几步：
+
+1. “工具-选项-环境-文档-不能以代码页的编码格式保存数据时将文档保存为Unicode”
+2. “工具-选项-文本编辑器-常规-自动检测不带签名的UTF-8编码”
+3. 在文件打开的情况下，选择“文件-高级保存选项”，设置编码和行尾
+4. 在另存文件的时候选择“编码保存”
+
+请原谅我使用中文描述界面，因为当时安装VS的时候手贱选了简中界面，然后无论如何都没法安装英文语言包……
+
+上面的1、2两项好像没什么用，关键是第3项。
+
+根据我的习惯，将编码设置为“Unicode(UTF-8无签名) - 代码页 65001”，将行尾设置为“Unix(LF)”。
+
+然后测试保存，再用Vim打开文件查看编码，发现文件确实保存为UTF-8编码了。
+
+但是（什么事情都有但是），当我重新打开这个文件的时候，重新查看“高级保存选项”，发现编码又变成了“简体中文（GB2312）-代码页936”。
+
+届时维尼奥神马！！！
+
+## 第二步解决
+
+我猜测，是由于VS无法识别不带签名的UTF-8编码文件造成的。
+
+要将一个文本文件被作为UTF-8编码对待，可能需要以下几个条件（或者之一）：
+
+1. 文件中包含UTF-8签名；
+2. 文件中包含UTF-8编码的字符（不能全是ASCII可以解释的字符）；
+3. 编辑器优先以UTF-8编码来解析。
+
+例如我对Vim的设置，就是[将UTF-8侦测放在优先的位置][vimfileencoding]。
+
+那么，让我来验证一下猜测是否正确。
+
+在“高级保存选项”中将编码设置为“Unicode(UTF-8带签名) - 代码页 65001”，然后保存。重新打开，编码没有变化。
+
+这说明我的猜测是正确的。
+
+那么，再来验证一下上面条件的第2项是否正确。
+
+在“高级保存选项”中将编码设置为“Unicode(UTF-8无签名) - 代码页 65001”，加入一些中文内容，然后保存。重新打开，编码没有变化。
+
+那么，现在我可以断定，VS可以正常识别UTF-8编码，但我需要满足上面的条件1或者2。
+
+需要注意的是，即使是已有的项目中，所有文件都已经是UTF-8编码（例如cocos2d-x的项目模版），但使用VS打开并进行保存后，原来的文件编码都会变成CP936。这是因为原来的模版文件中的文件是UTF-8（无签名）的。至于解决方法，参考上面了。
+
+## 新建C++文件的编码
+
+修改下面这几个模版文件的编码和行尾值，在VS中新建的cpp或者h文件，默认就是UTF-8编码了（路径自己改）：
+
+* c:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\VCProjectItems_WDExpress\newc++file.cpp
+* c:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\VCProjectItems_WDExpress\hfile.h
+* c:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\VCNewItems_WDExpress\newc++file.cpp
+* c:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\VCNewItems_WDExpress\hfile.h
+
+这些文件默认都是0字节的空文件，因此建议在其中加入一些注释，并将文件编码设置为UTF-8(带签名)，行尾设置为Unix格式即可。
+
+如果希望修改更多的东西，比如wizard之类的，可以看看这篇文章：[VS2008中自定义C++工程模板与修改新建文件默认编码的办法][vs2008cpp]
+
+[vimfileencoding]: http://zengrong.net/post/1023.htm
+[vs2008cpp]: http://blog.csdn.net/vagrxie/article/details/4665035
