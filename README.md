@@ -85,4 +85,6 @@
 * [Robotlegs2中文教程-1使用MVCBundle](http://zengrong.net/post/1866.htm)
 * [在Visual Studio Express 2012中创建一个cocos2d-x的win32项目](http://zengrong.net/post/1898.htm)
 * [修改Visual Studio Express 2012新建C++文件编码](http://zengrong.net/post/1900.htm)
+* [怎样学习Flash？](http://zengrong.net/post/1909.htm)
+* [在cocos2d-x中使用DragonBones](http://zengrong.net/post/1911.htm)
 * [cocos2d-x专用的DragonBones2.2](http://zengrong.net/post/1915.htm)
