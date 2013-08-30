@@ -31,13 +31,16 @@
 我做的工作并不多，只是花了一些时间理解了DragonBonesDesignPanel的结构。
 
 * 这个项目包含了 [SkeletonAnimationLibrary][dbl22] 和 [SkeletonAnimationDesignPanel][dbdp22] 项目v2.2的内容，做了极少量的修改；
-* DesignPanel中的修改在 [这里][c1]；
 * jsfl的修改，直接比较 [这3个文件即可][c2]。其中 `skeleton.jsfl.original` 是原始文件， `skeleton.jsfl.20cocos2dx` 是2.0修改版提供的文件， `skeketon.jsfl` 是我修改的文件；
+* 导出面板中，我增加了一种导出类型 “Zip(XML and PNGs, for cocos2d-x)”；
+* <img src="/wp-content/uploads/2013/08/export2.png" alt="export2" width="360" height="320" class="aligncenter size-full wp-image-1920" />
+* 我修改了导入代码，现在也能在DesignPanel中导入使用上面的类型导出的资源；
+* 其他的修改，请直接比较源码；
 * 如何使用可以看这里： [在cocos2d-x中使用DragonBones][using]。
 
-感谢DragonBones Team带来这样优秀的软件；
+感谢 DragonBones Team 带来这样优秀的软件；
 
-感谢DragonBones2.0修改版的作者。
+感谢对 DragonBones2.0 进行修改的程序员；
 
 希望这个项目对你们有用。
 
@@ -48,7 +51,7 @@
 [dbdp4cocos2dx]: https://github.com/zrong/dragonbones-for-cocos2d-x
 [dbdp22]: https://github.com/DragonBones/SkeletonAnimationDesignPanel/tree/V2.2
 [dbl22]: https://github.com/DragonBones/SkeletonAnimationLibrary/tree/V2.2
-[dragonerr]: dragon_err.png
-[exportscale]: export_scale.png
 [c1]: https://github.com/zrong/dragonbones-for-cocos2d-x/blob/master/src/control/ExportDataCommand.as#L222
 [c2]: https://github.com/zrong/dragonbones-for-cocos2d-x/tree/master/build/DragonBonesDesignPanel
+[dragonerr]: dragon_err.png
+[exportscale]: export_scale.png
