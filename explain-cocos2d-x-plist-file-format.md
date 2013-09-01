@@ -16,9 +16,12 @@ cocos2d-x 从 cocos2d-iphone 发展而来，因此在引擎中大量使用了这
 
 大致有这样几种：
 
-* 纹理定义文件  
+* 图像纹理定义文件  
 将多个纹理拼在一张大图上，使用 `CCSpriteFrameCache` 可以载入这类plist文件；  
-这里有一个纹理定义文件的范例： `[cocos2d-x]\samples\Cpp\TestCpp\Resources\animations\grossini_family.plist` 。  
+这里有一个图像纹理定义文件的范例： `[cocos2d-x]\samples\Cpp\TestCpp\Resources\animations\grossini_family.plist` 。  
+* Label纹理定义文件
+作用与图像纹理定义文件类似，只不过处理的是自己，面向 `CCLabelAtlas`；
+这里有一个Label纹理定义文件的范例： `[cocos2d-x]\samples\Cpp\TestCpp\Resources\fonts\tuffy_bold_italic-charmap.plist` 。  
 * 帧动画定义
 定义一个或多个动画中，使用哪些纹理，使用 `CCAnimationCache` 可以载入这类plist文件；  
 这里有一个帧动画定义文件的范例： `[cocos2d-x]\samples\Cpp\TestCpp\Resources\animations\animations.plist` 。  
@@ -31,7 +34,7 @@ cocos2d-x 从 cocos2d-iphone 发展而来，因此在引擎中大量使用了这
 * [Zwoptex][zw] 是MAC Only的软件，我不太喜欢用；
 * [SpritePacker][sp] 是Windows Only的软件，功能尚可。
 
-## 5. 纹理定义文件格式说明
+## 5. 图像纹理定义文件格式说明
 
 cocos2d-x中的纹理定义格式，是以Zwoptex生成的格式为标准的。
 
@@ -202,9 +205,11 @@ In general if you’re not trimming images you can set offset to be 0,0 and sour
 
 http://www.cocos2d-iphone.org/forums/topic/zwoptex-and-their-plist-explanation/
 
+## 5. Label纹理定义文件
 
+对这种格式的具体的解析代码在 `CCLabelAtlas::initWithString` 。
 
-## 5. 帧动画定义文件格式说明
+## 6. 帧动画定义文件格式说明
 
 这种文件也有2种格式：
 
