@@ -1,0 +1,153 @@
+在 quick-cocos2d-x 中导出 CCFileUtils::getFileData 给Lua使用
+
+本文讲解如何将 cocos2d-x 中的 CCFileUtils::getFileData 方法导出给Lua使用。提纲如下：
+
+1. quick-cocos2d-x 读取外部文件的问题
+2. 简单地使用 tolua++ 导出
+3. 获取到的字符串问题
+4. 修改 cocos2d-x 源文件解决字符串问题
+5. 重新编译和测试
+
+本文基于 quick-cocos2d-x devel 分支 `e55be13b8d6275c3eee3e86651f42857d5f1576f` 版本（2013-10-22）
+
+<!--more-->
+
+## 一、 quick-cocos2d-x 读取外部文件的问题
+
+在将 cocos2d-x 制作的一个 Demo 移植到 quick-cocos2d-x 时，我碰到了读取外部文件的问题。
+
+这个 Demo 使用一个 JSON 文件作为数据文件，在 cocos2d-x 中，我使用 CCFileUtils::getFileData 来读取这个 JSON 文件。
+
+查看了一下 [quick-cocos2d-x]/lib/luabinding/cocos2dx/platform/CCFileUtils.tolua 发现其中并没有导出 getFileData 方法。
+
+可以使用 Lua 的 io 库来读取，例如这样：
+
+<pre lang="LUA">
+io.input("res/fightdata.json")
+local __jsonTxt = io.read("*all")
+print(__jsonTxt) 
+local __json = json.decode(__jsonTxt)
+print(__json.actions)
+</pre>
+
+但这样一来，就无法跨平台了，例如在 Android 真机上，是读取不到 fightdata.json 的。
+
+其中原因 [廖大做了说明][u1] ：
+
+>假定有一个 res/game.json 文件
+>build_native.sh 执行时会将 res 目录中的所有内容复制到 proj.android/assets/res 目录中
+>编译结束，用 Eclipse 打包 apk 时，打包工具会将整个游戏打包为一个 apk 文件
+>将 apk 安装到设备上后，apk 文件的内容并不会解压缩（apk 实际是 ZIP 压缩文件格式）
+>
+>由于 apk 文件在设备上并不会解压缩，所以其中包含的文件就无法直接通过文件系统读取（因为文件都内嵌在 apk 里，而没有实际保存在文件系统中）。
+>
+>但是 Android 也提供了一种间接的途径来访问文件：
+>
+>假定原始目录是 res/game.json
+>那么在 Android 上应该以 assets/res/game.json 的路径读取
+
+既然 quick 没有导出，那么我就来导出试试。不过为什么 quick 没有导出这个方法呢？
+
+## 二、 简单地使用 tolua++ 导出
+
+修改 [quick-cocos2d-x]/lib/luabinding/cocos2dx/platform/CCFileUtils.tolua 文件，在其中加入下面这行：
+
+<pre lang="CPP">
+unsigned char* getFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize);
+</pre>
+
+然后运行 [quick-cocos2d-x]/lib/luabinding/build.bat ，它会生成 [quick-cocos2d-x]/lib/cocos2d-x/scripting/lua/cocos2dx_support/LuaCocos2d.cpp 这个 60,000+ 行的文件，所有的 Lua 绑定均在其中。
+
+重新编译 quick-cocos2d-x 中的 player 项目。
+
+## 三、 获取到的字符串问题
+
+在 player 中运行下面的 Lua 代码：
+
+<pre lang="LUA">
+local __size = 0
+local __jsonTxt = fileUtil:getFileData("fightdata.json", "r", __size)
+print(__jsonTxt)
+</pre>
+
+发现输出的 JSON 文本最后会多出一些字节，这样的 JSON 当然不能解析成功：
+
+![JSON内容不正确][p1]
+
+换了一个 XML 文件载入，也一样会多出字节。
+
+我猜想这应该是 C++ 与 Lua 通信时对字符串末尾结束字节计算不正确所致。
+
+## 四、 修改 cocos2d-x 源文件解决字符串问题
+
+为了解决这个问题，需要修改 cocos2d-x 源码。涉及的文件有下面两个：
+
+* [quick-cocos2d-x]/lib/cocos2d-x/cocos2dx/platform/CCFileUtils.h
+* [quick-cocos2d-x]/lib/cocos2d-x/cocos2dx/platform/CCFileUtils.cpp
+
+在头文件中找到 getFileData 的声明，在其上方增加一个重载函数的声明：
+
+<pre lang="CPP">
+// ......... many codes
+/**
+ * Get resource file data(for lua export)
+ * zrong 2013-10-31
+ */
+unsigned char* getFileData(const char* pszFileName);
+
+virtual unsigned char* getFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize);
+// ......... many codes
+</pre>
+
+在cpp文件中找到 getFileData 的定义，在其上方定义这个重载函数：
+
+<pre lang="CPP">
+// ......... many codes
+// for lua export
+// zrong 2013-10-31
+unsigned char* CCFileUtils::getFileData(const char* pszFileName)
+{
+	unsigned long __size = 0;
+	unsigned char* __pFileContent = getFileData(pszFileName, "r", &__size);
+	if (0 == __size)
+	{
+		CCLuaLog("CCFileUtils::getFileData: file length is 0, return null");
+		return NULL;
+	}
+	if (__pFileContent[__size] != '\0')
+		__pFileContent[__size] = '\0'; //let the texts have correct size
+	return __pFileContent;
+}
+
+unsigned char* CCFileUtils::getFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize)
+{
+}
+// ......... many codes
+</pre>
+
+我猜想 quick 没有导出 getFileData 方法，应该是因为不愿意修改源文件。因为这样一来，就对 cocos2d-x 底层进行了修改，影响了 quick 的设计初衷。
+
+## 五、 重新编译和测试
+
+再次修改 CCFileUtils.tolua 文件，改变 getFileData 的签名：
+
+<pre lang="CPP">
+unsigned char* getFileData(const char* pszFileName);
+</pre>
+
+运行 tolua++ ，重新编译 player。
+
+在 player 中运行下面的 Lua 代码：
+
+<pre lang="LUA">
+local __size = 0
+local __jsonTxt = fileUtil:getFileData("fightdata.json", "r", __size)
+print(__jsonTxt)
+</pre>
+
+搞定。
+
+
+[u1]: http://cn.quick-x.com/?topic=qwdqwbwjdljzzjsszmszd
+
+[p1]: /wp-content/uploads/2013/10/ccfileutils.png

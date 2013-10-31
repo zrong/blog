@@ -91,3 +91,4 @@
 * [Cocos2d-x script language binding:Lua or Javascript?](http://zengrong.net/post/1924.htm)
 * [获取CCArmature动画的播放状态](http://zengrong.net/post/1949.htm)
 * [使用 ZeroBrane Studio 和 Eclipse LDT 断点调试 quick-cocos2d-x](http://zengrong.net/post/1951.htm)
+* [在 quick-cocos2d-x 中导出 CCFileUtils::getFileData 给Lua使用](http://zengrong.net/post/1958.htm)
