@@ -13,7 +13,6 @@
 
 1. 在 ZeroBrane Studio 中进行断点调试
 2. 在 Eclipse LDT 中进行断点调试
-3. 如何选择？
 <!--more-->
 
 ## 一、 在ZeroBrane Studio中进行断点调试
@@ -62,12 +61,53 @@ require("mobdebug").start()
 
 LDT(Lua Development Tools)是一个 Eclipse 插件，支持Lua语言的编写和调试。
 
+### 1. 调试模块
+
+LDT 使用 另一个调试模块来实现调试支持。LDT可以自动生成这个模块。
+
+单击 `Run -> Debug Configurations` 菜单，新建一个 `Lua Attach to Application` 配置，点击其中的 `Lua Debugger Client` 将模块输出到 coinclip 的 scripts 文件夹，默认文件名为 debugger.lua 。
+
+![输出Debugger模块][ldtdebug1]
+[查看大图][ldtdebug1]
+
+### 2. require debugger
+
+在 coinflip/scripts/main.lua 的第一行加入下面的代码，让项目启动调试支持。
+
+<pre lang="lua">
+require("debugger")("127.0.0.1", 10000, "luaidekey")
+</pre>
+
+这里的 luaidekey 是调试过程中IDE用来保持会话的键名，与上面 Debug Configurations 配置界面中的 IDE Key 相同。
+
+### 3. 启动调试服务器
+
+单击 `Run -> Debug Configurations` 菜单，选择刚才新建的配置，单击 Debug 按钮。
+
+### 4. 加断点
+
+编辑 game.lua 文件，在32行 `game.enterChooseLevelScene()` 处加入断点。
+
+### 5. 启动 quick-player
+
+在 quick-player 中启动 coinflip 项目，单击游戏中的 "Start" 按钮，调试停止在 game.lua 中的断点处。如下图所示：
+
+![调试信息][ldtdebug2]
+[查看大图][ldtdebug2]
+
+若要进入 framework 源码内部调试，见上方的 6. 进入源码内部调试 。
+
+关于LDT更详细的调试信息，可以阅读 [Debugging a Lua program][ldtdebug] 。
+
 [quick]: http://quick-x.com/
 [quickplayer]: http://cn.quick-x.com/?p=39
 [quickfirst]: http://dualface.github.io/blog/2013/07/31/quick-first-time/
 [wxlua]: http://wxlua.sourceforge.net/
 [zbdebugging]: http://studio.zerobrane.com/doc-remote-debugging.html#setup_environment_for_debugging
 [ldt]: http://www.eclipse.org/koneki/ldt/
+[ldtdebug]: http://wiki.eclipse.org/Koneki/LDT/Developer_Area/User_Guides/User_Guide_1.0#Debugging_a_Lua_program
 
 [zbdebug1]: /wp-content/uploads/2013/10/zbdebug1.png
 [zbdebug2]: /wp-content/uploads/2013/10/zbdebug2.png
+[ldtdebug1]: /wp-content/uploads/2013/10/ldtdebug1.png
+[ldtdebug2]: /wp-content/uploads/2013/10/ldtdebug2.png
