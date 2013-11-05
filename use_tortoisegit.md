@@ -1,8 +1,6 @@
-[使用Git、Git GUI和TortoiseGit笔记](http://zengrong.net/post/1722.htm)
-
 <span style="color:red;">2012-12-26更新</span>：在TortoiseGit中使用SSH host
 <span style="color:red;">2012-12-30更新</span>：在安装的时候选择TortoiseGit使用的SSH客户端
-<hr>
+<span style="color:red;">2013-11-05更新</span>：加入从 putty 切换到 OpenSSH
 
 **注意：** 本文不讲解任何关于Git提交、合并等等使用细节和语法，只记录作者在使用Git相关工具中碰到的问题和选择的经验。本文只是个人意见的集中，不代表适合所有人。如果你是 “被惯坏了的那批”，请不要介意。:-)
 
@@ -12,7 +10,7 @@
 
 在Windows习惯的驱使下，大多数人是不会看弹出的对话框中有什么信息的，一般都是直接关掉。但是，版本库给我们的提示信息都是非常重要的，有的是冲突，有的是提交失败，等等，这些都被略过了。
 
-我碰到的关于版本库使用问题主要包括下面这些：
+我碰到的关于版本库使用问题主要包括下面这些：<!--more-->
 
 * 没有获取到最新版本就编译程序  
 出现这个问题的原因，主要是忽略了文件的冲突。有的是从不看版本库给的提示，有的是太依赖Windows资源管理器中指示冲突的图标覆盖。众所周知，Windows系统的图标缓存一直都有那么点问题。
@@ -90,8 +88,7 @@ msysGit使用一种很BT也很NB的方式来安装。先安装一个最小的[Mi
 
 ### TortoiseGit的密钥
 
-<del>我认为TortoiseGit最大的问题，就是在于它使用ppk密钥格式，而不是使用OpenSSH密钥格式。
-
+<del datetime="2012-12-30T07:03:27+00:00">我认为TortoiseGit最大的问题，就是在于它使用ppk密钥格式，而不是使用OpenSSH密钥格式。
 因为linux系统是默认使用OpenSSH的，所以Git在基于命令行的时候是使用OpenSSH格式的密钥。
 同理，[gitolite](http://zengrong.net/post/1720.htm)这种服务器端程序使用的是OpenSSH格式的密钥。
 所以，必须将原有的OpenSSH密钥转换成PPK密钥才能在TortoiseGit中使用。</del>
@@ -143,6 +140,16 @@ msysGit使用一种很BT也很NB的方式来安装。先安装一个最小的[Mi
 #### 在TortoiseGit中使用SSH host
 
 如果使用Putty作为TortoiseGit的SSH客户端，那么就不能使用OpenSSH的 ~/.ssh/config 来定义使用不同的端口和密钥访问SSH，而是需要使用 PuTTY Session。这篇文章进行了详细讲解：http://zengrong.net/post/1775.htm
+
+#### 从 putty 切换到 OpenSSH
+
+也许是你一时 <del>手贱</del>……唔，手快选择了 putty 作为客户端，某天又良心发现想用 OpenSSH ，是否必须重装一次 TortoiseGit 来重新选择一次呢？
+
+我曾经这样做过，直到我找到这个设置：
+ 
+![putty to openssh](/wp-content/uploads/2012/12/resetssh.png)
+ 
+是的，只需要把 ssh客户端 改成 git for windows 提供的 ssh.exe 即可。如果用 Cygwin，那么这个程序在 `cygwin/bin` 目录中。
 
 ### 换行符的问题 autocrlf and safecrlf
 
@@ -214,3 +221,5 @@ git config core.filemode false
 * <http://ycyuxin.blog.hexun.com/37440972_d.html>
 * <http://stackoverflow.com/questions/4181870/git-on-windows-what-do-the-crlf-settings-mean>
 * <http://www.360doc.com/content/11/0117/18/2036337_87178762.shtml>
+
+
