@@ -90,3 +90,4 @@
 * [cocos2d-x专用的DragonBones2.2](http://zengrong.net/post/1915.htm)
 * [Cocos2d-x script language binding:Lua or Javascript?](http://zengrong.net/post/1924.htm)
 * [获取CCArmature动画的播放状态](http://zengrong.net/post/1949.htm)
+* [quick-cocos2d-x 中的 socket 技术选择：LuaSocket 和 WebSocket](http://zengrong.net/post/1965.htm)
