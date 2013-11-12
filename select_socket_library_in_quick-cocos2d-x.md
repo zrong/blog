@@ -62,6 +62,8 @@ quick 中封装了 [lpack][10] ，能够更方便的把 lua 中的值转换成�
 	local __s = string.gsub(s,"(.)",function (x) return string.format("%02d ",string.byte(x)) end)
 	print(__s)
 
+如果不使用C模块，这里也有几个完全使用lua实现的位运算库。速度会比C慢：[1][13] [2][14] [3][15]
+
 ## 七、服务器实现
 
 服务端的选择就更广泛了。C/C++/JAVA/Go/Node.js/Python 等主流语言都有 WebSocket 的开源实现。标准的 TCP Socket 就更不用说了，那个是网络基础好吧。
@@ -83,3 +85,6 @@ quick 中封装了 [lpack][10] ，能够更方便的把 lua 中的值转换成�
 [10]: underpop.free.fr/l/lua/lpack/
 [11]: http://bitop.luajit.org/index.html
 [12]: http://cn.quick-x.com/?topic=quickkydsocketfzl
+[13]: https://github.com/DGAH/LuaSkillsForQSGS/blob/master/bit.lua
+[14]: http://ricilake.blogspot.com/2007/10/iterating-bits-in-lua.html
+[15]: http://www.cppblog.com/zhenyu/archive/2005/11/11/1050.html
