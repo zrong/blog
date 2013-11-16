@@ -44,7 +44,7 @@ LuaSocket 就不说了，标准的 TCP 协议实现，还支持 UDP/FTP/HTTP/DNS
 
 这里是 [WebSocket API][7] 和 [LuaSocket API][8] 。毫无疑问，LuaSocket当然更灵活。
 
-灵活和易用似乎总是一堆矛盾。为了更方便地使用 LuaSocket ，我们少不了要自己做一些封装。这里有一个 [非阻塞的 LuaSocket 封装][12] ，可以参考。
+灵活和易用似乎总是一堆矛盾。为了更方便地使用 LuaSocket ，我们少不了要自己做一些封装。我参考 [quick论坛上非阻塞socket的实现][12] 做了一些修改， [在这里下载][16] 。
 
 ## 六、二进制编码
 
@@ -63,6 +63,8 @@ quick 中封装了 [lpack][10] ，能够更方便的把 lua 中的值转换成�
 	print(__s)
 
 如果不使用C模块，这里也有几个完全使用lua实现的位运算库。速度会比C慢：[1][13] [2][14] [3][15]
+
+我基于 [lpack][10] 封装了一个 [ByteArray][17] 类，用来模仿 Actionscript 中 flash.utils.ByteArray的行为。详情可以看这里： [用lua实现ByteArray][18] 。
 
 ## 七、服务器实现
 
@@ -88,3 +90,6 @@ quick 中封装了 [lpack][10] ，能够更方便的把 lua 中的值转换成�
 [13]: https://github.com/DGAH/LuaSkillsForQSGS/blob/master/bit.lua
 [14]: http://ricilake.blogspot.com/2007/10/iterating-bits-in-lua.html
 [15]: http://www.cppblog.com/zhenyu/archive/2005/11/11/1050.html
+[16]: https://github.com/zrong/lua/blob/master/src/utils/ByteArray.lua
+[17]: https://github.com/zrong/lua/blob/master/src/net/SocketTcp.lua
+[18]: http://zengrong.net/post/1968.htm
