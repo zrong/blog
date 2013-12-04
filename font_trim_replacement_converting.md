@@ -49,6 +49,8 @@ TTC 则是一坨 OTF 或者 TTF 字体的集合体。例如 Windows7 下面的�
 2. 在B字体中选择 Edit-Paste Special；
 3. 选中 Items 中的所有选项，Codepoints 选择 Overrule same codepoints ，单击 OK 完成替换。
 
+## 3. 
+
 [1]: http://windows.microsoft.com/zh-cn/windows-vista/whats-the-difference-between-truetype-postscript-and-opentype-fonts
 [2]: http://en.wikipedia.org/wiki/TrueType
 [3]: http://zh.wikipedia.org/wiki/OpenType
@@ -56,6 +58,7 @@ TTC 则是一坨 OTF 或者 TTF 字体的集合体。例如 Windows7 下面的�
 [5]: http://www.glyphsapp.com/
 [6]: http://fontforge.org/
 [7]: http://www.cnblogs.com/RobertLee/archive/2006/12/25/602646.html
+[8]: http://www.freefontconverter.com/
 
 [101]: /wp-content/uploads/2013/12/fontcreator1.png
 [101]: /wp-content/uploads/2013/12/fontcreator2.png
