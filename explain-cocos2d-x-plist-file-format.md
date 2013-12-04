@@ -1,5 +1,7 @@
-cocs2d-x中的plist文件格式详解
+[cocos2d-x中的plist文件格式详解](http://zengrong.net/post/1981.htm)
 
+本文并未全部完成，请耐心等待……
+<hr>
 ## 1. 什么是plist文件格式？
 
 这是一种人类可读的串行化对象文件，由苹果公司发明，最早用于NeXTSTEP系统。详情看这里：[Plist][plist] 。
@@ -14,7 +16,7 @@ cocos2d-x 从 cocos2d-iphone 发展而来，因此在引擎中大量使用了这
 
 ## 3. cocos2d-x在哪些地方使用了plist格式？
 
-大致有这样几种：
+大致有这样几种：<!--more-->
 
 * 图像纹理定义文件  
 将多个纹理拼在一张大图上，使用 `CCSpriteFrameCache` 可以载入这类plist文件；  
@@ -52,7 +54,6 @@ TexturePacker生成的for cocos2d plist格式与Zwoptex生成的format为2的格
 ### 5.1 format为0的plist文件
 
 这里贴一个比较完整plist文件，为了方便描述，其中仅包含一个frame。
-
 <pre lang="XML">
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -88,11 +89,8 @@ TexturePacker生成的for cocos2d plist格式与Zwoptex生成的format为2的格
 		</dict>
 	</dict>
 </dict>
-</plist>
-</pre>
-
+</plist></pre>
 ### 5.2 format为2的plist文件内容
-
 <pre lang="XML">
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -128,11 +126,8 @@ TexturePacker生成的for cocos2d plist格式与Zwoptex生成的format为2的格
             <string>dragon.png</string>
         </dict>
     </dict>
-</plist>
-</pre>
-
+</plist></pre>
 ### 5.3 format为3的plist文件内容
-
 <pre lang="XML">
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -176,9 +171,7 @@ TexturePacker生成的for cocos2d plist格式与Zwoptex生成的format为2的格
 		<false/>
 	</dict>
 </dict>
-</plist>
-</pre>
-
+</plist></pre>
 Frame:
 
 Top-Left originating rectangle of the sprite’s pixel texture coordinates. Cocos2′d will convert these to UV coordinates (0-1) when loading based on the texture size.
@@ -219,7 +212,6 @@ http://www.cocos2d-iphone.org/forums/topic/zwoptex-and-their-plist-explanation/
 对这两种格式的具体的解析代码在 `CCAnimationCache::addAnimationsWithDictionary` 。
 
 ### format 1动画格式plist文件内容
-
 <pre lang="XML">
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -285,11 +277,8 @@ http://www.cocos2d-iphone.org/forums/topic/zwoptex-and-their-plist-explanation/
 		</dict>
 	</dict>
 </dict>
-</plist>
-</pre>
-
+</plist></pre>
 ### format 2动画格式plist文件内容
-
 <pre lang="XML">
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -423,9 +412,7 @@ http://www.cocos2d-iphone.org/forums/topic/zwoptex-and-their-plist-explanation/
 		<integer>2</integer>
 	</dict>
 </dict>
-</plist>
-</pre>
-
+</plist></pre>
 [tp]: http://www.codeandweb.com/texturepacker
 [plist]: http://zh.wikipedia.org/wiki/Plist
 [zw]: http://www.zwopple.com/zwoptex/

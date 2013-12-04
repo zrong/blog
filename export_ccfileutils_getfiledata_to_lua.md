@@ -1,5 +1,8 @@
 在 quick-cocos2d-x 中导出 CCFileUtils::getFileData 给Lua使用
 
+<span style="color:red">2013-11-18更新:</span>廖大在 [468be4](https://github.com/dualface/quick-cocos2d-x/commit/468be4923d47773a34bf4823cc3e4fc4524a470f) 这次提交中解决了本文提到的问题并进行了 getFileData 和 getFileDataFromZip 两个方法的导出。如果你使用的是develop分支，只需要pull即可，下面的修改不必做了。当然，可以继续将本文当作导出教程。
+<hr>
+
 本文讲解如何将 cocos2d-x 中的 CCFileUtils::getFileData 方法导出给Lua使用。提纲如下：
 
 1. quick-cocos2d-x 读取外部文件的问题

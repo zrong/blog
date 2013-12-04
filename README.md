@@ -93,3 +93,7 @@
 * [使用 ZeroBrane Studio 和 Eclipse LDT 断点调试 quick-cocos2d-x](http://zengrong.net/post/1951.htm)
 * [在 quick-cocos2d-x 中导出 CCFileUtils::getFileData 给Lua使用](http://zengrong.net/post/1958.htm)
 * [quick-cocos2d-x 中的 socket 技术选择：LuaSocket 和 WebSocket](http://zengrong.net/post/1965.htm)
+* [用lua实现ByteArray和ByteArrayVarint](http://zengrong.net/post/1968.htm)
+* [一个LuaSocket封装](http://zengrong.net/post/1980.htm)
+* [cocos2d-x中的plist文件格式详解](http://zengrong.net/post/1981.htm)
+* [一个基于AS3的plist库](http://zengrong.net/post/1982.htm)
