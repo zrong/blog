@@ -1,6 +1,7 @@
 * <span style="color: #ff0000;">2012年2月25日更新：</span>加入As3-Bloom的介绍。
 * <span style="color: #ff0000;">2012年3月12日更新：</span>在[服务器](#server)部分，加入CRTMPServer和Mammoth Server的介绍。
 * <span style="color: #ff0000;">2013年9月10日更新：</span>文章采用markdown重新排版，便于编辑；删除部分无效内容；从[游戏引擎](#game)中拆分出[2.5D引擎](#isometric)；在[UI组件](#UI)部分加入flexlite和morn UI。
+* <span style="color: #ff0000;">2013年11月28日更新：</span>加入Nape引擎。
 
 [旧的更新移至文章底部](#oldUpdate)
 
@@ -44,6 +45,8 @@ ActionScript 3D引擎，有AS2、AS3、haXe版
 <a name="physics"></a>
 ## Flash物理引擎
 
+* [Nape Physics Engine](http://http://napephys.com/)  
+一个Haxe实现的物理引擎，可以用于AS3和Haxe。开源、免费，可用于商业项目。在AS3中使用时，提供一个swc库。
 * [APE](http://www.cove.org/ape/) (Aionscript Physics Engine)
 * [The Fisix Engine](http://fisixengine.com/default.asp "http://fisixengine.com/default.asp")  
 不开源，但文档和示例比较齐全，zrong也用的就是这个
