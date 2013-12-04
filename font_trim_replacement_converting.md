@@ -49,7 +49,25 @@ TTC 则是一坨 OTF 或者 TTF 字体的集合体。例如 Windows7 下面的�
 2. 在B字体中选择 Edit-Paste Special；
 3. 选中 Items 中的所有选项，Codepoints 选择 Overrule same codepoints ，单击 OK 完成替换。
 
-## 3. 
+![font creator replace characters][102]
+
+## 3. TTF/OTF 相互转换
+
+经常会有一些莫名其妙的需求，要把TTF和OTF这两种格式相互转换。当然，作为一个有责任感的无证程序员，一定要尽可能满足这些莫名其妙的需求。生命在于折腾嘛。
+
+[freefontconverter][8] 这个网站提供在线转换功能。简单说就是你传个字体上去，然后选择转换类型，再下载一个已经转换过的字体下来。
+
+![freefontconverter.com][103]
+
+[fontforge][6] 软件则直接提供转换功能。步骤应该是这样的：
+
+1. 打开要转换的字体；
+2. 选择 File-Generate Fonts 命令；
+3. 选择字体类型，例如 TureType；
+4. 保存即可；
+5. 如果保存的时候软件直接挂了，可以取消勾选 Validate Before Saving 选项然后重新保存。
+
+![fontforge generate fonts][104]
 
 [1]: http://windows.microsoft.com/zh-cn/windows-vista/whats-the-difference-between-truetype-postscript-and-opentype-fonts
 [2]: http://en.wikipedia.org/wiki/TrueType
@@ -61,4 +79,6 @@ TTC 则是一坨 OTF 或者 TTF 字体的集合体。例如 Windows7 下面的�
 [8]: http://www.freefontconverter.com/
 
 [101]: /wp-content/uploads/2013/12/fontcreator1.png
-[101]: /wp-content/uploads/2013/12/fontcreator2.png
+[102]: /wp-content/uploads/2013/12/fontcreator2.png
+[103]: /wp-content/uploads/2013/12/fontconvert1.png
+[104]: /wp-content/uploads/2013/12/fontforge1.png

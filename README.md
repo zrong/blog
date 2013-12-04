@@ -97,3 +97,4 @@
 * [一个LuaSocket封装](http://zengrong.net/post/1980.htm)
 * [cocos2d-x中的plist文件格式详解](http://zengrong.net/post/1981.htm)
 * [一个基于AS3的plist库](http://zengrong.net/post/1982.htm)
+* [TureType/OpenType 字体瘦身、字体转换和字符替换](http://zengrong.net/post/1988.htm)
