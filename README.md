@@ -98,3 +98,5 @@
 * [cocos2d-x中的plist文件格式详解](http://zengrong.net/post/1981.htm)
 * [一个基于AS3的plist库](http://zengrong.net/post/1982.htm)
 * [TureType/OpenType 字体瘦身、字体转换和字符替换](http://zengrong.net/post/1988.htm)
+* [Cocos2d-x中的事件调用方式汇总](http://zengrong.net/post/1964.htm)
+* [在Lua中使用gettext实现多语言支持](http://zengrong.net/post/1986.htm)
