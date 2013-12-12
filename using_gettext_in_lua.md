@@ -155,3 +155,4 @@ MO 是个二进制格式的文件，我们的程序在读取它的时候，需�
 [17]: /wp-content/uploads/2013/12/poedit7.png
 [18]: /wp-content/uploads/2013/12/poedit8.png
 [19]: /wp-content/uploads/2013/12/poedit9.png
+[20]: /wp-content/uploads/2013/12/poedit10.png
