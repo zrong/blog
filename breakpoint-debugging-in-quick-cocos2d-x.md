@@ -1,5 +1,8 @@
 使用 ZeroBrane Studio 和 Eclipse LDT 断点调试 quick-cocos2d-x
 
+**2013-12-13 更新：** 加入quick官网提供的调试方式链接
+<hr>
+
 [quick-cocos2d-x][quick] 是个基于 cocos2d-x 的 Lua Binding 加强版。本文介绍在quick-cocos2d-x中进行断点调试的方法。
 
 为了便于阅读和减少废话，本文有如下假设：
@@ -11,11 +14,24 @@
 
 提纲如下：
 
-1. 在 ZeroBrane Studio 中进行断点调试
-2. 在 Eclipse LDT 中进行断点调试
+1. [Quick官方提供的调试方式](#quick)
+1. [在 ZeroBrane Studio 中进行断点调试](#zbs)
+2. [在 Eclipse LDT 中进行断点调试](#ldt)
 <!--more-->
 
-## 一、 在ZeroBrane Studio中进行断点调试
+<a name="quick"></a>
+## 一、 Quick官方提供的调试方式
+
+廖大已经在 Quick X Player 中加入了LDT调试支持，也就是说，LDT的 debugger.lua 模块已经被廖大加入到了 Quick X Player 中，不需要像本文下面写的那样 `require("debugger")` 了。
+
+取而代之，是需要打开调试的项目后，选择菜单 Player -> Auto Connect Debugger。
+
+详情请参阅quick官网： [用 Eclipse LDT 调试 quick-cocos2d-x 游戏][official]
+
+<a name="zbs"></a>
+## 二、 在ZeroBrane Studio中进行断点调试
+
+2013-12-13 更新：由于quick作者修改了调试方式，可能此处介绍的方法不再有效，请参阅 [一、 Quick官方提供的调试方式](#quick)
 
 ZeroBrane Studio是一个用Lua写成的跨平台Lua IDE。界面使用 [wxLua][wxlua] 实现。
 
@@ -57,7 +73,10 @@ require("mobdebug").start()
 ![框架内部][zbdebug2]  
 [查看大图][zbdebug2]
 
-## 二、 在Eclipse LDT 中进行断点调试
+<a name="ldt"></a>
+## 三、 在Eclipse LDT 中进行断点调试
+
+2013-12-13 更新：由于quick作者修改了调试方式，可能此处介绍的方法不再有效，请参阅 [一、 Quick官方提供的调试方式](#quick)
 
 LDT(Lua Development Tools)是一个 Eclipse 插件，支持Lua语言的编写和调试。
 
@@ -106,6 +125,7 @@ require("debugger")("127.0.0.1", 10000, "luaidekey")
 [zbdebugging]: http://studio.zerobrane.com/doc-remote-debugging.html#setup_environment_for_debugging
 [ldt]: http://www.eclipse.org/koneki/ldt/
 [ldtdebug]: http://wiki.eclipse.org/Koneki/LDT/Developer_Area/User_Guides/User_Guide_1.0#Debugging_a_Lua_program
+[official]: http://cn.quick-x.com/?p=1527
 
 [zbdebug1]: /wp-content/uploads/2013/10/zbdebug1.png
 [zbdebug2]: /wp-content/uploads/2013/10/zbdebug2.png
