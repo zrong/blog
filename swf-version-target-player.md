@@ -1,3 +1,7 @@
+* <span style="color:red">2013-12-11更新：</span>更新Flash Player 11.9/AIR 3.9正式版。
+* <span style="color:red">2013-04-16更新：</span>更新Flash Player 11.7/AIR 3.7正式版。
+* <span style="color:red">2013-03-10更新：</span>更新Flash Player 11.6/AIR 3.6正式版以及beta 11.7。
+* <span style="color:red">2012-11-07更新：</span>更新Flash Player 11.5/AIR 3.5正式版发布日期。
 * <span style="color:red">2012-10-10更新：</span>加入Flash Player 11.5/AIR 3.5的对应关系；加入发布日期列；修改文章结构和部分内容。
 * <span style="color:red">2012-08-27更新：</span>加入Flash Player 11.4/AIR 3.4的对应关系。
 * <span style="color:red">2012-03-20更新：</span>本篇文章只讲了Flex SDK的情况，但Flash IDE也能通过修改配置文件的方式支持新的Flash Player功能，详见这里：[让Flash支持更新的Flash Player功能](http://zengrong.net/post/1568.htm)
@@ -9,104 +13,23 @@
 
 那么-swf-version和-target-player的对应关系如何？见下表：<!--more-->
 
-<table>
-<tr>
-<td>Flash Player</td>
-<td>AIR</td>
-<td>Flex</td>
-<td>-swf-version</td>
-<td>-target-player</td>
-<td>发布日期</td>
-</tr>
-<tr>
-<td>9</td>
-<td>&nbsp;</td>
-<td>3</td>
-<td>9</td>
-<td>9</td>
-<td></td>
-</tr>
-<tr>
-<td>10.0</td>
-<td>1.5</td>
-<td> 4.0</td>
-<td>10</td>
-<td>10.0.0</td>
-<td></td>
-</tr>
-<tr>
-<td>10.1</td>
-<td>2.0/2.5</td>
-<td>4.1</td>
-<td>10</td>
-<td>10.1.0</td>
-<td></td>
-</tr>
-<tr>
-<td>10.2</td>
-<td>2.6</td>
-<td>4.5/4.5.1</td>
-<td>11</td>
-<td>10.2.0</td>
-<td>2011-2-9</td>
-</tr>
-<tr>
-<td>10.3</td>
-<td>2.7</td>
-<td></td>
-<td>12</td>
-<td>10.3.0</td>
-<td></td>
-</tr>
-<tr>
-<td>11.0</td>
-<td>3.0</td>
-<td></td>
-<td>13</td>
-<td>11.0.0</td>
-<td>2011-10-4</td>
-</tr>
-<tr>
-<td>11.1</td>
-<td>3.1</td>
-<td>4.6</td>
-<td>14</td>
-<td>11.1</td>
-<td>2011-11-7</td>
-</tr>
-<tr>
-<td>11.2</td>
-<td>3.2</td>
-<td></td>
-<td>15</td>
-<td>11.2</td>
-<td>2012-3-28</td>
-</tr>
-<tr>
-<td>11.3</td>
-<td>3.3</td>
-<td></td>
-<td>16</td>
-<td>11.3</td>
-<td>2012-6-8</td>
-</tr>
-<tr>
-<td>11.4</td>
-<td>3.4</td>
-<td>Adobe Flex 4.6/Apache Flex 4.8</td>
-<td>17</td>
-<td>11.4</td>
-<td>2012-8-21</td>
-</tr>
-<tr>
-<td>11.5</td>
-<td>3.5</td>
-<td>Adobe Flex 4.6/Apache Flex 4.8</td>
-<td>18</td>
-<td>11.5</td>
-<td>2012-9-26 beta</td>
-</tr>
-</table>
+|Flash Player|AIR|Flex|-swf-version|-target-player|发布日期|
+|----|----|----|----|----|----|
+|9 ||3 |9 |9||
+|10.0 |1.5 | 4.0 |10 |10.0.0 ||
+|10.1 |2.0/2.5 |4.1 |10 |10.1.0 ||
+|10.2 |2.6 |4.5/4.5.1 |11 |10.2.0 |2011-2-9|
+|10.3 |2.7 | |12 |10.3.0 ||
+|11.0 |3.0 | |13 |11.0.0 |2011-10-4|
+|11.1 |3.1 |4.6 |14 |11.1 |2011-11-7|
+|11.2 |3.2 | |15 |11.2 |2012-3-28|
+|11.3 |3.3 | |16 |11.3 |2012-6-8|
+|11.4 |3.4 |Adobe Flex 4.6/Apache Flex 4.8 |17 |11.4 |2012-08-21|
+|11.5 |3.5 |Adobe Flex 4.6/Apache Flex 4.8 |18 |11.5 |2012-11-06|
+|11.6 |3.6 |Adobe Flex 4.7/Apache Flex 4.9 |19 |11.6 |2013-02-12|
+|11.7 |3.7 |Adobe Flex 4.7/Apache Flex 4.9 |20 |11.7 |2013-04-09|
+|11.8 |3.8 |Adobe Flex 4.7/Apache Flex 4.10 |21 |11.8 |2013-07-09|
+|11.9 |3.9 |Adobe Flex 4.7/Apache Flex 4.11 |22 |11.9 |2013-10-08|
 
 ##-target-player和-swf-version
 
