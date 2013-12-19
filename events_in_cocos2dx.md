@@ -7,7 +7,7 @@ Cocos2d-x中的事件调用方式汇总
 好在 Cocos2d-x 内部已经造好了一些轮子供我们使用。这些轮子分别是：
 
 1. 回调函数
-2. CCNotification
+2. CCNotificationCenter
 3. Signals
 <!--more-->
 
@@ -17,7 +17,7 @@ Cocos2d-x中的事件调用方式汇总
 
 Cocos2d-x 内部大量使用回调函数来进行消息传递（或者说事件调用）。 例如 CCMenu 的事件触发，CCAction 中的结束回调等等。
  
-具体实现在 CCObject.h 中，这里包含了菜单、Action和shedule的回调。
+具体实现在 `cocos2dx/cocoa/CCObject.h` 中，这里包含了菜单、Action和shedule的回调。
 
 <pre lang="CPP">
 typedef void (CCObject::*SEL_SCHEDULE)(float);
@@ -102,15 +102,38 @@ void CCMenuItem::activate()
 
 若希望对上面函数指针的内容做进一步的了解，可以查看 《C++ Primer中文版（第5版）》 **6.7 函数指针** 和 **19.4.2 成员函数指针** 。
 
-## 2.  CCNotification
+## 2.  CCNotificationCenter
 
-未完待续
+CCNotificationCenter 在 cocos2d-x 内部提供了一套观察者模式的实现。
+
+下面是注册观察者的代码。注意这里依然用到了上面提到的函数指针的方法，使用的是 `callfuncO_selector` 这个宏。最后一个参数用于保存需要的数据到观察者中，之后可以使用 `CCNotificationObserver::getObject()` 来获取到这个数据。
+
+<pre lang="CPP">
+//定义事件
+#define CLICK_EVENT "clickEvent"
+//注册观察者
+CCNotificationCenter::sharedNotificationCenter()->addObserver(this, callfuncO_selector(NotifTestScene::onClick), CLICK_EVENT, NULL);
+//收到事件之后要移除观察者以避免内存泄露
+void NotifTestScene::onClick(CCObject* __obj)
+{
+	CCMessageBox(static_cast<CCString*>(__obj)->getCString(), "onClick");
+	CCNotificationCenter::sharedNotificationCenter()->removeObserver(this, CLICK_EVENT);
+}
+</pre>
+
+下面是发送事件的代码。发送事件的同时可以传递一个 CCObject 指针作为数据。
+
+<pre lang="CPP">
+CCNotificationCenter::sharedNotificationCenter()->postNotification(CLICK_EVENT, &CCString("Hello World"));
+</pre>
+
+CCNotificationCenter 源码位于 `cocos2dx/support` 目录中。
 
 ## 3. Signals
 
 我在 [获取CCArmature动画的播放状态][1] 一文中对 Signals 做了介绍。
 
-Signals 并非是 Cocos2d-x 内部通信的常用方式。
+Signals 并非是 cocos2d-x 内部通信的常用方式，Signals 也并不是 cocos2d-x 核心代码的一部分。
 
 [1]: http://zengrong.net/post/1949.htm
 
