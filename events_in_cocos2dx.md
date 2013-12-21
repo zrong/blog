@@ -7,15 +7,17 @@ Cocos2d-x中的事件调用方式汇总
 好在 Cocos2d-x 内部已经造好了一些轮子供我们使用。这些轮子分别是：
 
 1. 回调函数
-2. CCNotification
+2. CCNotificationCenter
 3. Signals
 <!--more-->
+
+**本文基于 cocos2d-x 2.1.5**
 
 ## 1. Cocos2d-x 中的回调函数
 
 Cocos2d-x 内部大量使用回调函数来进行消息传递（或者说事件调用）。 例如 CCMenu 的事件触发，CCAction 中的结束回调等等。
  
-具体实现在 CCObject.h 中，这里包含了菜单、Action和shedule的回调。
+具体实现在 `cocos2dx/cocoa/CCObject.h` 中，这里包含了菜单、Action和shedule的回调。
 
 <pre lang="CPP">
 typedef void (CCObject::*SEL_SCHEDULE)(float);
@@ -37,29 +39,101 @@ typedef int (CCObject::*SEL_Compare)(CCObject*);
 #define compare_selector(_SELECTOR) (SEL_Compare)(&_SELECTOR) 
 </pre>
  
-观察上面的代码可以发现，函数指针定义类型定义和定义与所有这些函数原型相匹配的函数指针，比如：
-typedef void (SelectorProtocol::*SEL_SCHEDULE)(ccTime);
- 
- 同时定义进行这种类型转换的宏：
-#define schedule_selector(_SELECTOR) (SEL_SCHEDULE)(&_SELECTOR)
- 
-然后在具体的类里，就可以使用这种回调进行一些事件通知了：
-  void CCNode::schedule(SEL_SCHEDULE selector, ccTime interval);
-比如上面这个，CNode就可以在有具体事件是，调用selector进行回调通知了。
+以菜单组件常用的 menu_selector 来分析。
 
-2）使用方法
-   (以上面的CCNode::schedule为例子)
-   a.首先要在类里声明与上面列出的某一个触发函数原型一样的函数(返回值，参数要一样，名称可以不一样)，然后做具体触发的实现处理；
-void Box2DView::tick(ccTime dt)
+首先，使用typedef定义了一个成员函数指针 SEL_MenuHandler。
+
+<pre lang="CPP">
+typedef void (CCObject::*SEL_MenuHandler)(CCObject*);
+</pre>
+
+SEL_MenuHandler 是 CCObject 的成员，接收一个 CCObject 指针形参。
+
+用 C++11 提供的方式，也可以这样写：
+
+<pre lang="CPP">
+using SEL_MenuHandler = void (CCObject::*)(CCObject*);
+</pre>
+ 
+接着，定义进行这种类型转换的宏。
+
+<pre lang="CPP">
+#define menu_selector(_SELECTOR) (SEL_MenuHandler)(&_SELECTOR)
+</pre>
+
+这个宏将使用 menu_selector 封装的代码，转换成一个 SEL_MenuHandler 函数指针的定义。(SEL_MenuHandler) 的作用是进行类型强制转换。
+
+让我们看看具体的使用代码，位于 HelloCpp 项目的 ActionTest.cpp 中：
+
+<pre lang="CPP">
+CCMenuItemImage *item1 = CCMenuItemImage::create(s_pPathB1, s_pPathB2, this, menu_selector(ActionsDemo::backCallback) );
+</pre>
+
+在这句代码中，将 ActionDemo::backCallback 这个函数作为指针传递进入 CCMenuItemImage 中。
+
+CCMenuItemImage 在 initWithTarget 方法中将 ActionDemo 的实例 this， 以及 this 中的 backCallback 函数保存为 m_pListener 和 m_pfnSelector 。
+
+<pre lang="CPP">
+bool CCMenuItem::initWithTarget(CCObject *rec, SEL_MenuHandler selector)
 {
- m_test->Step(&settings);
+    setAnchorPoint(ccp(0.5f, 0.5f));
+    m_pListener = rec;
+    m_pfnSelector = selector;
+    m_bEnabled = true;
+    m_bSelected = false;
+    return true;
 }
- 
-   b.把该函数当成一个变量一样设置到Node的schedule：
-schedule( schedule_selector(Box2DView::tick) );
-因为大部分数据类都是从CNode里继承过来的，所以可以直接使用schedule()。而schedule_selector是我们前面提到的进行类型转换的宏
+</pre>
 
-CCNotification
+在 CCMenuItemImage 的 activate 方法中，对这个函数指针进行了调用。
 
-Signals
+<pre lang="CPP">
+void CCMenuItem::activate()
+{
+    if (m_bEnabled)
+    {
+        if (m_pListener && m_pfnSelector)
+        {
+            (m_pListener->*m_pfnSelector)(this);
+        }
+    }
+}
+</pre>
+
+若希望对上面函数指针的内容做进一步的了解，可以查看 《C++ Primer中文版（第5版）》 **6.7 函数指针** 和 **19.4.2 成员函数指针** 。
+
+## 2.  CCNotificationCenter
+
+CCNotificationCenter 在 cocos2d-x 内部提供了一套观察者模式的实现。
+
+下面是注册观察者的代码。注意这里依然用到了上面提到的函数指针的方法，使用的是 `callfuncO_selector` 这个宏。最后一个参数用于保存需要的数据到观察者中，之后可以使用 `CCNotificationObserver::getObject()` 来获取到这个数据。
+
+<pre lang="CPP">
+//定义事件
+#define CLICK_EVENT "clickEvent"
+//注册观察者
+CCNotificationCenter::sharedNotificationCenter()->addObserver(this, callfuncO_selector(NotifTestScene::onClick), CLICK_EVENT, NULL);
+//收到事件之后要移除观察者以避免内存泄露
+void NotifTestScene::onClick(CCObject* __obj)
+{
+	CCMessageBox(static_cast<CCString*>(__obj)->getCString(), "onClick");
+	CCNotificationCenter::sharedNotificationCenter()->removeObserver(this, CLICK_EVENT);
+}
+</pre>
+
+下面是发送事件的代码。发送事件的同时可以传递一个 CCObject 指针作为数据。
+
+<pre lang="CPP">
+CCNotificationCenter::sharedNotificationCenter()->postNotification(CLICK_EVENT, &CCString("Hello World"));
+</pre>
+
+CCNotificationCenter 源码位于 `cocos2dx/support` 目录中。
+
+## 3. Signals
+
+我在 [获取CCArmature动画的播放状态][1] 一文中对 Signals 做了介绍。
+
+Signals 并非是 cocos2d-x 内部通信的常用方式，Signals 也并不是 cocos2d-x 核心代码的一部分。
+
+[1]: http://zengrong.net/post/1949.htm
 
