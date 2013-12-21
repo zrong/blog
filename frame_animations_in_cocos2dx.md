@@ -1,0 +1,340 @@
+[Cocos2d-x 中的帧动画](http://zengrong.net/post/2006.htm)
+
+在 Cocos2d-x 中可以通过 CCAnimcation 来实现一个帧动画。在这种动画中，根据时间的流逝显示不同的纹理，形成动画。这就是我们平常所说的 **逐帧动画**。
+
+本文将讨论这种动画的使用方法，以及如何利用现有的工具来简化使用和提高开发效率。
+
+**本文基于 Cocos2d-x 2.2.1**
+<!--more-->
+
+## 直接使用代码实现动画
+
+当纹理作为单独的图像文件出现的时候，动画是这样实现的：
+
+<pre lang="CPP">
+//建立一个帧动画，填充14个纹理
+CCAnimation* animation = CCAnimation::create();
+for( int i=1;i<15;i++)
+{
+	char szName[100] = {0};
+	sprintf(szName, "Images/grossini_dance_%02d.png", i);
+	animation->addSpriteFrameWithFileName(szName);
+}
+//在2.8秒中显示14帧，计算延迟
+animation->setDelayPerUnit(2.8f / 14.0f);
+animation->setRestoreOriginalFrame(true);
+
+CCAnimate* action = CCAnimate::create(animation);
+
+// grossini 是一个CCSprite，使用它播放一个自动回绕的动画
+grossini->runAction(CCSequence::create(action, action->reverse(), NULL));
+</pre>
+
+如果纹理处于plist文件中，则可以这样实现：
+
+<pre lang="CPP">
+//将纹理提前加入精灵帧缓存
+CCSpriteFrameCache *frameCache = CCSpriteFrameCache::sharedSpriteFrameCache();
+frameCache->addSpriteFramesWithFile("animations/grossini.plist");
+
+//建立15个元素的精灵帧数组
+CCArray* animFrames = CCArray::createWithCapacity(15);
+char str[100] = {0};
+for(int i = 1; i < 15; i++)
+{
+	sprintf(str, "grossini_dance_%02d.png",i);
+	CCSpriteFrame *frame = frameCache->spriteFrameByName(str);
+	animFrames->addObject(frame);
+}
+
+CCAnimation *animation = CCAnimation::createWithSpriteFrames(animFrames, 0.2f);
+CCAnimate *anim = CCAnimate::create(animation);
+
+//创建一个精灵用于显示动画
+CCSprite *grossini = CCSprite::create();
+CCSpriteFrame *frame = frameCache->spriteFrameByName("grossini_dance_01.png");
+grossini->setDisplayFrame(frame);
+
+//播放一个永久循环的动画
+grossini->runAction(CCRepeatForever::create(anim))
+</pre>
+
+## 使用帧动画定义文件播放动画
+
+使用代码实现动画的缺点是必须将动画的纹理名称硬编码到源码中，这样在修改纹理的时候必须重编编译程序。
+
+如果使用帧动画定义文件，就可以避免这个问题，并得到更多的便利。
+
+这种文件有2种格式：
+
+* format 1，定义了一个动画包含哪些帧以及帧纹理的名称，但是却并不能指定这些纹理从哪里加载。因此，我们必须提前加载将这些帧纹理使用的文件加载到缓存中。它可以为一个动画指定平均的帧延迟。
+* format 2，可以直接指定需要的纹理文件的名称，也可以定义每帧的延迟。
+
+`CCAnimationCache::addAnimationsWithDictionary` 负责解析这两种格式，并将它们转换成 CCAnimation ，同时保存在缓存中。
+
+### format 1 动画格式的播放
+
+这是 format 1 格式的内容，文件名为 `armatures.plist` 。它定义了 `dance_1/dance_2/dance_3` 这3个动画，每个动画的帧延迟为0.2秒。
+
+这个格式一看就懂，不需要详细介绍。
+
+<pre lang="XML">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>animations</key>
+	<dict>
+		<key>dance_1</key>
+		<dict>
+			<key>delay</key>
+			<real>0.2</real>
+			<key>frames</key>
+			<array>
+				<string>grossini_dance_01.png</string>
+				<string>grossini_dance_02.png</string>
+				<string>grossini_dance_03.png</string>
+				<string>grossini_dance_04.png</string>
+				<string>grossini_dance_05.png</string>
+				<string>grossini_dance_06.png</string>
+				<string>grossini_dance_07.png</string>
+				<string>grossini_dance_08.png</string>
+				<string>grossini_dance_09.png</string>
+				<string>grossini_dance_10.png</string>
+				<string>grossini_dance_11.png</string>
+				<string>grossini_dance_12.png</string>
+				<string>grossini_dance_13.png</string>
+				<string>grossini_dance_14.png</string>
+			</array>
+		</dict>
+		<key>dance_2</key>
+		<dict>
+			<key>delay</key>
+			<real>0.2</real>
+			<key>frames</key>
+			<array>
+				<string>grossini_dance_gray_01.png</string>
+				<string>grossini_dance_gray_02.png</string>
+				<string>grossini_dance_gray_03.png</string>
+				<string>grossini_dance_gray_04.png</string>
+				<string>grossini_dance_gray_05.png</string>
+				<string>grossini_dance_gray_06.png</string>
+				<string>grossini_dance_gray_07.png</string>
+				<string>grossini_dance_gray_08.png</string>
+				<string>grossini_dance_gray_09.png</string>
+				<string>grossini_dance_gray_10.png</string>
+				<string>grossini_dance_gray_11.png</string>
+				<string>grossini_dance_gray_12.png</string>
+				<string>grossini_dance_gray_13.png</string>
+				<string>grossini_dance_gray_14.png</string>
+			</array>
+		</dict>
+		<key>dance_3</key>
+		<dict>
+			<key>delay</key>
+			<real>0.2</real>
+			<key>frames</key>
+			<array>
+				<string>grossini_blue_01.png</string>
+				<string>grossini_blue_02.png</string>
+				<string>grossini_blue_03.png</string>
+				<string>grossini_blue_04.png</string>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>
+</pre>
+
+使用下面的代码将这3个动画串起来并连续播放：
+
+<pre lang="CPP">
+CAnimationCache *animCache = CCAnimationCache::sharedAnimationCache();
+
+//把动画定义文件载入缓存中
+animCache->addAnimationsWithFile("animations/animations.plist");
+
+//根据动画定义文件中的名称获取3个动画
+CCAnimation *normal = animCache->animationByName("dance_1");
+normal->setRestoreOriginalFrame(true);
+CCAnimation *dance_grey = animCache->animationByName("dance_2");
+dance_grey->setRestoreOriginalFrame(true);
+CCAnimation *dance_blue = animCache->animationByName("dance_3");
+dance_blue->setRestoreOriginalFrame(true);
+
+//创建Action进行播放
+CCAnimate *animN = CCAnimate::create(normal);
+CCAnimate *animG = CCAnimate::create(dance_grey);
+CCAnimate *animB = CCAnimate::create(dance_blue);
+CCSequence *seq = CCSequence::create(animN, animG, animB, NULL);
+
+//创建一个不带纹理的精灵
+CCSprite *grossini = CCSprite::create();
+//获取一个精灵帧，设置成精灵的第1帧
+CCSpriteFrame *frame = frameCache->spriteFrameByName("grossini_dance_01.png");
+grossini->setDisplayFrame(frame);
+addChild(grossini);
+
+//播放动画
+grossini->runAction(seq);
+</pre>
+
+### format 2 动画格式plist文件内容
+
+这是 format 2 格式的内容，文件名为 `armatures-2.plist` 。它定义了 `dance_1` 这个动画。其中：
+
+* delayPerUnit 定义的就是每帧之间的间隔，是 0.2 秒。
+* delayUnits 定义了每帧的延迟值，它会覆盖 delayPerUnit 的定义。实际上，动画持续的时间，就是 **所有帧的 delayUnits 的和乘以 delayPerUnit** 。
+* notification 中定义的值会保存在 CCAnimationFrame 中。这些值的本意是在动画播放到设置值的帧时，触发一些事件。但是在 Cocos2d-x 2.2.1 中，这个事件触发并没有实现。
+* properties 定义了动画格式的版本以及这个动画中使用的帧来自于哪些纹理。
+
+<pre lang="XML">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>animations</key>
+	<dict>
+		<key>dance_1</key>
+		<dict>
+			<key>delayPerUnit</key>
+			<real>0.2</real>
+			<key>restoreOriginalFrame</key>
+			<true/>
+			<key>loops</key>
+			<integer>2</integer>
+			<key>frames</key>
+			<array>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_01.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+					<key>notification</key>
+					<dict>
+						<key>firstframe</key>
+						<true/>
+					</dict>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_02.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_03.png</string>
+					<key>delayUnits</key>
+					<real>0.5</real>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_04.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_05.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_06.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+					<key>notification</key>
+					<dict>
+						<key>key1</key>
+						<integer>1234</integer>
+						<key>key2</key>
+						<false/>
+					</dict>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_07.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_08.png</string>
+					<key>delayUnits</key>
+					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_09.png</string>
+					<key>delayUnits</key>
+					<real>0.5</real>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_10.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_11.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_12.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_13.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>spriteframe</key>
+					<string>grossini_dance_14.png</string>
+					<key>delayUnits</key>
+					<integer>1</integer>
+					<key>notification</key>
+					<dict>
+						<key>lastframe</key>
+						<true/>
+					</dict>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+	<key>properties</key>
+	<dict>
+		<key>spritesheets</key>
+		<array>
+			<string>animations/grossini.plist</string>
+			<string>animations/grossini_blue.plist</string>
+			<string>animations/grossini_family.plist</string>
+		</array>
+		<key>format</key>
+		<integer>2</integer>
+	</dict>
+</dict>
+</plist>
+</pre>
+
+使用下面的代码播放这个动画：
+
+<pre lang="CPP">
+//解析动画定义文件，将动画载入缓存
+CCAnimationCache *cache = CCAnimationCache::sharedAnimationCache();
+cache->addAnimationsWithFile("animations/animations-2.plist");
+
+//创建动画
+CCAnimation *animation = cache->animationByName("dance_1");
+CCAnimate* action = CCAnimate::create(animation);
+
+//播放一个回绕的动画，grossini是一个已存在的精灵
+grossini->runAction(CCSequence::create(action, action->reverse(), NULL));
+</pre>
