@@ -102,3 +102,4 @@
 * [Cocos2d-x中的事件调用方式汇总](http://zengrong.net/post/1964.htm)
 * [Cocos2d-x 中的帧动画](http://zengrong.net/post/2006.htm)
 * [基于JMicron JMB363在CentOS上架设 RAID 的问题](http://zengrong.net/post/2009.htm)
+* [在CentOS 6.1上配置 4TB硬盘+RAID1](http://zengrong.net/post/2014.htm)
