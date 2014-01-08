@@ -1,4 +1,4 @@
-基于JMicron JMB363在CentOS上架设 RAID 的问题
+[基于JMicron JMB363在CentOS上架设 RAID 的问题](http://zengrong.net/post/2009.htm)
 
 ## 配置
 
@@ -30,6 +30,8 @@ CPU： Intel Core2
 
 使用 jmiron 虚拟出来的RAID设备，使用 parted 只能认到1.8T，即使是使用 GPT 分区表也是如此。
 
+最终我放弃了使用硬RAID，而改为使用软RAID。见 [4TB HDD + RAID1 on CentOS 6.1][6] 。
+
 ## 参考
 
 * [How to Create Partition on Linux for >2TB Size using Parted GPT][5]
@@ -40,3 +42,4 @@ CPU： Intel Core2
 [3]: http://www.jmicron.com/Support_FAQ.html
 [4]: http://book.51cto.com/art/200902/110753.htm
 [5]: http://www.thegeekstuff.com/2012/08/2tb-gtp-parted/
+[6]: http://zengrong.net/post/2014.htm
