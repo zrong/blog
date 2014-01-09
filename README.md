@@ -1,4 +1,4 @@
-##zengrong.net中文章的源文件，采用markdown格式编写
+## [zrong's blog](http://zengrong.net) 中部分文章的源文件，采用markdown格式编写。
 
 * [AS3中正则表达式对反斜杠的替换](http://zengrong.net/post/1374.htm)
 * [使用Embed标签在AS3项目中嵌入字体](http://zengrong.net/post/1438.htm)
@@ -103,3 +103,4 @@
 * [Cocos2d-x 中的帧动画](http://zengrong.net/post/2006.htm)
 * [基于JMicron JMB363在CentOS上架设 RAID 的问题](http://zengrong.net/post/2009.htm)
 * [在CentOS 6.1上配置 4TB硬盘+RAID1](http://zengrong.net/post/2014.htm)
+* [在Bash中将字符串拆分成数组](http://zengrong.net/post/1591.htm)

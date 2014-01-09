@@ -1,0 +1,144 @@
+[在Bash中将字符串拆分成数组](http://zengrong.net/post/1591.htm)
+
+split string to array in bash
+
+和AS中的String.split不同，Bash没有类似的语法，但它实在是太灵活了，有很多种方式可以做类似的事情。
+
+以前我写过一篇 [Bash数组操作教程][1] ，今天使用Bash做文件处理的时候，发现有必要再写一篇将字符串拆分成数组的教程。但发现有人已经写了更好的教程在前面了，于是就偷懒转过来好了。<!--more-->
+
+** 下面的内容转自[Bash @ Linux][2] **
+<hr>
+
+## 以空白作为分隔符来拆分字符串构造数组
+
+ARR=($STR)
+
+注意$STR不能加引号。
+
+<pre lang="sh"> 
+STR="Hello World" 
+ARR=($STR) 
+declare -p ARR 
+declare -a ARR='([0]="Hello" [1]="World")'
+</pre>
+ 
+## 用指定分隔符来拆分字符串构造数组
+
+如果分隔符不是空白，而是别的，那么需要借助IFS变量。
+
+default IFS (Internal Field Separator, which is space/tab/new line)
+ 
+<pre lang="sh">
+echo $PATH 
+/usr/kerberos/sbin:/usr/kerberos/bin:/usr/apache/apache-ant-1.7.1/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+IFS=: DIRS=($PATH) 
+declare -p DIRS   
+declare -a DIRS='([0]="/usr/kerberos/sbin" [1]="/usr/kerberos/bin" [2]="/usr/apache/apache-ant-1.7.1/bin" [3]="/usr/local/sbin" [4]="/usr/local/bin" [5]="/sbin" [6]="/bin" [7]="/usr/sbin" [8]="/usr/bin" [9]="/root/bin")'
+</pre>
+ 
+但是下面的方式是不行的。
+
+<pre lang="sh">
+echo $PATH 
+/usr/kerberos/sbin:/usr/kerberos/bin:/usr/apache/apache-ant-1.7.1/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+IFS=: declare -a DIRS=($PATH) 
+declare -p DIRS 
+declare -a DIRS='([0]="/usr/kerberos/sbin:/usr/kerberos/bin:/usr/apache/apache-ant-1.7.1/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin")'
+</pre>
+ 
+## 使用read -a来拆分字符串构造数组
+
+All work and no play makes Jack a dull boy.
+只会用功不玩耍，聪明孩子也变傻。
+
+<pre lang="sh">
+PROVERB="All work and no play makes Jack a dull boy." 
+read -a WORDS <<< $PROVERB 
+echo "$WORDS" 
+All
+echo "${#WORDS}" 
+3
+echo "${WORDS[*]}" 
+All work and no play makes Jack a dull boy.
+echo "${WORDS[@]}" 
+All work and no play makes Jack a dull boy.
+echo "${#WORDS[*]}" 
+10
+echo "${#WORDS[@]}" 
+10
+</pre>
+ 
+前面的例子中要分割的字符串是以空格分割的，现在举一个以:分割的例子。
+
+<pre lang="BASH">
+echo $IFS 
+IFS=: read -r -a DIRS <<< "$PATH" 
+echo $IFS 
+declare -p DIRS 
+declare -a DIRS='([0]="/usr/kerberos/sbin" [1]="/usr/kerberos/bin" [2]="/usr/apache/apache-ant-1.7.1/bin" [3]="/usr/local/sbin" [4]="/usr/local/bin" [5]="/sbin" [6]="/bin" [7]="/usr/sbin" [8]="/usr/bin" [9]="/root/bin")'
+</pre>
+ 
+下面的例子是将当前工作目录以/进行分割。
+
+<pre lang="sh">
+echo $PWD 
+/root/work191/ct08/src/ctmw
+IFS=/ read -r -a PARTS <<< $PWD 
+declare -p PARTS 
+declare -a PARTS='([0]=" root work191 ct08 src ctmw")'
+IFS=/ read -r -a PARTS <<<"$PWD" 
+declare -p PARTS                 
+declare -a PARTS='([0]="" [1]="root" [2]="work191" [3]="ct08" [4]="src" [5]="ctmw")'
+</pre>
+ 
+## 使用cut命令分隔字符串
+
+<pre lang="sh">
+echo "$STR" | cut -f $N
+</pre>
+
+以TAB分隔，打印第N个子串值，N从1开始计数。
+
+<pre lang="sh">
+echo "$STR" | cut -d "$DELIM" -d $N
+</pre>
+
+以指定DELIM分隔，打印第N个子串值，N从1开始计数。
+其中，-d部分也可以是$N1,$N2,$N3的形式，即输出多个子串。
+ 
+A good beginning is half done.
+良好的开端是成功的一半。
+ 
+<pre lang="sh">
+STR="A good beginning is half done." 
+echo $STR | cut -d ' ' -f 2          
+good
+echo $PATH 
+/usr/kerberos/sbin:/usr/kerberos/bin:/usr/apache/apache-ant-1.7.1/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+echo $PATH | cut -d ':' -f 3 
+/usr/apache/apache-ant-1.7.1/bin
+echo $PATH | cut -d ':' -f 3,5 
+/usr/apache/apache-ant-1.7.1/bin:/usr/local/bin
+</pre>
+ 
+## 使用awk命令分隔字符串
+
+<pre lang="bash">
+echo "$STR" | awk '{print $1}'
+echo "$STR" | awk '{print $2}'
+</pre>
+
+注意：awk后面的参数用单引号，不能用双引号。
+
+<pre lang="sh"> 
+STR="A good beginning is half done." 
+echo "$STR" | awk '{print $1}' 
+A
+echo "$STR" | awk '{print $2}' 
+good
+echo "$STR" | awk '{print $5,$6}' 
+half done.
+</pre>
+
+[1]: http://zengrong.net/post/1518.htm
+[2]: http://codingstandards.iteye.com/blog/1164910
