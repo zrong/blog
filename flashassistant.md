@@ -45,7 +45,7 @@ ActionScript 3D引擎，有AS2、AS3、haXe版
 <a name="physics"></a>
 ## Flash物理引擎
 
-* [Nape Physics Engine](http://http://napephys.com/)  
+* [Nape Physics Engine](http://napephys.com/)  
 一个Haxe实现的物理引擎，可以用于AS3和Haxe。开源、免费，可用于商业项目。在AS3中使用时，提供一个swc库。
 * [APE](http://www.cove.org/ape/) (Aionscript Physics Engine)
 * [The Fisix Engine](http://fisixengine.com/default.asp "http://fisixengine.com/default.asp")  
@@ -79,7 +79,7 @@ ActionScript 3D引擎，有AS2、AS3、haXe版
 		* [Flixel Power Tools](http://www.photonstorm.com/flixel-power-tools) 在Flixel的基础上加入了一些工具。
 * [Bold Pixel engine](http://blog.vortixgames.com/contact-us/bold-pixel-engine)
 以copyPixels方法写的位图引擎。里面实现了缓存BitmapData贴图管理等优化，不过没有对不在显示区域的对象进行过滤，以及其它优化。
-* [FlashPunk](http://flashpunk.net/)（要翻墙才能访问）  
+* [FlashPunk](http://useflashpunk.net/)（要翻墙才能访问）  
 FlashPunk同样是个针对位图的开源引擎。它具有清晰的框架以及创建游戏需要的动画、碰撞等类库，让开发者更专注与游戏的设计与测试中。  
 	* 其主要特性包括：
 		* 相对独立与固定的帧频时间步长控制
