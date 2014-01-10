@@ -1,5 +1,7 @@
 [一个LuaSocket封装](http://zengrong.net/post/1980.htm)
 
+**2014-01-10更新：** SocketTCP 已经进入 quick-cocos2d-x 的 framework.
+<hr>
 在 [quick-cocos2d-x 中的 socket 技术选择：LuaSocket 和 WebSocket][1] 一文中，我提到了选择 [LuaSocket][2] 与服务器通信。
 
 为了方便使用，我对LuaSocket进行了封装。封装主要做了这样几件事：
