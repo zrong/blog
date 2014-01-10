@@ -1,5 +1,8 @@
 [用lua实现ByteArray和ByteArrayVarint](http://zengrong.net/post/1968.htm)
 
+**2014-01-10更新：** ByteArray 和 ByteArrayVarint 已经进入 quick-cocos2d-x 的 framework.
+<hr>
+
 许多 Actionscript 程序员已经从 Flash 转到 Cocos2d-x 了。那么以前的那些超级好用的类库都不见了，只好重新来过。
 
 我利用 Lua 和 lpack 库实现了一套 [lua版本的 ByteArray][3] 。这套库用于 quick-cocos2d-x(后称quick) 中。因此依赖一些 quick 中已经包含的c库和lua库 。
@@ -21,42 +24,44 @@ lpack 其实已经足够好用了。但是由于lpack的指针功能有限，所
 
 下面是使用ByteArray的例子：
 
-	-- 直接使用 lpack 库生成一个字节流
-	local __pack = string.pack("<bihP2", 0x59, 11, 1101, "", "中文")
+<pre lang="lua">
+-- 直接使用 lpack 库生成一个字节流
+local __pack = string.pack("<bihP2", 0x59, 11, 1101, "", "中文")
 
-	-- 创建一个ByteArray
-	local __ba = ByteArray.new()
+-- 创建一个ByteArray
+local __ba = ByteArray.new()
 
-	-- ByteArray 允许直接写入 lpack 生成的字节流
-	__ba:writeBuf(__pack)
+-- ByteArray 允许直接写入 lpack 生成的字节流
+__ba:writeBuf(__pack)
 
-	-- 不要忘了，lua数组是1基的。而且函数名称比 position 短
-	__ba:setPos(1)
+-- 不要忘了，lua数组是1基的。而且函数名称比 position 短
+__ba:setPos(1)
 
-	-- 这个用法和AS3相同了，只是有些函数名称被我改掉了
-	print("ba.len:", __ba:getLen())
-	print("ba.readByte:", __ba:readByte())
-	print("ba.readInt:", __ba:readInt())
-	print("ba.readShort:", __ba:readShort())
-	print("ba.readString:", __ba:readStringUShort())
-	print("ba.available:", __ba:getAvailable())
-	-- 自带的toString方法可以以10进制、16进制、8进制打印
-	print("ba.toString(16):", __ba:toString(16))
+-- 这个用法和AS3相同了，只是有些函数名称被我改掉了
+print("ba.len:", __ba:getLen())
+print("ba.readByte:", __ba:readByte())
+print("ba.readInt:", __ba:readInt())
+print("ba.readShort:", __ba:readShort())
+print("ba.readString:", __ba:readStringUShort())
+print("ba.available:", __ba:getAvailable())
+-- 自带的toString方法可以以10进制、16进制、8进制打印
+print("ba.toString(16):", __ba:toString(16))
 
-	-- 创建一个新的ByteArray
-	local __ba2 = ByteArray.new()
+-- 创建一个新的ByteArray
+local __ba2 = ByteArray.new()
 
-	-- 和AS3的用法相同，还支持链式调用
-	__ba2:writeByte(0x59)
-		:writeInt(11)
-		:writeShort(1101)
-	-- 写入空字符串
-	__ba2:writeStringUShort("")
-	-- 写入中文（UTF8）字符串
-	__ba2:writeStringUShort("中文")
+-- 和AS3的用法相同，还支持链式调用
+__ba2:writeByte(0x59)
+	:writeInt(11)
+	:writeShort(1101)
+-- 写入空字符串
+__ba2:writeStringUShort("")
+-- 写入中文（UTF8）字符串
+__ba2:writeStringUShort("中文")
 
-	-- 十进制输出
-	print("ba2.toString(10):", __ba2:toString(10))
+-- 十进制输出
+print("ba2.toString(10):", __ba2:toString(10))
+</pre>
 
 下面就是效果了：
 

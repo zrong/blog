@@ -33,6 +33,8 @@
 
 SocketTCP 位于我的 [lua库][6] 项目中。
 
+我在 [quick-cocos2d-x sample][9] 中提交制作了一个 sample 介绍用法。
+
 我会把自己在游戏中常用的 lua 功能陆续整合进入这个开源库，就像我的 [as3库][7] 和 [java库][8] 一样。
 
 [1]: http://zengrong.net/post/1965.htm
@@ -43,3 +45,4 @@ SocketTCP 位于我的 [lua库][6] 项目中。
 [6]: https://github.com/zrong/lua
 [7]: https://github.com/zrong/as3
 [8]: https://github.com/zrong/java
+[9]: https://github.com/dualface/quick-cocos2d-x/tree/develop/samples/luasocket
