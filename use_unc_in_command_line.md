@@ -1,0 +1,81 @@
+[在Windows批处理中处理网上邻居中的文件](http://zengrong.net/post/2022.htm)
+
+use UNC files in command line
+
+在 Windows 批处理中，默认不能处理网上邻居中的文件。本文介绍解决办法。
+<!--more-->
+
+## 问题
+
+当使用 `cd` 命令进入一个网上邻居目录的时候，会出现下面的错误提示：
+
+<pre>
+C:\Users\zrong>cd \\192.168.18.18\project
+'\\192.168.18.18\project'
+CMD does not support UNC paths as current directories.
+</pre>
+
+那么，如何处理？
+
+## 使用 pushd / popd
+
+使用 `pushd` 命令，可以自动将网上邻居中的共享目录映射为一个驱动器。
+
+例如，下面的命令映射了一个 `z:` 驱动器，然后我们就可以像操作本地硬盘一样操作该驱动器。
+
+<pre>
+C:\Users\zrong>pushd \\192.168.18.18\project
+Z:\>
+</pre>
+
+`pushd` 只能将共享的目录映射为驱动器的根目录，如果映射的是一个子目录，则会自动进入该驱动器的子目录。
+
+例如：
+
+<pre>
+C:\Users\zrong>pushd \\192.168.18.18\project\lulala
+
+Z:\lulala>
+</pre>
+
+使用完毕之后，使用 `popd` 命令取消映射。
+
+<pre>
+Z:\>popd
+
+C:\Users\zrong>
+</pre>
+
+注意， `pushd / popd` 是可以递归使用的，在 `pushd` 映射成功的驱动器中，可以继续使用 `pushd` 映射新的驱动器。
+
+## 使用 net use
+
+使用强大的 `net` 命令集中的 `use` 命令，也可以映射网络驱动器。
+
+<pre>
+C:\Users\zrong>net use z: \\192.168.18.18\project
+The command completed successfully.
+
+C:\Users\zrong>z:
+Z:\>
+</pre>
+
+与 `pushd` 不同的是，`net use` 可以直接将一个共享目录的子目录映射成为驱动器的根目录。例如：
+
+<pre>
+C:\Users\zrong>net use z: \\192.168.18.18\project\lulala
+The command completed successfully.
+</pre>
+
+此时， `z:` 驱动器的根目录就是 `\\192.168.18.18\project\lulala` 。
+
+删除映射：
+
+<pre>
+C:\Users\zrong>net use z: /del /yes
+z: was deleted successfully.
+</pre>
+
+## 参考文章
+
+[Simplify UNC usage in command line batch files](http://www.intelliadmin.com/index.php/2007/02/simplify-unc-usage-in-command-line-batch-files/)

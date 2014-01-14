@@ -104,3 +104,4 @@
 * [基于JMicron JMB363在CentOS上架设 RAID 的问题](http://zengrong.net/post/2009.htm)
 * [在CentOS 6.1上配置 4TB硬盘+RAID1](http://zengrong.net/post/2014.htm)
 * [在Bash中将字符串拆分成数组](http://zengrong.net/post/1591.htm)
+* [在Windows批处理中处理网上邻居中的文件](http://zengrong.net/post/2022.htm)
