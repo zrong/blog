@@ -1,3 +1,8 @@
+**2014-01-15更新：** 加入Gwill的文章连接。
+<hr>
+
+cocos2dx script binding: lua or javascript?
+
 这篇文章是我在之乎的一个回答： <http://www.zhihu.com/question/21130385/answer/18827858> ，有修改。
 
 **强调：这篇文章有极强的时效性，在1年时间内应该有一定指导意义。本文成文日期是2013年9月11日。**
@@ -43,6 +48,8 @@ Javascript Binding最大的优势，我认为就是游戏可以直接通过cocos
 
 **强调：这篇文章有极强的时效性，在1年时间内应该有一定指导意义。本文成文日期是2013年9月11日。**
 
+发现 G\_will 也写了一篇类似的文章： [Cocos2d-x 绑定脚本究竟选择 Lua 还是 JS ？][s2]
+
 [u1]: http://www.reddit.com/r/javascript/comments/ft7zn/why_i_switched_from_lua_to_javascript/
 [u2]: http://wiki.interfaceware.com/241.html
 [u3]: http://wiki.interfaceware.com/242.html
@@ -61,3 +68,4 @@ Javascript Binding最大的优势，我认为就是游戏可以直接通过cocos
 [u16]: https://github.com/cocos2d/cocos2d-js-tests
 
 [s1]: http://cn.quick-x.com/
+[s2]: http://ieqi.net/2013/12/02/cocos2d-x-%E7%BB%91%E5%AE%9A%E8%84%9A%E6%9C%AC%E7%A9%B6%E7%AB%9F%E9%80%89%E6%8B%A9-lua-%E8%BF%98%E6%98%AF-js-%EF%BC%9F/
