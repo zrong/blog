@@ -1,0 +1,18 @@
+[git svn dcommit 提交失败，原因：assertion "svn_fspath__is_canonical(child_fspath)" failed](http://zengrong.net/post/2030.htm)
+
+在使用 git svn 作为客户端对一个 svn 库进行提交的时候出现了错误：
+
+>git svn dcommit
+>Committing to https://xx.xx.xx.xx/svn/xyz/trunk ...
+>        R       CODING_STYLE.md => doc/CODING_STYLE.md
+>assertion "svn_fspath__is_canonical(child_fspath)" failed: file "/usr/src/packages/subversion/subversion-1.8.5-1/src/subversion-1.8.5/subversion/libsvn_subr/dirent_uri.c", line 2504, function: svn_fspath__skip_ancestor
+>error: git-svn died of signal 6
+
+错误发生在 cygwin 下，git 版本 1.7.9，svn 版本 1.8.5。
+
+[stackoverflow][1] 上说，原因是 git 的重命名检测机制与 svn 发生了冲突。有两个解决方案：
+
+1. 把 svn 降级到 1.7.9，一劳永逸。
+2. 使用 `git svn dcommit -C1 -l1` 来提交。这样会关闭 git 的重命名检测机制，这次提交会丢失重命名操作，取而代之的是一次 remove 和 一次 add 操作，就和 svn 1.4 一样。 
+
+[1]: http://stackoverflow.com/questions/17693255/git-svn-dcommit-fails-because-of-assertion-error-svn-fspath-is-canonicalchild
