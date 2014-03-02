@@ -1,0 +1,61 @@
+[cygwin在windows8.1上的chmod无法修改权限](http://zengrong.net/post/2048.htm)
+
+这几天安装了windows 8.1，在使用cygwin的时候发现了问题。
+
+## 表现
+
+在使用git clone一个项目时，cygwin告知 .ssh 的权限不正常：
+
+<pre>
+$ git clone git@github.com:zrong/cocos2d-x-filters.git
+Cloning into 'cocos2d-x-filters'...
+Bad owner or permissions on /home/rong/.ssh/config
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+</pre>
+
+查看一下权限，是这样的：<!--more-->
+
+<pre>
+$ ll .ssh
+total 47K
+-rw-rw----+ 1 rong None 1.7K 2012-04-08  admin
+-rw-rw----+ 1 rong None  398 2012-04-08  admin.pub
+-rw-rw----+ 1 rong None  725 09-13 22:03 config
+-rw-rw----+ 1 rong None 1.7K 03-02 16:58 id_rsa
+-rw-rw----+ 1 rong None  402 03-02 16:58 id_rsa.pub
+-rw-rw----+ 1 rong None  13K 10-06 21:20 known_hosts
+</pre>
+
+使用 `chomd 600 *` ，发现无效，权限依然是和上面一样。
+
+## 解决
+
+要解决这个问题，可以先为 .ssh 文件夹给予一个有效的Group。例如：
+
+<pre>
+chgrp Users .ssh
+</pre>
+
+然后再次执行 `chmod 600 -R ~/.ssh` 就搞定了。
+
+我猜这是因为 Windows 8 的权限控制发生了变化。在 Windows 7 中，可以使用 None 作为用户组，而在 Windows 8 中就必须指定一个存在的用户组。
+
+## 进一步解决
+
+上面的方案解决了 .ssh 的权限问题，目前 `git clone` 正常了。但是，当我在 cygwin 下新建一个文件的时候，它的属组依然是 None 。
+
+可以通过修改 `/etc/passwd` 文件来解决这个问题:
+
+1. 在 `/etc/group` 中找到 Users 用户对应的id，我的是 545；
+2. 在 `/etc/passwd` 中找到 rong 用户条目，将它的属组id改为刚才找到的id；
+3. 重启 cygwin，搞定。
+
+## 参考文章
+
+* [Why cannot chmod in cygwin on Windows 8 CP?][1]
+* [cygwin permissions bug on Windows 8][2]
+
+[1]: http://stackoverflow.com/questions/9561759/why-cannot-chmod-in-cygwin-on-windows-8-cp
+[2]: http://www.verious.com/article/cygwin-permissions-bug-on-windows-8/
