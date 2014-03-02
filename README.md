@@ -106,4 +106,5 @@
 * [在Bash中将字符串拆分成数组](http://zengrong.net/post/1591.htm)
 * [在Windows批处理中处理网上邻居中的文件](http://zengrong.net/post/2022.htm)
 * [Adobe AIR与Unity3D都是跨平台，那个更好呢？](http://zengrong.net/post/2027.htm)
+* [git svn dcommit 提交失败，原因：assertion "svn_fspath__is_canonical(child_fspath)" failed](http://zengrong.net/post/2030.htm)
 * [cygwin在windows8.1上的chmod无法修改权限](http://zengrong.net/post/2048.htm)
