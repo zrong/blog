@@ -108,3 +108,4 @@
 * [Adobe AIR与Unity3D都是跨平台，那个更好呢？](http://zengrong.net/post/2027.htm)
 * [git svn dcommit 提交失败，原因：assertion "svn_fspath__is_canonical(child_fspath)" failed](http://zengrong.net/post/2030.htm)
 * [cygwin在windows8.1上的chmod无法修改权限](http://zengrong.net/post/2048.htm)
+* [在 cocos2d-x 中使用多组shader实现多重滤镜](http://zengrong.net/post/2052.htm)

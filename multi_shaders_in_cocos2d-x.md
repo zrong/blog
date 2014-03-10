@@ -1,0 +1,80 @@
+[在 cocos2d-x 中使用多组shader实现多重滤镜](http://zengrong.net/post/2052.htm)
+
+在 cocos2d-x 中使用 shader 实现了滤镜之后，我发现实现多重滤镜是个问题。
+
+## 多重滤镜是什么
+
+举例说，我希望先对一个纹理执行一次 blur 滤镜，然后再执行一次 glow 滤镜。这样纹理既有模糊效果也有发光效果。
+
+Fireworks 和 Flash 中的滤镜，都允许这样进行叠加。在Actionscript 3中，Sprite 的 filters 属性本来就是一个滤镜数组。这说明至少在API的设计上，Actionscript 3 鼓励多重滤镜的使用。
+
+## 多重滤镜的问题
+
+而在 cocos2d-x 中，则不是这样。
+
+cocos2d-x 中的 shader 支持位于几个类中，它们是：<!--more-->
+
+* `shaders/CCGLProgram`
+* `shaders/CCShaderCache`
+* `shaders/ccShaders`
+* `shaders/ccGLStateCache`
+
+其中， CCGLPrgram 负责 shader 的生成、编译、缓存、attribute 的 bind、uniform 设置等等工作，是非常重要的一个类。在这个类中， `m_uVertShader` 和 `m_uFragShader` 这两个用来指定 shader 位置索引值的变量值定为 0，且没有地方进行修改。
+
+这也就是说，如果不对 CCGLProgram 进行 hack ，是无法实现多重shader的。
+
+那么，能不能使用多个 CCGLProgram 实例实现多重 shader 呢？
+
+从 CCNode 的源码来看，每个 CCNode 实例都持有一个 `m_pShaderProgram` 成员变量，所有的渲染操作都是基于这一个变量来实现。那么也就是说，在不对 CCNode 进行 hack 的前提下，也无法实现多重渲染。
+
+## 使用 CCRenderTexture
+
+CCRenderTexture 可以用来渲染屏幕外的内容。我们一般使用它将纹理渲染到一块屏幕之外的区域中，然后对纹理进行进一步操作。在需要的时候，再将其渲染到屏幕上。
+
+我们可以利用 CCRenderTexture 来实现多重滤镜支持。
+
+在下面的代码中，CCHBlurFilter 和 CCVBlurFilter 分别负责实现横向模糊和纵向模糊。而CCFilteredSprite 则负责根据 Filter 进行渲染。
+
+<pre lang="cpp">
+//建立横向和纵向模糊滤镜
+CCHBlurFilter* __hblurFilter = CCHBlurFilter::create(0.02f);
+CCBlurBaseFilter* __vblurFilter = CCVBlurFilter::create(0.02f);
+//对helloworld.pn使用横向模糊滤镜
+CCSprite* __hs = CCFilteredSprite::create("helloworld.png", __hblurFilter);
+__hs->setAnchorPoint(ccp(0,0));
+CCSize __size = __hs->getContentSize();
+//将进行过横向模糊的纹理渲染到CCRenderTexture中
+CCRenderTexture* __canva = CCRenderTexture::create(__size.width, __size.height);
+__canva->begin();
+__hs->visit();
+__canva->end();
+//根据CCRenderTexture中的纹理创建新的纹理
+CCTexture2D* __tex2 = new CCTexture2D();
+__tex2->initWithImage(__canva->newCCImage(true));
+__tex2->autorelease();
+//根据新的纹理创建最终的CCFilteredSprite，应用纵向模糊滤镜
+CCSprite* __final = CCFilteredSprite::createWithTexture(__tex2, __vblurFilter);
+__final->setAnchorPoint(ccp(0,0));
+__final->setPosition(ccp(0,0));
+//显示最终效果
+this->addChild(__final);
+</pre>
+
+如果把渲染的功能集成到 CCFilteredSprite 中，就可以简化调用，例如：
+
+<pre lang="cpp">
+CCSprite* __final = CCFilteredSprite::create("helloworld.png", 
+	CCArray::create(__hblurFilter, __vblurFilter, NULL));
+this->addChild(__final);
+</pre>
+
+上面的关于滤镜的类可以在 [cocos2d-x-filters][3] 项目中找到。这个项目还没有完成，不建议用于产品。
+
+## 参考文章
+
+* [Multi shader cocos2d-x 2.2.1][1]
+* [How to use CCRenderTexture for Motion Blur, Screenshots and Drawing Sketches][2]
+
+[1]: http://www.cocos2d-x.org/forums/6/topics/42388 
+[2]: http://www.learn-cocos2d.com/2011/12/how-to-use-ccrendertexture-motion-blur-screenshots-drawing-sketches/
+[3]: https://github.com/zrong/cocos2d-x-filters
