@@ -1,0 +1,46 @@
+[quick-cocos2d-x中的绘图API](http://zengrong.net/post/2055.htm)
+
+quick-cocos2d-x 提供的绘图API的相关C++文件位于 `draw_nodes` 文件夹中，有这样几个：
+
+# CCDrawingPrimitives  
+
+提供 ccDraw\* 开头的全局方法，可用来绘制游戏开发中调试用的图形。cocos2d-x开发组在该功能源码前使用了这样的说明：
+
+>LEGACY FUNCTIONS
+>USE CCDrawNode instead
+
+在ccDrawCubicBezier下面还有这样的说明：<!--more-->
+
+>This function could be pretty slow. Use it only for debugging purposes. 
+
+这说明这并不是开发组推荐的方法。因为它没有使用批量渲染，执行起来可能会很慢。
+
+使用这些方法还有个问题，就是必须将绘制的函数调用放在 CCNode 的 draw 方法中。这意味着在单独使用绘图功能的时候，可能需要实现一个继承 CCNode 的类，并实现其中的 draw 方法。
+
+# CCDrawNode
+
+它支持批量渲染绘制，但支持的绘制功能并没有 CCDrawingPrimitives 多。它只提供了3个方法：
+
+* drawDot 画点
+* drawSegment 画线段 
+* drawPolygon 画多边形 
+
+当然，画多边形功能其实可以画任何图像。只需要顶点坐标值即可。
+
+例如 [display.newSolidCircle][1] 这个方法就是使用 CCDrawNode 的 drawPolygon 方法来绘制圆形、饼型或扇形（还未完成）。
+
+# CCShapeNode
+
+**这个文件只在 quick-cocos2d-x 中有，标准的 cocos2d-x 中是找不到的。** 它包含了1个基类和4个子类：
+
+* CCShapeNode
+* CCCircleShape
+* CCRectShape
+* CCPointShape
+* CCPolygonShape
+
+CCShapeNode 是基类，定义了诸如设置颜色、线宽、线性等公用方法。其他几个类是子类，分别实现了画圆、画矩形、画点和画多边形。
+
+CCShapeNode 是对 CCDrawingPrimitives 的封装。它解决了上面我在 CCDrawingPrimitives 中提到的问题，使绘图操作更简便。
+
+[1]: https://github.com/zrong/quick-cocos2d-x/blob/develop/framework/display.lua
