@@ -111,3 +111,4 @@
 * [在 cocos2d-x 中使用多组shader实现多重滤镜](http://zengrong.net/post/2052.htm)
 * [在quick-cocos2d-x中对非2的幂纹理进行平铺操作](http://zengrong.net/post/2054.htm)
 * [quick-cocos2d-x中的绘图API](http://zengrong.net/post/2055.htm)
+* [优秀的程序员和一般的程序员差别在哪？](http://zengrong.net/post/2056.htm)
