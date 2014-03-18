@@ -112,3 +112,4 @@
 * [在quick-cocos2d-x中对非2的幂纹理进行平铺操作](http://zengrong.net/post/2054.htm)
 * [quick-cocos2d-x中的绘图API](http://zengrong.net/post/2055.htm)
 * [优秀的程序员和一般的程序员差别在哪？](http://zengrong.net/post/2056.htm)
+* [真正的程序员应该能自己解决问题](http://zengrong.net/post/2057.htm)
