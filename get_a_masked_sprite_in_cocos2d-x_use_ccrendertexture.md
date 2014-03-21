@@ -183,9 +183,14 @@ end
 
 [在 cocos2d-x 中实现蒙版支持（二）——使用 CCClippingNode（待完成）][1] 一文中，我们会再看看另一种性能更好的实现遮罩的方法。
 
+## 参考文章
+
+* [How To Mask a Sprite with Cocos2D 1.0][4]
+
 [1]: http://zengrong.net
 [2]: http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBlendFunc.xml
 [3]: http://www.andersriggelsen.dk/glblendfunc.php
+[4]: http://www.raywenderlich.com/4421/how-to-mask-a-sprite-with-cocos2d-1-0
 
 [11]: /wp-content/uploads/2014/03/masked.png
 [12]: /wp-content/uploads/2014/03/mask.png
