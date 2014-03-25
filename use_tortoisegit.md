@@ -1,3 +1,7 @@
+[使用Git、Git GUI和TortoiseGit](http://zengrong.net/post/1722.htm)
+
+Using git, git gui and tortoisegit
+
 <span style="color:red;">2012-12-26更新</span>：在TortoiseGit中使用SSH host
 <span style="color:red;">2012-12-30更新</span>：在安装的时候选择TortoiseGit使用的SSH客户端
 <span style="color:red;">2013-11-05更新</span>：加入从 putty 切换到 OpenSSH
@@ -139,7 +143,7 @@ msysGit使用一种很BT也很NB的方式来安装。先安装一个最小的[Mi
 
 #### 在TortoiseGit中使用SSH host
 
-如果使用Putty作为TortoiseGit的SSH客户端，那么就不能使用OpenSSH的 ~/.ssh/config 来定义使用不同的端口和密钥访问SSH，而是需要使用 PuTTY Session。这篇文章进行了详细讲解：http://zengrong.net/post/1775.htm
+如果使用Putty作为TortoiseGit的SSH客户端，那么就不能使用OpenSSH的 ~/.ssh/config 来定义使用不同的端口和密钥访问SSH，而是需要使用 PuTTY Session。这篇文章进行了详细讲解： [在TortoiseGit中使用SSH host](http://zengrong.net/post/1775.htm)
 
 #### 从 putty 切换到 OpenSSH
 
@@ -221,5 +225,4 @@ git config core.filemode false
 * <http://ycyuxin.blog.hexun.com/37440972_d.html>
 * <http://stackoverflow.com/questions/4181870/git-on-windows-what-do-the-crlf-settings-mean>
 * <http://www.360doc.com/content/11/0117/18/2036337_87178762.shtml>
-
 
