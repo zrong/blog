@@ -114,3 +114,4 @@
 * [优秀的程序员和一般的程序员差别在哪？](http://zengrong.net/post/2056.htm)
 * [真正的程序员应该能自己解决问题](http://zengrong.net/post/2057.htm)
 * [在 cocos2d-x 中实现蒙版支持（一）——使用 CCRenderTexture ](http://zengrong.net/post/2060.htm)
+* [在cocos2d-x中实现橡皮擦功能](http://zengrong.net/post/2067.htm)

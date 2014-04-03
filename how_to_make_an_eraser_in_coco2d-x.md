@@ -1,0 +1,145 @@
+[在cocos2d-x中实现橡皮擦功能](http://zengrong.net/post/2067.htm)
+
+How to make an eraser in cocos2d-x?
+
+cocos2d-x 是使用 OpenGL ES 来渲染的，实现橡皮擦，需要一点点 OpenGL 知识。
+
+/\* 下面是可以跳过不看的废话。
+
+是的，不需要 OpenGL ，我们也能使用 cocos2d-x 制作出游戏。至少我接触过的几个团队都是这么干的，有的团队中甚至无人了解 C++。
+
+但是，在我学习 cocos2d-x 的这几个月里，我发现不学习 OpenGL ES 对我来说是无法想象的。在看源码的时候，你不能碰到 OpenGL 就无视它们，对程序员来说这是罪过。
+
+这不难，Trust me.
+
+废话结束 \*/
+
+## 依赖
+
+本文基于 cocos2d-x 2.2.2
+
+## 效果截图
+
+![eraser](/wp-content/uploads/2014/04/eraser.png)
+
+## 原理
+
+先将要被擦除的像素渲染到 FrameBuffer 中，然后使用 Alpha 为 0 的像素块与已有像素做混合，将已有的像素替换成 Alpha 为 0 的像素即可完成擦除。<!--more-->
+
+**注意，这里说的“擦除”，准确的描述是“擦除到透明”。对于不透明画布（例如白色背景）的擦除，只需要使用画布的背景颜色进行绘制就行了，本文并不讨论。**
+
+我们并不需要真的去考虑 FrameBuffer 的建立和渲染，cocos2d-x 已经为我们准备好了 CCRenderTexture 类。
+
+使用 CCRenderTexture ，我们可以方便地完成绘制工作，比使用 Shader 要灵活，弱点可能就是性能较低。
+
+设置混合模式，可使用 CCNode 提供的 ccBlendFunc 这个预定义类型。
+
+## C++代码
+
+这里仅贴出主要代码，详细的代码请在本文最后下载。
+
+本文代码使用 cocos2d-x project\_creator 创建的项目修改。
+
+1\. 以下代码位于 HelloWorldScene.cpp 文件的 init 方法中，详细的内容看注释。
+<pre lang="C++"
+//启用触摸支持
+this->setTouchMode(kCCTouchesOneByOne);
+this->setTouchEnabled(true);
+//... 其它初始化内容
+//...
+// 显示背景图片，方便查看“擦除到透明”效果
+CCPoint center = ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y);
+CCSprite* pSprite = CCSprite::create("HelloWorld.png");
+pSprite->setPosition(center);
+this->addChild(pSprite, 0);
+
+// 创建一个橡皮擦，注意颜色的设置是全透明黑色
+pEraser = CCDrawNode::create();
+pEraser->drawDot(ccp(0, 0), 20, ccc4f(0, 0, 0, 0));
+pEraser->retain();
+
+// 创建画布，并显示它
+pRTex = CCRenderTexture::create(visibleSize.width, visibleSize.height);
+pRTex->setPosition(ccp(visibleSize.width/2, visibleSize.height/2));
+this->addChild(pRTex, 10);
+
+// 创建被擦除的内容，将其渲染到画布上
+CCSprite* pBg = CCSprite::create("dirt.png");
+pBg->setAnchorPoint(ccp(0.5,0.5));
+pBg->setPosition(center);
+pRTex->begin();
+pBg->visit();
+pRTex->end();
+</pre>
+
+2\. 下面是执行擦除逻辑。代码位于 ccTouchMoved 方法中。
+
+<pre lang="C++">
+// 获取触摸坐标并移动橡皮擦到该坐标
+CCPoint touchPoint = touch->getLocation();
+pEraser->setPosition(touchPoint);
+
+// 设置混合模式
+ccBlendFunc blendFunc = { GL_ONE, GL_ZERO };
+pEraser->setBlendFunc(blendFunc);
+
+// 将橡皮擦的像素渲染到画布上，与原来的像素进行混合
+pRTex->begin();
+pEraser->visit();
+pRTex->end();
+</pre>
+	
+## 关于混合
+
+[混合（blend）][1] 发生在 OpenGL 将像素渲染 FrameBuffer 之前。我们使用的混合模式 `{GL_ONE, GL_ZERO}` 的含义如下：
+
+完全使用源像素（橡皮擦）的内容，替换掉目标像素（被擦除画面）对应坐标的内容。
+
+假设源像素（橡皮擦）的颜色值为 `Rs, Gs, Bs, As` ，目标像素的颜色值为 `Rd, Gd, Bd, Ad` ，那么使用上面的混合模式，最终的像素值为：
+
+    (Rs*1 + Rd*0), (Gs*1 + Gd*0), (Bs*1 + Bd*0), (As*1 + Ad*0)
+
+从上面的公式可以看出，最终的结果与橡皮擦原来的颜色值完全相同。
+
+## quick-cocos2d-x lua代码
+
+lua代码依赖我forked的 [quick-cocos2d-x][2] 。
+
+display.newSolidCircle 方法，目前并没有收录进入 dualface 的官方 quick-cocos2d-x 版本。
+
+<pre lang="lua">
+
+local __touchPoint = cc.p(0, 0)
+local __sp = display.newSolidCircle(20, {fillColor=cc.c4f(0,0,0,0)})
+local __bf = ccBlendFunc:new()
+__bf.src = GL_ONE
+__bf.dst = GL_ZERO
+__sp:setBlendFunc(__bf)
+	
+local __rTex = CCRenderTexture:create(display.width, display.height)
+__rTex:begin()
+__sp:align(display.CENTER, __touchPoint.x, __touchPoint.y)
+__sp:visit()
+__rTex:endToLua()
+
+__rTex:setPosition(display.cx, display.cy)
+self:addChild(__rTex)
+</pre>
+
+## 项目下载
+
+请将此项目放在 cocos2d-x 中的 projects 目录下。
+
+[download id="119"]
+
+## 参考文章
+
+* [Eraser in OpenGL ES iphone][11]
+* [Blending a texture to erase alpha values softly with OpenGL][12]
+* ["Scratch Off" effect (mask) CCRenderTexture + CCSprite instead of a solid color][13]
+
+[1]: http://www.khronos.org/opengles/sdk/docs/man/xhtml/glBlendFunc.xml
+[2]: https://github.com/zrong/quick-cocos2d-x
+[11]: http://stackoverflow.com/questions/3439616/eraser-in-opengl-es-iphone
+[12]: http://stackoverflow.com/questions/4074955/blending-a-texture-to-erase-alpha-values-softly-with-opengl
+[13]: www.cocos2d-iphone.org/forums/topic/scratch-off-effect-mask-ccrendertexture-ccsprite-instead-of-a-solid-color/
