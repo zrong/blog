@@ -44,7 +44,7 @@ apt-cyg install libncurses-devel --mirror http://mirrors.163.com/cygwin
 
 编译和安装的方式与 `libevent` 相同，这里不再重复。
 
-## 3. 下载mtux源码
+## 3. 下载tmux源码
 
 在这里下载tmux源码：<http://tmux.sourceforge.net/>，可能需要翻墙，目前最新版本为1.7。
 
