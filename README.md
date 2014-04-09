@@ -116,3 +116,4 @@
 * [在 cocos2d-x 中实现蒙版支持（一）——使用 CCRenderTexture ](http://zengrong.net/post/2060.htm)
 * [在cocos2d-x中实现橡皮擦功能](http://zengrong.net/post/2067.htm)
 * [在手机游戏开发中如何选择图像素材格式？](http://zengrong.net/post/2070.htm)
+* [如何升级Ubuntu中的OpenSSL库](http://zengrong.net/post/2074.htm)
