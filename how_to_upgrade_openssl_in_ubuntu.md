@@ -10,7 +10,7 @@ How to upgrade OpenSSL in unbutu?
 
 我最担心的，是在升级 OpenSSL 的过程中，远程 SSH 无法连线。
 
-在 OSChina 和 [Segmentfault][5] 上询问后，得知这种情况不会发生。
+在 [OSChina][6] 和 [Segmentfault][5] 上询问后，得知这种情况不会发生。
 
 另外，可以采用比较保险的方法：
 
@@ -27,6 +27,7 @@ How to upgrade OpenSSL in unbutu?
 [3]: http://drops.wooyun.org/papers/1381
 [4]: https://www.openssl.org/source/openssl-1.0.1g.tar.gz
 [5]: http://segmentfault.com/q/1010000000460583
+[6]: http://www.oschina.net/question/948725_150419
 [11]: http://askubuntu.com/questions/429385/upgrade-openssl-on-ubuntu-12-04
 [12]: http://www.markdream.com/server/linux-update-openssl.shtml
 [13]: http://wangyan.org/blog/install-openssl-from-source.html
