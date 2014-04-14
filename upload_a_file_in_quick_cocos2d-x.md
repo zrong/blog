@@ -1,0 +1,217 @@
+[在 cocos2d-x 中使用 libcurl 实现上传文件功能（附quick-cocos2d-x封装）](http://zengrong.net/post/2088.htm)
+
+Upload a file use libcurl in cocos2d-x.
+
+本文基于 cocos2d-x 2.2.2 和 [quick-cocos2d-x zrong修改版 3be9b8][1]
+
+目前做的项目中需要实现b截图分享功能，我的设计思路是使用 CCRenderTexture 来截图，并通过HTTP上传到截图分享服务器。
+
+通过查看 cocos2d-x 源码，我发现 cocos2d-x 封装了一个 CCHttpClient 类，用于调用 libcurl 实现HTTP协议通信。不过并没有实现文件上传功能。
+
+但 quick-cocos2d-x 不知道什么原因，删除了这个 CHttpClient 实现，而改用了 CCHTTPRequest 类，内部封装的依然是 libcurl ，但也依然没有实现文件上传功能。
+
+既然都是封装 libcurl ，我们完全完全为现有的类扩展上传文件功能。在本文中，我基于 quick-cocos2d-x 的 CCHTTPRequest 类进行了扩展。cocos2d-x 如果需要扩展，方法也类似。<!--more-->
+
+如果不愿意了解具体的封装过程，请直接clone我封装好的版本：[quick-cocos2d-x forked by zrong][11]
+
+## cURL 的文档
+
+学习 cURL 最好的文档自然在 [cURL 的官网][2] ，这里能找到所有的官方文档以及推荐，这些文档都写得不错。
+
+如果来不及想看API，可以直接戳这里：[Using the libcurl C Interface][3] 。
+
+直接看源码则是最快的上手方式：[libcurl - small example snippets][4] 。
+
+php 中的 [cURL 函数][5] 也是不错的学习材料。优点就是有中文资源，缺点就是一些地方和标准 libcurl 库名称和用法不太相同。
+
+## 表单上传用法
+
+如果单纯使用 libcurl 来上传，那么官方的sample中就提供了具体的用法。戳这里：[postit2.c][6]。
+
+因为有了上面的sample，我这里也就不再画蛇添足地演示整个流程了。我只说自认为重要（意思就是我犯过错）的地方吧。
+
+在这个sample中，我们采用的是表单上传，因此采用了 `curl_formadd` 方法来构建表单。
+
+我的表单是这样的：
+
+<pre lang="HTML">
+<form method="post" enctype="multipart/form-data">
+	<input id="filepath" name="filepath" type="file" />
+	<input type="submit" value="upload" />
+	<input name="act" type="hidden" value="upload" />
+</form>
+</pre>
+
+在这个表单中，我一共给出了2个变量：
+
+* filepath 指定要上传的文件；
+* act 是个要传递的变量，值是 upload。
+
+相应的，我的封装是这样的（省略了curl的初始化和变量定义，省略了curl的调用和资源的销毁。具体的流程看上面提到的 [postit2.c][6]）：
+
+<pre lang="C++">
+void CCHTTPRequest::setUploadFile(const char *filepath)
+{
+	curl_formadd(&m_formPost, &m_lastPost, 
+		CURLFORM_COPYNAME, "filepath",
+		CURLFORM_FILE, filepath,
+		CURLFORM_CONTENTTYPE, "Image/jpeg",
+		CURLFORM_END);
+	curl_formadd(&m_formPost, &m_lastPost,
+		CURLFORM_COPYNAME, "act",
+		CURLFORM_COPYCONTENTS, "upload",
+		CURLFORM_END);
+	curl_easy_setopt(m_curl, CURLOPT_HTTPPOST, m_formPost);
+}
+</pre>
+
+简单点说，我需要把表单中使用到的所有变量通过 `curl_formadd` 命令添加到表单中，然后使用 `curl_easy_setopt` 将表单内容传递给curl。
+
+这两个API的说明：
+
+* [curl_formadd][7]
+* [curl_easy_setopt][8]
+
+在使用 `CURLFORM_FILE` 来传递值的时候，可以一起再设定一个 `CURLFORM_CONTENTTYPE` 指定上传的文件类型(Content-Type/Mime-Type)。常见的取值可以在这里找到： [Content-Type/Mime-Type][9]  。
+
+## 扩展 CCHTTPRequest
+
+根据上面的介绍，我对 quick-cocos2d-x 中包含的 CCHTTPRequest 进行了扩展，使其可以支持上传文件。
+
+在 CCHTTPRequest.h 文件中，定义两个成员和两个方法：
+
+<pre lang="C++">
+//......
+private:
+	curl_httppost *m_formPost;
+	curl_httppost *m_lastPost;
+public:
+	//用于设置上传文件名以及文件类型
+	void addFormFile(const char *name, const char *filePath, const char *fileType="application/octet-stream");
+	//用于增加附加的表单变量
+	void addFormContents(const char *name, const char *value);
+//......
+</pre>
+
+在 CCHTTPRequest.cpp 文件中，实现着这个方法：
+
+<pre lang="C++">
+void CCHTTPRequest::addFormFile(const char *name, const char *filePath, const char *contentType)
+{
+	curl_formadd(&m_formPost, &m_lastPost,
+		CURLFORM_COPYNAME, name,
+		CURLFORM_FILE, filePath,
+		CURLFORM_CONTENTTYPE, contentType,
+		CURLFORM_END);
+}
+
+void CCHTTPRequest::addFormContents(const char *name, const char *value)
+{
+	curl_formadd(&m_formPost, &m_lastPost,
+		CURLFORM_COPYNAME, name,
+		CURLFORM_COPYCONTENTS, value,
+		CURLFORM_END);
+}
+</pre>
+
+找到 onRequest 方法的定义，在 `curl_easy_perform` 之前，加入这句代码：
+
+<pre lang="C++">
+if (m_formPost)
+{
+	curl_easy_setopt(m_curl, CURLOPT_HTTPPOST, m_formPost);
+}
+</pre>
+
+还是在 onRequest 方法中，在 `curl_easy_clearup` 之后，加入这句代码：
+
+<pre lang="C++">
+if (m_formPost)
+{
+	curl_formfree(m_formPost);
+	m_formPost = NULL;
+}
+</pre>
+
+## 导出到 lua
+
+CCHTTPRequest 并没有单独的tolua文件。所有位于 `lib/cocos2d-x/external/extra` 包中的功能的导出都集中在 `lib/cocos2d-x/external/extra/luabinding/cocos2dx_extra_luabinding.tolua` 中。关于这点，我足足找了半小时，多亏 [ChildhoodAndy][10] 提醒，再次感谢。
+
+在该文件中相应的地方增加这两个要导出的方法，然后运行 `lib/cocos2d-x/external/extra/luabinding/build.bat` ，并重新编译 quick-x-player 即可实现导出。
+
+## 完善 network.lua
+
+我在 network.lua 中增加了一个 uploadFile 方法，这样用起来更加方便。
+
+该方法定义如下：
+
+<pre lang="lua">
+--- 通过 CCHTTPRequest 上传一个文件
+-- @author zrong(zengrong.net)
+-- Creation: 2014-04-14
+-- @param callback 和 network.createHTTPRequest 的第一个参数一样。
+-- @param url 和 network.createHTTPRequest 的第二个参数一样。
+-- @param datas 包含下列值：
+-- 		fileFiledName（表单中的type值为file的input标签的name值）；
+-- 		filePath（要上传文件的绝对路径）
+-- 		contentType（可选，上传文件的 Content-Type。默认的值为 application/octet-stream）
+-- 		extra（可选，要附加到form中的变量的键值对） 
+function network.uploadFile(callback, url, datas)
+	assert(datas or datas.fileFieldName or datas.filePath, "Need file datas!")
+	local request = network.createHTTPRequest(callback, url, "POST")
+	local fileFieldName = datas.fileFieldName
+	local filePath = datas.filePath
+	local contentType = datas.contentType
+	if contentType then
+		request:addFormFile(fileFieldName, filePath, contentType)
+	else
+		request:addFormFile(fileFieldName, filePath)
+	end
+	if datas.extra then
+		for i in ipairs(datas.extra) do
+			local data = datas.extra[i]
+			request:addFormContents(data[1], data[2])
+		end
+	end
+	request:start()
+	return request
+end
+</pre>
+
+使用范例：
+
+<pre lang="lua">
+network.uploadFile(function(evt)
+		if evt.name == "completed" then
+			local request = evt.request
+			printf("REQUEST getResponseStatusCode() = %d", request:getResponseStatusCode())
+			printf("REQUEST getResponseHeadersString() =\n%s", request:getResponseHeadersString())
+			printf("REQUEST getResponseDataLength() = %d", request:getResponseDataLength())
+			printf("REQUEST getResponseString() =\n%s", request:getResponseString())
+		end
+	end,
+	"http://127.0.0.1/upload.php",
+	{
+		fileFieldName="filepath",
+		filePath=device.writablePath.."screen.jpg",
+		contentType="Image/jpeg",
+		extra={
+			{"act", "upload"},
+		}
+	}
+)
+</pre>
+
+已经封装好的版本，请查看： [quick-cocos2d-x forked by zrong][11]
+
+[1]: https://github.com/zrong/quick-cocos2d-x/tree/3be9b8a6caeb7d2fac36de1d721c0c57c6635a85
+[2]: http://curl.haxx.se/docs/
+[3]: http://curl.haxx.se/libcurl/c/
+[4]: http://curl.haxx.se/libcurl/c/example.html
+[5]: https://php.net/manual/zh/ref.curl.php
+[6]: http://curl.haxx.se/libcurl/c/postit2.html
+[7]: http://curl.haxx.se/libcurl/c/curl_formadd.html
+[8]: http://curl.haxx.se/libcurl/c/curl_easy_setopt.html
+[9]: http://tool.oschina.net/commons
+[10]: http://childhood.logdown.com/
+[11]: https://github.com/zrong/quick-cocos2d-x/
