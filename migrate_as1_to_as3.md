@@ -1,0 +1,97 @@
+[从 Actionscript 1.0 迁移到 Actionscript 3.0](http://zengrong.net/post/2089.htm)
+
+Migrate Actionscript 1.0 to Actionscript 3.0
+
+这并不是一篇好几年前的老文章，而是我去年10月份在之乎上的一个回答，今天有知友回复让我看到这篇，于是把她转到自己的博客上来。
+
+原文见这里：[AS1.0/2.0 改写成 AS3.0 难吗？一款中型的flash游戏改写，大概需要多少时间和成本？][1]
+
+做为一个从AS1一路写到AS3的程序员，我来回答一下。
+
+* 首先需要声明的是，关于难不难，每个人有自己的判断标准，这个我不会回答。
+* 其次需要声明的是，我也无法回答大概需要多少时间和成本，但看完我的回答后，你应该能自己计算出来。
+
+AS从1到2，其实没有什么本质的改变，AS2.0只是加入了一个似是而非的class关键字而已，最终编译成的字节码，还是一样的。
+
+而AS3就完全不同，从FlashPlayer9（第一个支持AS3的Player）开始，FlashPlayer就内置了2套AVM虚拟机，AVM1针对AS1+2，AVM2针对AS3。AS3甚至专门加了一个类AVM1Movie来处理AS1+2的MC，看这个： [AVM1Movie - Adobe ActionScript? 3 (AS3 ) API 参考][2] 。我认为，即使说AS3是另外一门语言也不为过。<!--more-->
+
+## 个人升级经历
+
+我在从AS1转到AS2的时候，没什么太难的感觉。当时只是深入学了一些面向对象编程概念和设计模式知识，这些概念都是面向对象编程必学的内容，是放之语言四海皆准的准则，对于有大量项目经验的人来说简直就是让你高端大气上档次的非学不可的必要知识，与语言本身倒没有太大关系。
+
+可是，从AS1+2转到AS3，我就彻底崩溃了。这TMD完全就是一门不同的语言嘛！用法变了不说，和AS2的面向对象完全两码事，以前写的类绝对是不能用的；以前的编程经验，技巧、语法糖大部分都无效了啊啊啊。而且AS3已经完全面向对象，对习惯在时间轴上写代码的 **普通、文艺闪客** 来说，是非常非常的不友好了。
+
+我认识的AS程序员（或者叫社稷师更好）中，不愿意转向AS3的不少，还有朋友一直到现在都停留在AS1中，依然在时间轴上写代码；依然认为 `addEventListener` 神马的是很讨厌的事情，依然用 `mc._x = 100` 用得不亦知乎。
+
+当然，作为一个有理想无底线的 **2B闪客** ，迁移到AS3是必须的。下面是几个迁移中涉及的方面。
+
+## 工具层面
+
+AS1的工具，只有Flash IDE了。实际上，Actionscript这个名字，也是从Flash 5开始才有的，以前在Flash 4及以前，这门语言是没有名字的。
+
+而到了AS2，就可以增加一个选择—— [MTASC][3] 。这是个速度超快的编译器，可以把AS2源码编译成 SWF bytecode。是的，它比Flash IDE的编译要快很多很多。
+
+但是，MTASC的问题在于它并非是Adobe制作的，它是一个第三方工具。但即使是这样，它也成了最好的AS1/AS2编译器。它为不使用Flash设计工具，纯粹使用文本编辑器生成SWF文件提供了可能。也为纯粹的程序员加入到SWF制作队伍铺平了道路。
+
+到了AS3时代，由于Flex SDK的出现，我们可以使用MXMLC这个编译器来把AS3源文件直接编译成SWF格式。我们已经可以完全抛弃Flash IDE工具了，完全用代码来制作SWF文件。我们可以忘掉图像元件、按钮元件、影片剪辑、时间轴、Library和Scene，我们可以不在时间轴上制作补间，不用再考虑gotoAndPlay()或者stop()，不必在时间轴上放代码，也不必在库中“导出元件”了。
+
+上面的转变大么？真的很大。你希望从AS1/2转到AS3，就要习惯这些工具的变化，同样也要习惯从“社稷师”到“程序猿/媛”的变化。
+
+## 语言层面
+
+这块说起来就大了，我举个实例吧。
+
+下面是一段 **AS1** 代码：
+
+<pre lang="actionscript">
+_root.arrow1._x = v.p1.x*game.step;
+_root.arrow1._y = v.p1.y*game.step;
+_root.arrow1._rotation = 180/Math.PI*Math.atan2(v.vy, v.vx);
+</pre>
+
+下面是迁移到 **AS3** 的代码：
+
+<pre lang="actionscript">
+_arrow1.x = _dragger1.x;
+_arrow1.y = _dragger1.y;
+_arrow1.rotation = 180 / Math.PI * Math.atan2(_v.y, _v.x);
+</pre>
+
+嗯，看起来很像。但AS1在属性前面多了下划线，还有就是多了无处不在的 `_root` 。
+
+如果只说下划线，那么有许多属性，其实本来就没有下划线……在AS1中，有的有，有的没有，而在AS3中，统一都没有……
+
+上面的代码来自于这里：<https://github.com/zrong/as3-vector2d/tree/master/sample2-normals>
+其中AS1的部分在这里：<https://github.com/zrong/as3-vector2d/tree/master/sample2-normals/legacy>
+AS3的部分就是这个文件：<https://github.com/zrong/as3-vector2d/blob/master/sample2-normals/src/Vector2dSample2.as>
+
+下划线只是很小很小的一部分，另一个很重要的问题，就是类的变化。
+
+AS1是基于ECMAScript标准的，与JS的语法几乎完全一致，是在JS的基础上加入了一些Flash特有的类（例如MovieClip等等），可用的功能比较少。
+
+而AS3其实是增加了非常多的类，许多类与AS1名称一致，但功能已经大不相同。例如XML类，在AS3中与AS1中的XML已经不是同样的功能。AS1中的XML在AS3中被重命名为XMLNode。
+
+最大的差别，是编程习惯上的。上面讲到，设计师们习惯在时间轴上写代码，在Flash IDE中，也可以直接在元件上写代码，这种灵活和可视化的方式，让设计师们很高兴。
+
+可是程序员们不高兴。因为代码放得太分散，往往很难找。我不知道一段代码是在哪个MC中的某个MC中的其中一个按钮的实例上，还是在某个MC的某个MC的某个帧上？这完全不是程序员们的style。
+
+AS3加入了强类型，也加入了包、类等面向对象风格，但设计师们不买账。可是如果还是用以前的做法，程序员们又不买账。
+
+分裂开始了。
+
+## 多个迁移的例子
+
+最近我把TONYPA写的 Vectors for Flash 教程中提供的范例从Flash 5迁移到了Actionscript 3。没有fla文件，顿时整个世界清静了。
+
+如果你更喜欢直接看例子的话，上面的废话都不用看。
+
+legacy文件夹中的fla文件，是用Flash 5制作的。而src文件夹中的内容，是用Actionscript 3写成。
+
+你一定要习惯没有fla文件的生活。
+
+例子见这里：<https://github.com/zrong/as3-vector2d>
+
+[1]:http://www.zhihu.com/question/21511346/answer/18969840 
+[2]: http://help.adobe.com/zh_CN/FlashPlatform/reference/actionscript/3/flash/display/AVM1Movie.html
+[3]: http://mtasc.org
+

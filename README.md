@@ -119,3 +119,4 @@
 * [如何升级Ubuntu中的OpenSSL库](http://zengrong.net/post/2074.htm)
 * [在ITX小机箱中替换CPU风扇](http://zengrong.net/post/2075.htm)
 * [在 cocos2d-x 中使用 libcurl 实现上传文件功能（附quick-cocos2d-x封装）](http://zengrong.net/post/2088.htm)
+* [从 Actionscript 1.0 迁移到 Actionscript 3.0](http://zengrong.net/post/2089.htm)
