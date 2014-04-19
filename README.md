@@ -121,3 +121,4 @@
 * [在 cocos2d-x 中使用 libcurl 实现上传文件功能（附quick-cocos2d-x封装）](http://zengrong.net/post/2088.htm)
 * [从 Actionscript 1.0 迁移到 Actionscript 3.0](http://zengrong.net/post/2089.htm)
 * [解决Github访问超慢问题](http://zengrong.net/post/2092.htm)
+* [管理带有子模块的git库（DragonBonesCPP）](http://zengrong.net/post/2096.htm)
