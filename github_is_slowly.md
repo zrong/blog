@@ -1,0 +1,32 @@
+[解决Github访问超慢问题](http://zengrong.net/post/2092.htm)
+
+Github is so slowly.
+
+这段时间访问 [github][1] 都非常慢，google了一下发现是github某个CDN被伟大的墙屏蔽所致。
+
+出问题的应该是这个CDN: github.global.ssl.fastly.net，有图为证:
+
+![CDN访问不畅][11]
+
+解决方法就是使用万能的host文件，将这个域名映射到它所在的ip。
+
+1. 访问 [IPAddress.com][2] 使用 IP Lookup 工具获得这个域名的ip地址（注意，该网站可能需要梯子）；
+2. 也可以直接点击 [这个地址][3] 查看，结果如下:  
+![http://github.global.ssl.fastly.net.ipaddress.com/#ipinfo][12]
+3. 撰写本文时，该ip地址为：185.31.17.185 ；
+3. 修改host文件；
+4. 刷新本机DNS缓存。
+
+参考文章：
+
+* [github加载过慢][4]
+* [github访问速度慢，样式加载不完全解决][5]
+
+
+[1]: http://github.com
+[2]: http://www.ipaddress.com
+[3]: http://github.global.ssl.fastly.net.ipaddress.com/#ipinfo
+[4]: http://www.thinkingbar.com/2014/02/20/github%E5%8A%A0%E8%BD%BD%E8%BF%87%E6%85%A2/
+[5]: http://blog.csdn.net/ycpanda/article/details/19544033
+[11]: /wp-content/uploads/2014/04/github-global-ssl-fastly-net1.png
+[12]: /wp-content/uploads/2014/04/github-global-ssl-fastly-net2.png
