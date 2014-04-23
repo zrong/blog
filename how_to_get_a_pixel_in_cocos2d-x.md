@@ -35,7 +35,10 @@ cocos2d-x 的渲染流程是这样的：
 
 ## 二、使用 CCTexture2DMutable
 
-可以在 [getPixel setPixel from CCTexture2D][3] 这篇讨论中下载到这个类。
+下面两篇文章中都提到了这个类：
+
+* [getPixel setPixel from CCTexture2D][3]
+* [Fast set/getPixel for an opengl texture?][5]
 
 这个类继承了 CCTextuer2D，并在内部实现了对像素信息的缓存。如果要实现绘图等功能，这个类倒是挺有用的。
 
@@ -143,3 +146,4 @@ en
 [2]: http://www.firedragonpzy.com.cn/index.php/archives/3233
 [3]: http://www.cocos2d-x.org/forums/6/topics/3472
 [4]: https://github.com/dualface/quick-cocos2d-x/blob/develop/framework/cocos2dx/CCSpriteExtend.lua
+[5]: http://www.cocos2d-iphone.org/forums/topic/fast-setgetpixel-for-an-opengl-texture/
