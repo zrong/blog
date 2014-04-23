@@ -1,60 +1,82 @@
-谢邀。
+[如何学习 cocos2d-x ？](http://zengrong.net/post/2100.htm)
 
-如果按照 优秀的程序员和一般的程序员差别在哪？ 的定义来看，你已经是个程序员了。
+How to study cocos2d-x?
 
-我接触的许多程序员中，绝大多数都是知其然不知其所以然，做了AS好几年的，甚至连AVM是什么都不知道的太多了。许多程序员把快速开发出成品作为是工作的唯一目标，认为研究底层知识和周边技术是浪费时间。很多东西他们不是不能知道，而是不想知道。
-
-更有甚者，学会了 gotoAndPlay 就敢说熟悉 Flash，会敲 ls 就敢说精通Linux。前几天有朋友发给我他膜拜了一日的逆天简历，上面洋洋洒洒写着汇编、C/C++、Linux网络编程、JAVA EE、Perl、Bash、Python、Windows驱动开发、单片机开发、HTML、CSS3、JavaScript、PHP、cocos2d-x、iOS开发、安卓开发……而且所有的项目的级别都是 精通！
-
-我看完简历和朋友说：这位前后端桌面嵌入式系统驱动网页手机开发通吃的全栈神人10年里跳槽8次，从没在一个公司干满过2年，你敢用么？
-
-======上面废话，不看也罢。
+这是我在之乎上的一个回答，原文在这里(有修改)：[如何学习一种开发框架（如：手机开发cocos2dx方向）？][1]
 
 刚巧我也是从AS3转到了cocos2d-x，说说我的经验吧。
 
-一、 cocos2d-x 部分
+## 一、 cocos2d-x 部分
 
-1. 技术选型。从第三个手游开始，我实在被Adobe的ANE和国内的小平台折腾得没了脾气，决定转到cocos2d-x。在选择哪种语言绑定的时候纠结了很久，最后力排众议选了 lua：Cocos2dx+lua合适还是Cocos2dx+js合适? cocos2d-x 2.x 的lua绑定做得并不好，于是我选择了 quick-cocos2d-x 。
+### 1.1 技术选型
 
-2. 学习 C++。《C++ Primer》 是不错的入门书籍，建议看第五版，我写过一篇 C++Primer 第4版和第5版比较 。学习期间建议画一些思维导图帮助理解和整理思路。
+从第三个手游开始，我实在被Adobe的ANE和国内的小平台折腾得没了脾气，决定转到cocos2d-x。在选择哪种语言绑定的时候纠结了很久，最后力排众议选了 lua：[Cocos2d-x script language binding:Lua or Javascript?][2] 。cocos2d-x 2.x 的lua绑定做得并不好，于是我选择了 [quick-cocos2d-x][3] 。 <!--more-->
 
-3. 学习DEMO和熟悉开发平台。编译 cocos2d-x 自带的 TestCPP 项目，全部跑一遍。熟悉 cocos2d-x API 的用法。记得生成文档，建议每个API的功能都浏览一遍。
+### 1.2 学习 C++
+
+[《C++ Primer》][4] 是不错的入门书籍，建议看第五版，我写过一篇 [C++Primer 第4版和第5版比较][5] 。学习期间建议画一些思维导图帮助理解和整理思路。例如这个（不完整）：
+
+<a href="http://zengrong.net/wp-content/uploads/2014/04/mind_cpp.png"><img src="http://zengrong.net/wp-content/uploads/2014/04/mind_cpp-793x1024.png" alt="C++ mind mapping" width="474" height="612" class="aligncenter size-large wp-image-2102" /></a>
+
+### 1.3 学习DEMO和熟悉开发平台。
+
+编译 cocos2d-x 自带的 TestCPP 项目，全部跑一遍。熟悉 cocos2d-x API 的用法。记得生成文档，建议每个API的功能都浏览一遍。
 
 在学习DEMO的过程中，你还必须熟悉自己开发平台的IDE，例如Windows上必须熟悉 Visual Studio，而OS X上必须熟悉xcode，Linux平台上就熟悉Eclipse+CDT吧。
 
-注意，quick-cocos2d-x 是不支持Linux开发平台的。
+**注意，quick-cocos2d-x 是不支持Linux开发平台的。**
 
-4. 了解引擎的文件夹结构。基于 cocos2d-x 源码生成的文档并不怎么详细，许多功能必须看源码。但这个阶段，我不建议纠结源码太深，倒是可以纠结一下 cocos2d-x 的文件夹结构，看看各个类放在什么地方，找一找常见的哪些宏和常量以及枚举定义在什么地方，这花不了多少时间，但能让你对cocos2d-x有更深刻的了解，同时给你很强的成就感。这种成就感冲淡了你面对大量源码时候的无力感，让你能够继续前行。
+### 1.4 了解引擎的文件夹结构
 
-5. 重复上面的第3步：再次学习DEMO。这时候看DEMO可能会轻松不少，但是你会有更多的问题去纠结。例如多分辨率支持？例如坐标系统？例如绘图功能？例如层级管理系统？例如事件传递系统？等等等等……这时候可以去Google（注意不要用百毒和其他搜索引擎）找文档看了。我推荐一些我看过的不错的文档和博客：
+基于 cocos2d-x 源码生成的文档并不怎么详细，许多功能必须看源码。但这个阶段，我不建议纠结源码太深，倒是可以纠结一下 cocos2d-x 的文件夹结构，看看各个类放在什么地方，找一找常见的哪些宏和常量以及枚举定义在什么地方，这花不了多少时间，但能让你对cocos2d-x有更深刻的了解，同时给你很强的成就感。这种成就感冲淡了你面对大量源码时候的无力感，让你能够继续前行。
 
-    http://www.ityran.com/archives/4809
-    Cocos2d-x官方中文文档 v2.x
-    Cocos2D | iOS Development Tips & Tricks by BiOM
-    子龙山人 - 博客园
-    红孩儿的游戏编程之路
-    Ray Wenderlich
-    Cocos2d-x | Cross Platform Open Source 2D Game Engine
+下面是我的分析：
 
-许多博客都是极好的。红孩儿写了许多源码分析，每一句源码都加了注释。虽然我不太认同他这种吃力不讨好的方法，但对于新手来说确实是有很大的帮助。
+<a href="http://zengrong.net/wp-content/uploads/2014/04/mind_cocos2d-x222.png"><img src="http://zengrong.net/wp-content/uploads/2014/04/mind_cocos2d-x222-512x1024.png" alt="cocos2d-x 2.2.2 mand mapping" width="474" height="948" class="aligncenter size-large wp-image-2101" /></a>
 
-另外在 Stack Overflow 你能找到绝大部分问题的答案。当然，许多问题是针对 cocos2d 而非 cocos2d-x 的，不过用法相同，照看不误。许多优秀的文章都是基于 cocos2d 的，所以，不要介意，可以先花半天时间熟悉 OC 的语法，能看懂即可。
+### 1.5 重复上面的第3步：再次学习DEMO
 
-忘了广告了，我的博客（cocos2d-x | zrong's Blog）也有一些cocos2d-x内容，欢迎来喷。
+这时候看DEMO可能会轻松不少，但是你会有更多的问题去纠结。例如多分辨率支持？例如坐标系统？例如绘图功能？例如层级管理系统？例如事件传递系统？等等等等……这时候可以去Google（注意不要用百毒和其他搜索引擎）找文档看了。我推荐一些我看过的不错的文档和博客：
 
-6. 熟悉工具集。现在你应该对周边工具感兴趣了。例如帧动画使用什么制作？BMFont使用什么制作？骨骼动画呢？plist文件怎么编辑？碎图用什么工具拼合？有些项目上，你有许多选择，也可能没得选。去Google吧，如果遇到选择上的问题，欢迎找我讨论。
+* [Cocos2d-x 多分辨率适配完全解析][6]
+* [Cocos2d-x官方中文文档 v2.x][7]
+* [子龙山人 - 博客园][8]
+* [红孩儿的游戏编程之路][9]
+* [Cocos2D | iOS Development Tips & Tricks by BiOM][10]
+* [Ray Wenderlich][11]
+* [Cocos2d-x | Cross Platform Open Source 2D Game Engine][12]
 
-二、 quick-cocos2d-x 部分
+许多博客都是极好的。[红孩儿][9] 写了许多源码分析，每一句源码都加了详细注释。虽然我不太认同他这种吃力不讨好的方法，但这对于新手来说确实是有很大帮助的。
 
-1. 现在就到lua时间了。请认真读完 《Lua程序设计(第2版) 》 第一、二、三部分。第四部分可暂时不读。
+另外在 [Stack Overflow][13] 你能找到绝大部分问题的答案。当然，许多问题是针对 cocos2d 而非 cocos2d-x 的，不过用法相同，照看不误。许多优秀的文章都是基于 cocos2d 的，所以，不要介意，可以先花半天时间熟悉 OC 的语法，能看懂即可。
 
-2. 熟悉 quick-cocos2d-x 的文件夹结构。相信有了上面 cocos2d-x 的基础，这个应该不难理解。
+暂时不要买中文书。我曾经花3天时间看完了 [《Cocos2D-X游戏开发技术精解》][18] 和 [《cocos2d-x手机游戏开发--跨iOS、Android和沃Phone平台》][19] ，发现作者其实就是来赚稿费的。
 
-3. 跑完 quick-cocos2d-x 自带的所有sample，期间熟悉 framework 中的所有封装。这期间可以参考下面的文章：http://quick.cocoachina.com/wiki/doku.php?id=zh_cn
+忘了广告了，我的博客（[cocos2d-x | zrong's Blog][14]）也有一些cocos2d-x内容，欢迎来喷。
 
-4. 学习导出API给Lua使用。http://quick.cocoachina.com/?p=235
+### 1.6 熟悉工具集
 
-三、学习 OpenGL ES
+现在你应该对周边工具感兴趣了。例如帧动画使用什么制作？BMFont使用什么制作？骨骼动画呢？plist文件怎么编辑？碎图用什么工具拼合？有些项目上，你有许多选择，也可能没得选。去Google吧，如果遇到选择上的问题，欢迎找我讨论。
+
+## 二、 quick-cocos2d-x 部分
+
+### 2.1 现在就到lua时间了
+
+请认真读完 [《Lua程序设计(第2版) 》][15] 第一、二、三部分。第四部分可暂时不读。
+
+### 2.2 熟悉 quick-cocos2d-x 的文件夹结构
+
+相信有了上面 cocos2d-x 的基础，这个应该不难理解。
+
+### 2.3 跑完 quick-cocos2d-x 自带的所有sample
+
+在这期间，熟悉 framework 中的所有封装。可以参考 [quick网站][16] 和 [quick wiki][17] 。
+
+### 2.4 学习导出API给Lua使用
+
+[导出 C/C++ API 给 Lua 使用][20]
+
+## 三、学习 OpenGL ES
 
 熟悉Lua部分之后，作为一个有志于成为程序员的码农，依然要回到C++来，这里才是 cocos2d-x 的本质。
 
@@ -62,29 +84,87 @@ cocos2d-x 使用 OpenGL ES 进行渲染的，如果要对 cocos2d-x 的渲染层
 
 既然逃不开，那就对她说，请张开双腿，我要上。
 
-1. 阅读 OpenGL ES 2.0 Programming Guide - Book Website
+### 3.1 阅读 OpenGL ES 2.0 Programming Guide
 
-http://www.opengles-book.com/es2/index.html
+下面是这本书的官网，目前已经出了 OpenGL ES 3.0 版本，cocos2d-x 使用的是2.0。
+
+<http://www.opengles-book.com/es2/index.html>
 
 这本书写得浅显易懂，非常适合新手。有位网友花3个月时间翻译了中文版，但还是建议你不要看了。
 
-官方文档：http://www.khronos.org/opengles/sdk/docs/man/
-API 翻译： http://www.dreamingwish.com/dream-category/api-in-chinese/opengl-es-api
+这里是 OpenGL ES 的 [官方文档][21] 和 [API中文翻译][22] 。
 
-当然，也可以买那本著名的 OpenGL 红宝书《OpenGL编程指南（原书第7版）》来看，不过 OpenGL ES 相对与 OpenGL 来说还是有一些不同的，你要知道如何区分这些不同。
+当然，你也可以买那本著名的 OpenGL 红宝书 [《OpenGL编程指南（原书第7版）》][23] 来看，不过 OpenGL ES 相对与 OpenGL 来说还是有一些不同的，你要知道如何区分这些不同。
 
-http://book.douban.com/subject/4311129/
+### 3.2 尝试理解 cocos2d-x 的渲染部分架构
 
-2. 尝试理解 cocos2d-x 的渲染部分架构。相关的类我就不列出了，我正在酝酿一个这方面的系列文章准备发到博客上。如果写完了，我会在这里更新。
+相关的类我就不列出了，我正在酝酿一个这方面的系列文章准备发到博客上。如果写完了，我会在这里更新。
 
-3. 自己写一些滤镜、绘图功能的扩展。
+### 3.3 自己写一些滤镜、绘图功能的扩展
 
-四、回归项目
+例如这个： [cocos2d-x-filters][24]
 
-到了这里，你可以开始你的项目了。
+## 四、回归项目
 
+到了这里，你可以开始你的项目了。虽然源码还没有读完，但相信整个架构都能理解了。在做项目的过程中，再去一点点读源码是比较快捷和我能够接受的方法，否则就太枯燥了。
 
+你可以还需要选择一下cocos2d-x相关的工具。你可能听说过 CCB（cocosBuilder）和CCS（cocoStudio），尝试了解她们，再决定是否使用她们。
 
+你已经有了AS3的基础，这样许多前端的概念和经验已经很丰富了。这些经验在cocos2d-x中同样适用。但是要注意的是，cocos2d-x不是AS3，不要试图用AS3的方法去使用cocos2d-x。
 
+* 有位码农在从C#转到AS3的时候向我抱怨：为什么Flash Builder没有Visual Studio的这个功能那个功能？
+* 然后这位码农在从AS3转到Sublime Text（用于Lua编辑）的时候向我抱怨，为什么Sublime Text没有Flash Builder的这个功能那个功能？
 
+上面是个笑话。
 
+同时，为了解决一些cocos2d-x没有提供的功能，你必须去学习相关的知识。例如这个：[在 cocos2d-x 中使用 libcurl 实现上传文件功能（附quick-cocos2d-x封装）][25] 。不过你现在已经有了基础，学习这些不是难事。
+
+在有时间的时候，可认真读一下上面提到的《Lua程序设计(第2版) 》第四部分，了解Lua和C语言通信的方式，顺便看看cocos2d-x里面是怎么实现的。
+
+另外，一些你需要的引擎中没有的功能，也可以顺手实现了开源出来（例如这个： [一个LuaSocket封装][26] ），说不定你需要的东西正好是别人也需要的。
+
+## 五、熟悉发布平台
+
+既然是做手游，Android和iOS平台是逃不掉了。
+
+你要熟悉Android和iOS平台的特点，熟悉JAVA语言在Android上的应用，熟悉Objective-C在iOS上的应用，熟悉Eclipse ADT和XCode（上面应该已经熟悉过了）。
+
+你还要熟悉Google Play和AppStore的发布流程以及方针、政策，内购的接入、SDK的嵌入。
+
+你要学习和各个接入平台的程序员、商务、前台小妹打交道（因为经常会找不到你要找的真正的负责该SDK的技术人员），你要能忍受国内小平台糟糕的文档、代码规范和逆天的编程方法。
+
+## 终、没有终点
+
+上面说的并不完整，应该遗漏了不少东西，但我只能说这么多了。因为我的经验也止于此。
+
+**祝你成功！**
+
+[1]: http://www.zhihu.com/question/23008892/answer/24724927
+[2]: http://zengrong.net/post/1924.htm
+[3]: http://quick-x.com
+[4]: http://book.douban.com/subject/25708312/
+[5]: http://zengrong.net/post/1942.htm
+[6]: http://www.ityran.com/archives/4809
+[7]: http://www.ityran.com/archives/3863
+[8]: http://www.cnblogs.com/andyque/
+[9]: http://blog.csdn.net/honghaier
+[10]: http://ios.biomsoft.com/category/ios-tips/cocos2d/
+[11]: http://www.raywenderlich.com/
+[12]: http://cocos2d-x.org/
+[13]: http://cocos2d-x.org/
+[14]: http://zengrong.net/post/tag/cocos2d-x
+[15]: http://book.douban.com/subject/3076942/
+[16]: http://quick.cocoachina.com/wiki/doku.php?id=zh_cn
+[17]: http://quick.cocoachina.com/
+[18]: http://book.douban.com/subject/24733748/
+[19]: http://book.douban.com/subject/7046664/
+[20]: http://quick.cocoachina.com/?p=235
+[21]: http://www.khronos.org/opengles/sdk/docs/man/
+[22]: http://www.dreamingwish.com/dream-category/api-in-chinese/opengl-es-api
+[23]: http://book.douban.com/subject/4311129/
+[24]: https://github.com/zrong/cocos2d-x-filters
+[25]: http://zengrong.net/post/2088.htm
+[26]: http://zengrong.net/post/1980.htm
+
+[51]: /wp-content/uploads/2014/04/mind_cpp.png
+[52]: /wp-content/uploads/2014/04/mind_cocos2d-x222.png
