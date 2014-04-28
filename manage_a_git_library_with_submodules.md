@@ -178,14 +178,6 @@ nothing to commit, working directory clean
 
 在提交 DragonBonesCPP 之前，若已经修改过子模块，请务必先提交子模块的修改并推送子模块，然后再提交并推送 DragonBonesCPP 。
 
-### 提交子模块 cocos2d-x 的修改
-
-待续
-
-### 提交 DragonBonesCPP 的修改
-
-待续
-
 [1]: http://www.kafeitu.me/git/2012/03/27/git-submodule.html
 [2]: http://git-scm.com/book/en/Git-Tools-Submodules
 [3]: http://git-scm.com/docs/git-submodule
