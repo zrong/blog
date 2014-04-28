@@ -124,3 +124,4 @@
 * [管理带有子模块的git库（DragonBonesCPP）](http://zengrong.net/post/2096.htm)
 * [如何学习 cocos2d-x ？](http://zengrong.net/post/2100.htm)
 * [在 cocos2d-x 中获取纹理的像素值](http://zengrong.net/post/2104.htm)
+* [DragonBones 官方C++版本 for cocos2d-x](http://zengrong.net/post/2106.htm)

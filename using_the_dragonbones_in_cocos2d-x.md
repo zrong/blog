@@ -1,8 +1,14 @@
-* <span style="color:red;">2013-10-11更新：</span>加入CocoStudio动画编辑器导入 .fla 文件注意事项
-* <span style="color:red;">2013-10-12更新：</span>加入Cocos2d-x 2.2.0 的bug
-* <span style="color:red;">2013-10-15更新：</span>更新2.2.0bug处理情况
+* <span style="color:red;">2014-04-28更新：</span>更新 DragonBones 官方C++版本 for cocos2d-x
 * <span style="color:red;">2013-11-19更新：</span>更新2.2.0bug处理情况
+* <span style="color:red;">2013-10-15更新：</span>更新2.2.0bug处理情况
+* <span style="color:red;">2013-10-12更新：</span>加入Cocos2d-x 2.2.0 的bug
+* <span style="color:red;">2013-10-11更新：</span>加入CocoStudio动画编辑器导入 .fla 文件注意事项
 <hr>
+
+## 重要更新 2014-04-28
+
+DragonBones 开发组已经对 DragonBones 进行了官方的 C++ 移植，很多问题都不复存在了。详情看这里 [DragonBones 官方C++版本 for cocos2d-x](http://zengrong.net/post/2106.htm) 。
+
 ## 基础知识
 
 要看懂本文，你需要了解骨骼动画（或称关节动画）是什么，以及DragonBones是什么。下面提供了一些资料：
@@ -14,7 +20,7 @@
 
 To flash veteran: do you remember the 'Moho'?<!--more-->
 
-## 不要使用官方版本的DragonBones
+## 不要使用官方版本的DragonBones Design Panel
 
 在写这篇文章的时候，DragonBones的官方版本为v2.3。cocos2d-x的稳定版本为2.1.5。
 
