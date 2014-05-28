@@ -126,3 +126,4 @@
 * [在 cocos2d-x 中获取纹理的像素值](http://zengrong.net/post/2104.htm)
 * [DragonBones 官方C++版本 for cocos2d-x](http://zengrong.net/post/2106.htm)
 * [iOS 7.1在线安装IPA失败以及数字证书](http://zengrong.net/post/2108.htm)
+* [flash动画是如何兴起和衰退的？](http://zengrong.net/post/2112.htm)
