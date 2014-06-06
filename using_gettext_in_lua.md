@@ -8,6 +8,15 @@
 
 gettext 是一套工具集的名称。这套工具集包含 xgettext/msginit/msgfmt 等一套建立模版(POT)、创建PO文件和编译MO文件的工具。
 
+gettext 包含的工具如下：
+
+* xgettext 从源码中生成POT模版或直接生成PO文件；
+* msginit 基于POT文件生成待翻译的PO文件；
+* msgfmt 将PO文件编译成二进制的MO文件；
+* msgunfmt 顾名思义，将MO文件反编译成PO文件；
+* msgmerge 将POT模版文件与PO文件合并。用于在源码更新之后将新的待翻译内容更新到已经翻译的PO文件中；
+* msgcat 将多个PO文件合并在一起。
+
 使用 gettext 需要涉及这样几个概念：
 
 * 源码  
