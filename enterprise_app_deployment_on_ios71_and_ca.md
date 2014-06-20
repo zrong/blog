@@ -1,3 +1,5 @@
+**2014-06-20更新：**增加对七牛云存储的HTTPS服务说明和又拍云的介绍。
+
 [iOS 7.1在线安装IPA失败以及数字证书](http://zengrong.net/post/2108.htm)
 
 Enterprise app deployment doesn't work on iOS 7.1 and CA
@@ -96,7 +98,13 @@ Enterprise app deployment doesn't work on iOS 7.1 and CA
 如果你找不到拥有 HTTPS 服务器的土豪朋友，那么可以使用下面两种免费的方案：
 
 * [DropBox][2] 这位美国土豪提供免费服务。只需要把你的plist文件传到 dropbox 的 public 共享区并 Copy public link 得到公共下载地址就行了。
-* [七牛云存储][8] 这位中国土豪也支持 HTTPS ，服务同样免费，速度在国内访问更快，方法类似。
+* [七牛云存储][8] 这位中国土豪也支持 HTTPS ，服务同样免费（有流量限制），速度在国内访问更快，方法类似。  
+在使用七牛的时候要注意，七牛默认提供的外网访问地址，使用HTTPS协议直接访问时浏览器会提示证书无效。可参考 [如何通过 SSL 的形式来访问七牛云存储上的资源][10] 重新绑定一个 qbox.me 域名来实现HTTPS访问。
+* [又拍云][11] 也支持HTTPS服务，但仅支持7天试用。
+
+2014-06-20更新：
+
+最近DropBox在国内抽风，估计离永久屏蔽也不远了，还是早点转吧。
 
 ## 数字证书
 
@@ -123,3 +131,5 @@ Enterprise app deployment doesn't work on iOS 7.1 and CA
 [7]: http://www.startssl.com/
 [8]: https://portal.qiniu.com/signup?code=3lqod6o5frnf6
 [9]: http://www.godaddy.com/ssl/ssl-open-source.aspx
+[10]: http://kb.qiniu.com/https-support
+[11]: https://www.upyun.com
