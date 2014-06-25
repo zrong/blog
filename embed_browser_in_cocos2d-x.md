@@ -8,7 +8,7 @@ Embeds a browser in cocos2d-x
 
 主要代码来自：[CCXWebview][2]，[这里][3] 还有一篇专门讲解Android嵌入浏览器的文章，可以参考。
 
-集成的类叫做 CCWebView，位于 extensions 之中。
+集成的类叫做 CCWebView，位于 [extensions][4] 之中。
 
 效果如下：<!--more-->
 
@@ -53,6 +53,70 @@ self._webview:release()
 self._webview = nil
 </pre>
 
+## 封装
+
+为了方便使用，我封装了一个 [webview.lua][5] 放在 framework 里面，这样只需要记住 show 和 remove 方法就好了。
+
+由于C++中没有处理重复的CCWebView的情况，我把 webview 做成单例的，保证任何时候都只有一个 CCWebView 在工作。
+
+使用这个封装，我写了一个完整的测试项目，看这里：
+
+<pre lang="LUA">
+local WebViewTest = class("WebViewTest", function()
+	return display.newNode()
+end)
+
+function WebViewTest:ctor()
+	self:_showUI()
+	self:_test()
+end
+
+function WebViewTest:_test()
+	webview.setActivityName("us/t1201/testplayer/Testplayer")
+	print("getActivityName:", webview.getActivityName())
+end
+
+function WebViewTest:_showUI()
+	local __menu = ui.newMenu({
+		ui.newTTFLabelMenuItem(
+		{
+			text="show(http://zengrong.net, 20,20,1000,500)",
+			listener = function()
+				webview.show("http://zengrong.net", 20,20, 1000, 500)
+			end
+		}),
+		ui.newTTFLabelMenuItem(
+		{
+			text="show(http://zhihu.com, 0,0,500,300)",
+			listener = function()
+				webview.show("http://zhihu.com", 0,0, 500, 300)
+			end
+		}),
+		ui.newTTFLabelMenuItem(
+		{
+			text="show(http://github.com)",
+			listener = function()
+				webview.show("http://github.com")
+			end
+		}),
+		ui.newTTFLabelMenuItem(
+		{
+			text="remove()",
+			listener = function()
+				webview.remove()
+			end
+		}),
+	})
+		:addTo(self)
+		:pos(display.cx,display.bottom+100)
+	__menu:alignItemsVertically()
+end
+
+return WebViewTest
+</pre>
+
+需要注意的是，在上面的例子中，如果希望改变已有的内嵌浏览器的大小，必须先remove才可以生效。
+
 ## 跨平台
 
 目前内嵌浏览器仅支持 iOS 和Android 平台。以下是一些需要注意的地方：
@@ -92,4 +156,6 @@ showWebView("http://zengrong.net", 20, 20, 1000, 500)
 [1]: https://github.com/zrong/quick-cocos2d-x
 [2]: https://github.com/go3k/CCXWebview
 [3]: http://blog.csdn.net/jackystudio/article/details/17576995
-[10]: /wp-contents/uploads/2014/06/webview.png
+[4]: https://github.com/zrong/quick-cocos2d-x/tree/zrong/lib/cocos2d-x/extensions/webview
+[5]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/framework/webview.lua
+[10]: /wp-content/uploads/2014/06/webview.png
