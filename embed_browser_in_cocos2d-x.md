@@ -119,11 +119,15 @@ return WebViewTest
 
 ## 跨平台
 
-目前内嵌浏览器仅支持 iOS 和Android 平台。以下是一些需要注意的地方：
+目前内嵌浏览器仅支持 iOS 和Android 平台。以下是一些需要注意的地方（**非常重要！**）：
 
 ### Android 平台
 
-在创建CCWebView的时候必须提供你的项目的主Activity的包路径和类名。CCWebView 需要结合主Activity中提供的一些方法才能工作。这些方法我已经添加到项目模板中。
+在创建CCWebView的时候必须提供你的项目的主Activity的包路径和类名。CCWebView 需要结合主Activity中提供的一些方法才能工作。这些方法我已经添加到 [项目模板][6] 中。
+
+如果是老项目，请比较 [项目模版][6] 和自己的主Activity的区别，加入缺少的方法（这很简单）。
+
+如果是新项目，请使用项目创建程序 `create_project` 来创建。它会使用模版来自动加入这些方法。
 
 注意写包路径和类名的格式与JAVA的习惯不同，需要把点 `.` 替换成斜线 `/` 。
 
@@ -147,15 +151,16 @@ showWebView("http://zengrong.net", 20, 20, 1000, 500)
 
 ### Mac OS X 平台
 
-在 quick-x 的 Mac 模拟器中，调用 CCWebView 的方法将不会有任何作用。
+在 quick-x-player Mac 版本中，调用 CCWebView 的方法将不会有任何作用，也不会报错，这是正常的。
 
 ### Windows 平台
 
-目前可能无法编译 quick-x Windows 模拟器，我正在安装 Virtual Box 来解决这个问题。
+在 quick-x-player Windows 版本中，调用 CCWebView 的方法将不会有任何作用，也不会报错，这是正常的。
 
 [1]: https://github.com/zrong/quick-cocos2d-x
 [2]: https://github.com/go3k/CCXWebview
 [3]: http://blog.csdn.net/jackystudio/article/details/17576995
 [4]: https://github.com/zrong/quick-cocos2d-x/tree/zrong/lib/cocos2d-x/extensions/webview
 [5]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/framework/webview.lua
+[6]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/template/PROJECT_TEMPLATE_01/proj.android/src/__PROJECT_PACKAGE_FULL_NAME_L__/__PROJECT_PACKAGE_LAST_NAME_UF__.java
 [10]: /wp-content/uploads/2014/06/webview.png
