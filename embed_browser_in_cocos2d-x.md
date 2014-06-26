@@ -14,6 +14,12 @@ Embeds a browser in cocos2d-x
 
 ![CCWebView in ios simulator][10]
 
+显示本博客
+
+![CCWebView in ios simulator][11]
+
+在浏览器中输入
+
 ## 做什么？
 
 在游戏中，我们需要显示系统公告，或者制作一些需要复杂图文混排的界面，这些东西如果用 cocos2d-x 来做，未免太过麻烦。嵌入一个网页就简单的多。
@@ -163,4 +169,5 @@ showWebView("http://zengrong.net", 20, 20, 1000, 500)
 [4]: https://github.com/zrong/quick-cocos2d-x/tree/zrong/lib/cocos2d-x/extensions/webview
 [5]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/framework/webview.lua
 [6]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/template/PROJECT_TEMPLATE_01/proj.android/src/__PROJECT_PACKAGE_FULL_NAME_L__/__PROJECT_PACKAGE_LAST_NAME_UF__.java
-[10]: /wp-content/uploads/2014/06/webview.png
+[10]: /wp-content/uploads/2014/06/webview1.png
+[11]: /wp-content/uploads/2014/06/webview2.png
