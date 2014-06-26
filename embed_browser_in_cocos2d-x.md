@@ -10,6 +10,8 @@ Embeds a browser in cocos2d-x
 
 集成的类叫做 CCWebView，位于 [extensions][4] 之中。
 
+本文基于 cocos2d-x 2.x，下面的 Android 平台部分介绍了一些 cocos2d-x 3.x 的相关信息。
+
 效果如下：<!--more-->
 
 ![CCWebView in ios simulator][10]
@@ -63,7 +65,7 @@ self._webview = nil
 
 为了方便使用，我封装了一个 [webview.lua][5] 放在 framework 里面，这样只需要记住 show 和 remove 方法就好了。
 
-由于C++中没有处理重复的CCWebView的情况，我把 webview 做成单例的，保证任何时候都只有一个 CCWebView 在工作。
+由于C++中没有处理CCWebView可能重复的情况，我把 webview 做成单例的，保证任何时候都只有一个 CCWebView 在工作。
 
 使用这个封装，我写了一个完整的测试项目，看这里：
 
@@ -131,13 +133,15 @@ return WebViewTest
 
 在创建CCWebView的时候必须提供你的项目的主Activity的包路径和类名。CCWebView 需要结合主Activity中提供的一些方法才能工作。这些方法我已经添加到 [项目模板][6] 中。
 
-如果是老项目，请比较 [项目模版][6] 和自己的主Activity的区别，加入缺少的方法（这很简单）。
+如果是老项目，请比较 [项目模版][6] 和自己的主Activity的区别，加入缺少的方法（相信我，这很简单）。
 
 如果是新项目，请使用项目创建程序 `create_project` 来创建。它会使用模版来自动加入这些方法。
 
 注意写包路径和类名的格式与JAVA的习惯不同，需要把点 `.` 替换成斜线 `/` 。
 
 使用 `getActivityName()` 方法可以返回传入的包名。
+
+对于 cocos2d-x 3.x，由于Activity继承自NativeActivity，因此需要使用 `getWindowManager().addView()` 来假如Android控件。详见：[Cocos2d-x 3.0beta成功添加Android的webview][7] 。
 
 ### iOS 平台
 
@@ -169,5 +173,6 @@ showWebView("http://zengrong.net", 20, 20, 1000, 500)
 [4]: https://github.com/zrong/quick-cocos2d-x/tree/zrong/lib/cocos2d-x/extensions/webview
 [5]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/framework/webview.lua
 [6]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/template/PROJECT_TEMPLATE_01/proj.android/src/__PROJECT_PACKAGE_FULL_NAME_L__/__PROJECT_PACKAGE_LAST_NAME_UF__.java
+[7]: http://www.cocoachina.com/bbs/read.php?tid=196181
 [10]: /wp-content/uploads/2014/06/webview1.png
 [11]: /wp-content/uploads/2014/06/webview2.png
