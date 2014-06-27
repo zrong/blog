@@ -128,3 +128,4 @@
 * [iOS 7.1在线安装IPA失败以及数字证书](http://zengrong.net/post/2108.htm)
 * [flash动画是如何兴起和衰退的？](http://zengrong.net/post/2112.htm)
 * [在 cocos2d-x 中嵌入浏览器](http://zengrong.net/post/2123.htm)
+* [在 Mac OS X 上安装lighttpd](http://zengrong.net/post/2127.htm)
