@@ -116,7 +116,7 @@ function os.rmdir(path)
 end
 </pre>
 
-上面的代码在 ios 模拟器上测试成功。Windows系统、Mac OSX 以及Android还没有测试。我测试后会立即更新。
+上面的代码在 iOS 模拟器和 Android 真机上测试成功。Windows系统、Mac OSX 以及 iOS 真机还没有测试。我测试后会立即更新。
 
 [1]: https://github.com/cocos2d/cocos2d-x/tree/v2/samples/Cpp/AssetsManagerTest
 [2]: https://github.com/cocos2d/cocos2d-x/tree/v2/extensions/AssetsManage

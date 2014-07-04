@@ -130,3 +130,4 @@
 * [在 cocos2d-x 中嵌入浏览器](http://zengrong.net/post/2123.htm)
 * [在 Mac OS X 上安装lighttpd](http://zengrong.net/post/2127.htm)
 * [在lua中递归删除一个文件夹](http://zengrong.net/post/2129.htm)
+* [quick-cocos2d-x的热更新机制实现](http://zengrong.net/post/2131.htm)
