@@ -215,11 +215,11 @@ void Updater::Helper::handlerState(Message *msg)
 }
 </pre>
 	
-**3.4.3 `UPDATER_MESSAGE_PROGRESS`  **
+**3.4.3 `UPDATER_MESSAGE_PROGRESS`**
 
 事件名为 progress，传递的对象为一个 CCInteger ，代表进度。详细的实现可以看[源码][6]。
 
-**3.4.4 `UPDATER_MESSAGE_ERROR`  **
+**3.4.4 `UPDATER_MESSAGE_ERROR`**
 
 事件名为 error，传递的对象是一个 CCString，值有这样几个：
 
@@ -233,7 +233,7 @@ void Updater::Helper::handlerState(Message *msg)
 
 Updater(C++) 部分只做了这些苦力工作，而具体的分析逻辑（分析getUserInfo返回的数据决定是否升级、如何升级和升级什么），下载命令的发出（调用update方法），解压成功之后的操作（比如合并新文件到就文件中，更新文件索引列表等等），全部需要lua来做。下面是一个处理Updater(C++)事件的lua函数的例子。
 
-<a name="_updateHandler">
+<a name="_updateHandler"></a>
 <pre lang="lua">
 function us._updateHandler(event, value)
 	updater.state = event
@@ -1179,32 +1179,31 @@ return updater
 
 这个功能可以使用 lfs(Lua file system) 来实现，参见：[在lua中递归删除一个文件夹][12] 。
 
-<a name="updateFinalResInfo">
-**4.5.3 update.updater.updateFinalResInfo()**
+**4.5.3 相关目录和变量**
 
-这是一个至关重要的方法。
+上面的代码中定义了几个变量，在这里进行介绍方便理解：
 
-它实现的功能是：
+**4.5.3.1 lres(local res)**
 
-1. 读出本地保存的最新资源索引文件；
-1. 读取压缩包中的需要更新的资源索引文件；
-1. 将需要更新的资源文件复制到新资源文件夹中；
-1. 更新资源索引文件，使其中的资源键名指向正确的资源路径（上一步复制的目标路径）；
-1. 删除解压的临时文件夹；
-1. 将最新的资源索引文件作为lua文件写入更新资源文件夹。
+安装包所带的res目录；
 
-**4.5.4 说说资源索引文件**
+**4.5.3.2 ures(updated res)**
 
-上面很多地方讲到了资源索引文件，现在是时候来讲讲它了。
+保存在设备上的res目录，用于保存从网上下载的新资源；
 
-在我的项目中，它的名字叫做 resinfo.lua，它的内容大概是这样的：
+**4.5.3.3 utmp（update temp）**
+        
+临时文件夹，用于解压缩，更新后会删除；
+
+**4.5.3.4 lresinfo（本地索引文件）**
+
+安装包内自带的所有资源的索引文件，所有资源路径指向包内自带的资源。打包的时候和产品包一起提供，产品包会默认使用这个资源索引文件来查找资源。它的大概内容如下：
 
 <pre lang="lua">
 local data = {
     version = "1.0",
     update_url = "http://192.168.18.22:8080/updater/resinfo.lua",
     lib = {
-        ["res/lib/cc.zip"] = "res/lib/cc.zip",
         ["res/lib/config.zip"] = "res/lib/config.zip",
         ["res/lib/framework_precompiled.zip"] = "res/lib/framework_precompiled.zip",
         ["res/lib/root.zip"] = "res/lib/root.zip",
@@ -1218,13 +1217,38 @@ local data = {
 return data
 </pre>
 
-从它的结构可以看出，它包含了当前包的版本(version)、在哪里获取要更新的资源索引文件(update)url)、当前包中所有的lua模块的路径(lib)、当前包中所有的资源文件的路径(oth)。
+从它的结构可以看出，它包含了当前包的版本(version)、在哪里获取要更新的资源索引文件(update_url)、当前包中所有的lua模块的路径(lib)、当前包中所有的资源文件的路径(oth)。
 
-这个资源索引文件包含在包中，打包的时候和产品包一起提供，产品包会默认使用这个资源索引文件来查找资源。
+**4.5.3.5 uresinfo（更新索引文件）**
 
-我把这个资源索引文件叫做 **本地资源索引文件** ，简称 lresinfo 。
+保存在 ures 中的更新后的索引文件，没有更新的资源路径指向包内自带的资源，更新后的资源路径指向ures中的资源。它的内容大致如下：
 
-再来说说 `http://192.168.18.22:8080/updater/resinfo.lua` 这个文件，它的内容如下：
+config.zip 的路径是在 iOS 模拟器中得到的。
+
+<pre lang="lua">
+local data = {
+    version = "1.0",
+    update_url = "http://192.168.18.22:8080/updater/resinfo.lua",
+    lib = {
+        ["res/lib/cc.zip"] = "res/lib/cc.zip",
+        ["res/lib/config.zip"] = "/Users/zrong/Library/Application Support/iPhone Simulator/7.1/Applications/2B46FAC0-C419-42B5-92B0-B06DD16E113B/Documents/res/lib/config.zip",
+		......
+    },
+    oth = {
+        ["res/pic/init_bg.png"] = "res/pic/init_bg.png",
+        ......
+    },
+}
+return data
+</pre>
+
+**4.5.3.6 `http://192.168.18.22:8080/updater/resinfo.lua`**
+
+`getRemoteResInfo` 方法会读取这个文件，然后将结果解析成lua table。对比其中的version与 lrefinfo 中的区别，来决定是否需要更新。
+
+若需要，则调用C++ Updater模块中的方法下载 package 指定的zip包并解压。
+
+它的内容如下：
 
 <pre lang="lua">
 local data = {
@@ -1234,11 +1258,7 @@ local data = {
 return data
 </pre>
 
-`getRemoteResInfo` 这个方法就会读取这个文件，然后将结果解析成lua table。对比其中的version与 lrefinfo 中的区别，来决定是否需要更新。
-
-若需要，则调用C++ Updater模块中的方法下载 package 指定的zip包并解压。
-
-下载和解压都是由C++完成的，但是下载和解压的路径需要Lua来指派。这个动作完成后，C++会通知Lua更新成功。Lua就使用上面 [4.5.3][13] 中提到的方法来复制资源、合并 **更新资源索引文件**。
+**4.5.3.6 `http://192.168.18.22:8080/updater/res.zip` **
 
 zip包的文件夹结构大致如下：
 
@@ -1248,7 +1268,11 @@ zip包的文件夹结构大致如下：
     res/pic/init_bg.png
     ......
 
-其中 resinfo.lua 用于指示哪些文件需要更新，我将它叫做**zip资源索引文件** ，简称 zresinfo，它的内容大致如下：
+zip文件的下载和解压都是由C++完成的，但是下载和解压的路径需要Lua来提供。这个动作完成后，C++会通知Lua更新成功。Lua会接着进行后续操作就使用下面 [4.5.4][13] 中提到的方法来复制资源、合并 uresinfo 。
+
+**4.5.3.7 zresinfo（zip资源索引文件）
+
+zip文件中也包含一个 resinfo.lua ，它用于指示哪些文件需要更新。内容大致如下：
 
 <pre lang="lua">
 local data = {
@@ -1267,9 +1291,164 @@ return data
 
 这个文件中包含的所有文件必须能在zip解压后找到。
 
-**更新资源索引文件** 简称 uresinfo，它位于所有资源保存的目录中。
+<a name="updateFinalResInfo"></a>
+**4.5.4 update.updater.updateFinalResInfo()**
 
--- 未完待续 --
+这是一个至关重要的方法，让我们代入用上面提到的变量名和目录来描述它的功能：
+
+它实现的功能是：
+
+1. 读取 uresinfo，若没有，则将 lresinfo 复制成 uresinfo；
+1. 从 utmp 中读取 zresinfo，注意此时zip文件已经解压；
+1. 将需要更新的资源文件从 utmp 中复制到 ures 中；
+1. 更新 uresinfo ，使其中的资源键名指向正确的资源路径（上一步复制的目标路径）；
+1. 删除 utmp；
+1. 将更新后的 uresinfo 作为lua文件写入 ures 。
+
+**4.5.5 其它方法
+
+对 update.updater 的调用一般是这样的顺序：
+
+1. 调用 checkUpdat 方法检测是否需要升级；
+2. 调用 update 方法执行升级，同时注册事件管理handler；
+3. 升级成功，调用 getResCopy 方法获取最新的 uresinfo 。
+
+# 5. 对 framework 的修改
+
+## 5.1 写一个 getres 方法
+
+ures 中包含的就是所有素材的索引（键值对）。形式如下：
+
+* 键名：`res/pic/init_bg.png`
+* 键值（lres中）: `res/pic/init_bg.png`
+* 键值（ures中）：`/Users/zrong/Library/Application Support/iPhone Simulator/7.1/Applications/2B46FAC0-C419-42B5-92B0-B06DD16E113B/Documents/res/pic/init_bg.png`
+
+在程序中，我们一般会使用这样的写法来获取资源：
+
+<pre lang="lua">
+display.newSprite("pic/init_bg.png")
+</pre>
+
+或者干脆简化成了：
+
+<pre lang="lua">
+display.newSprite("init_bg.png")
+</pre>
+
+要上面的代码能够工作，需要为 CCFileUtils 设置搜索路径：
+
+<pre lang="lua">
+CCFileUtils:sharedFileUtils:addSearchPath("res/")
+CCFileUtils:sharedFileUtils:addSearchPath("res/pic/")
+</pre>
+
+在这套更新机制中，**我不建议设置搜索路径**，因为素材都是以完整路径格式保存的，这样使用起来更方便和更确定。
+
+如果是新项目，那么挺好，我只需要保证素材路径基于 `res` 提供即可，类似这样：
+
+<pre lang="lua">
+display.newSprite("res/pic/init_bg.png")
+</pre>
+
+但是对于已经开发了一段时间的项目来说，一个个改就太不专业了。这是我们需要扩展一个 io.getres 方法：
+
+<pre lang="lua">
+res = {}
+
+function io.getres(path)
+	print("io.getres originl:", path)
+	if CCFileUtils:sharedFileUtils():isAbsolutePath(path) then
+		return path
+	end
+	if res[path] then return res[path] end
+	for key, value in pairs(finalRes.oth) do
+		print(key, value)
+		local pathInIndex = string.find(key, path)
+		if pathInIndex and pathInIndex >= 1 then
+			print("io.getres getvalue:", path)
+			res[path] = value
+			return value
+		end
+	end
+	print("io.getres no get:", path)
+	return path
+end
+</pre>
+
+然后，我们需要修改 quick framework 中的display模块让我们的旧代码不必进行任何改动就能生效。
+
+## 5.2 修改 display.newSprite
+
+找到该方法中的这个部分：
+
+<pre lang="lua">
+if string.byte(filename) == 35 then -- first char is #
+	local frame = display.newSpriteFrame(string.sub(filename, 2))
+	if frame then
+		sprite = spriteClass:createWithSpriteFrame(frame)
+	end
+else
+	if display.TEXTURES_PIXEL_FORMAT[filename] then
+		CCTexture2D:setDefaultAlphaPixelFormat(display.TEXTURES_PIXEL_FORMAT[filename])
+		sprite = spriteClass:create(filename)
+		CCTexture2D:setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGBA8888)
+	else
+		sprite = spriteClass:create(filename)
+	end
+end
+</pre>
+
+将其改为：
+
+<pre lang="lua">
+if string.byte(filename) == 35 then -- first char is #
+	local frame = display.newSpriteFrame(string.sub(filename, 2))
+	if frame then
+		sprite = spriteClass:createWithSpriteFrame(frame)
+	end
+else
+	local absfilename = io.getres(filename)
+	if display.TEXTURES_PIXEL_FORMAT[filename] then
+		CCTexture2D:setDefaultAlphaPixelFormat(display.TEXTURES_PIXEL_FORMAT[filename])
+		sprite = spriteClass:create(absfilename)
+		CCTexture2D:setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGBA8888)
+	else
+		sprite = spriteClass:create(absfilename)
+	end
+end
+</pre>
+
+## 5.3 修改display.newTilesSprite
+
+将其中的 `local sprite = CCSprite:create(filename, rect)`
+
+改为`local sprite = CCSprite:create(io.getres(filename), rect)`
+
+## 5.4 修改 display.newBatchNode
+
+改法与上面相同。
+
+# 6. 后记
+
+这真是一篇太长的文章了，希望我说清了。
+
+其实还有一些东西在这个机制中没有涉及，例如：
+
+## 6.1 更新的健壮性
+
+* 在更新 update.zip 模块自身的时候，如果新的update.zip有问题怎么办？
+* 如果索引文件找不到怎么办？zip文件解压失败怎么办？zresinfo 中的内容与zip文件解压后的内容不符怎么办？
+* 下载更新的时候网断了如何处理？如何处理断点续传？设备磁盘空间不够了怎么处理？
+
+## 6.2 更多的更新方式
+
+* 如何回滚更新？
+* 如何多个版本共存？
+* 如何对资源进行指纹码化？
+
+这些问题都不难解决。方法自己想，我只能写到这儿了。话说回来，实现了 **更新一切** ，你的又担心什么呢？
+
+**射手，30分钟够么？**
 
 [1]: http://my.oschina.net/SunLightJuly/blog/180639
 [2]: https://groups.google.com/forum/#!topic/quick-x/ni6Nf50jzfo
