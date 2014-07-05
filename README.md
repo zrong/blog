@@ -131,3 +131,4 @@
 * [在 Mac OS X 上安装lighttpd](http://zengrong.net/post/2127.htm)
 * [在lua中递归删除一个文件夹](http://zengrong.net/post/2129.htm)
 * [quick-cocos2d-x的热更新机制实现](http://zengrong.net/post/2131.htm)
+* [项目版本描述规则](http://zengrong.net/post/2132.htm)
