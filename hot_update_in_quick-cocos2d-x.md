@@ -2,7 +2,7 @@
 
 Hot update in quick-cocos2d-x
 
-# 0. 依赖
+# 0 依赖
 
 这里说的热更新，指的是客户端的更新。
 
@@ -14,7 +14,7 @@ Hot update in quick-cocos2d-x
 
 本文基于 [quick-cocos2d-x zrong 修改版][5] 。 <!--more-->
 
-# 1. 前言
+# 1 前言
 
 ## 1.1 他山之石
 
@@ -44,13 +44,14 @@ Roberto Ierusalimschy 在 [Lua程序设计(第2版)][9] 第15章开头所说：
 
 >通常，Lua不会设置规则（policy）。相反，Lua会提供许多强有力的机制来使开发者有能力实现出最适合的规则。
 
-我认为更新模块也不应该设置规则，而是尽可能提供一些机制来满足程序员的需要。这些机制并不是我发明的，而是Lua和quick本来就提供的。让程序员自己实现自己的升级系统，一定比我这个无证的半吊子的方法更好.
+我认为更新模块也不应该设置规则，而是尽可能提供一些机制来满足程序员的需要。这些机制并不是我发明的，而是Lua和quick本来就提供的。让程序员自己实现自己的升级系统，一定比我这个无证野路子的方法更好.
 
-因此，这篇文章中讲述的并非是一套通用的机制，而是我根据上面说到的这些机制实现的一套适合自己的方法。当然你可以直接拿去用，但要记住：
+因此，本文中讲述的并非是一套通用的机制，而是我根据上面说到的这些机制实现的一套适合自己的方法。当然你可以直接拿去用，但要记住：
 
 * 用的好，请告诉你的朋友。
 * 出了问题，<del>请告诉</del>别找我。
 
+<a name="complexity"></a>
 ## 1.3 需求的复杂性
 
 热更新有许多的必要条件，每个产品的需求可能都不太相同。
@@ -73,13 +74,13 @@ Roberto Ierusalimschy 在 [Lua程序设计(第2版)][9] 第15章开头所说：
 
 ## 1.4 版本号设计
 
-关于上面说到的版本号的问题，可以参考一下这篇文章进行设置：[语义化版本2.0.0][8] 。
+关于上面 [需求的复杂性][14] 中提到的版本号的问题，可以参考一下这篇文章：[语义化版本2.0.0][8] 。
 
 我基于语义化版本设计了一套规则在团队内部使用：[项目版本描述规则][10] 。
 
 在这里，我尽量详细地阐述我的思路和做法，抛砖引玉吧。
 
-# 2. 特色
+# 2 特色
 
 基本的热更新功能就不说了大家都有。我这套机制还有如下几个特色：
 
@@ -135,38 +136,46 @@ bool AppDelegate::applicationDidFinishLaunching()
 
 所以，你看，我不仅是撑数，还是忽悠。
 
-# 3. Updater(C++)
+# 3 Updater(C++)
 
 [AssetsManager][3] 中提供了下载资源，访问更新列表，解压zip包，删除临时文件，设置搜索路径等等一系列的功能。但它的使用方式相当死板，我只能传递一个获取版本号的地址，一个zip包的地址，一个临时文件夹路径，然后就干等着。期间啥也干不了。
 
-当然，我可以通过 quick-cocos2d-x 为其增加的 registerScriptHandler 方法让lua得知下载进度和网络状态等等。但下载进度的数字居然以事件名的方式通过字符串传过来的！这个就有点太匪夷所思了点。
+当然，我可以通过 quick 为其增加的 `registerScriptHandler` 方法让lua得知下载进度和网络状态等等。但下载进度的数字居然以事件名的方式通过字符串传过来的！这个就太匪夷所思了点。
 
-于是，我对这个 AssetsManager 进行了修改。因为修改的东西实在太多，改完后就不好意思再叫这个名字了（其实主要是现在的名字比较短 XD）。我们只需要记住这个 Updater 是使用 AssetsManager 修改的即可。
+于是，我对这个 `AssetsManager` 进行了修改。因为修改的东西实在太多，改完后就不好意思再叫这个名字了（其实主要是现在的名字比较短 XD）。我们只需要记住这个 `Updater` 是使用 `AssetsManager` 修改的即可。
 
-在上面SunLightJuly和Henry同学的方法中，使用的是 CCHTTPRequest 来获取网络资源的。CCHTTPRequest 封装了cURL 操作。而在 Updater 中，是直接封装的 cURL 操作。
+在上面SunLightJuly和Henry同学的方法中，使用的是 `CCHTTPRequest` 来获取网络资源的。`CCHTTPRequest` 封装了`cURL` 操作。而在 `Updater` 中，是直接封装的 `cURL` 操作。
 
 在我的设计中，逻辑应该尽量放在lua中，C++部分只提供功能供lua调用。因为lua可以进行热更新，而C++部分则只能整包更新。
 
 [Updater][6] 主要实现的内容如下：
 
-## 3.1 删除了get和set相关的一堆方法，new对象的时候不必传递参数；
+## 3.1 删除了不需要的方法
 
-## 3.2 使用 `getUpdateInfo` 方法通过HTTP协议获取升级列表数据，获取到的数据直接返回，C++并不做处理；
+get和set相关的一堆方法都被删除了。new对象的时候也不必传递参数了。
 
-## 3.3 使用 `update` 方法通过HTTP协议下载升级包，需要提供四个参数：
+## 3.2 增加 `getUpdateInfo` 方法
+
+这个方法通过HTTP协议获取升级列表数据，获取到的数据直接返回，C++并不做处理。
+
+## 3.3 修改 `update` 方法
+
+这个方法通过HTTP协议下载升级包，需要提供四个参数：
 
 1. zip文件的url；
 2. zip文件的保存位置；
 3. zip 文件的解压临时目录；
 4. 解压之前是否需要清空临时目录。
 
-## 3.4 把传递给lua的事件分成了四种类型：
+## 3.4 修改事件类型
 
-**3.4.1 `UPDATER_MESSAGE_UPDATE_SUCCEED` **
+我把把传递给lua的事件分成了四种类型：
+
+**3.4.1 `UPDATER_MESSAGE_UPDATE_SUCCEED`**
 
 事件名为 success，代表更新成功，zip文件下载并解压完毕；
 
-**3.4.2 `UPDATER_MESSAGE_STATE`  **
+**3.4.2 `UPDATER_MESSAGE_STATE`**
 
 事件名为 state，更新过程中的状态（下载开始、结束，解压开始、结束）也传递给了lua。这个方法是这样实现的：
 
@@ -217,7 +226,7 @@ void Updater::Helper::handlerState(Message *msg)
 	
 **3.4.3 `UPDATER_MESSAGE_PROGRESS`**
 
-事件名为 progress，传递的对象为一个 CCInteger ，代表进度。详细的实现可以看[源码][6]。
+事件名为 progress，传递的对象为一个 CCInteger ，代表进度。详细的实现可以看 [源码][6]。
 
 **3.4.4 `UPDATER_MESSAGE_ERROR`**
 
@@ -229,7 +238,7 @@ void Updater::Helper::handlerState(Message *msg)
 * errorUncompress
 * errorUnknown
 	
-方法的实现和上面的 `UPDATER_MESSAGE_STATE` 类似，这里就不贴了。详细的实现可以看[源码][6]。
+方法的实现和上面的 `UPDATER_MESSAGE_STATE` 类似，这里就不贴了。详细的实现可以看 [源码][6]。
 
 Updater(C++) 部分只做了这些苦力工作，而具体的分析逻辑（分析getUserInfo返回的数据决定是否升级、如何升级和升级什么），下载命令的发出（调用update方法），解压成功之后的操作（比如合并新文件到就文件中，更新文件索引列表等等），全部需要lua来做。下面是一个处理Updater(C++)事件的lua函数的例子。
 
@@ -310,7 +319,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 
 原来位于 main.lua 中的 `__G_TRACKBACK__` 函数（用于输出lua报错信息）直接包含在C++代码中了。那么现在 `main.lua` 就不再需要了。
 
-同样的，第一个载入的模块变成了 `res/lib/update.zip`，当然这个zip也可以放在quick能找到的其它路径中，使用上面的路径只是我的个人习惯。
+同样的，第一个载入的模块变成了 `res/lib/update.zip`，这个zip也可以放在quick能找到的其它路径中，使用这个路径只是我的个人习惯。
 
 最后，LuaStack直接执行了下面这句代码启动了 `update.UpdateApp` 模块：
 
@@ -322,15 +331,17 @@ require("update.UpdateApp").new("update"):run(true);
 
 update包有三个子模块，每个模块是一个lua文件，分别为：
 
-* update.UpdateApp 检测更新，觉得启动哪个模块。
-* update.updater 负责真实的更新工作，与C++通信，下载、解压、复制。
-* update.updateScene 负责在真实的更新过程中显示界面，进度条等等。
+* update.UpdateApp 检测更新，决定启动哪个模块。
+* update.updater 负责真正的更新工作，与C++通信，下载、解压、复制。
+* update.updateScene 负责在更新过程中显示界面，进度条等等。
 
-对于不同的大小写，是因为在我的命名规则中，类用大写开头，对象是小写开头。
+对于不同的大小写，是因为在我的命名规则中，类用大写开头，对象是小写开头。 `update.UpdateApp` 是一个类，其它两个是对象(table)。
 
-## 4.3 update.UpdateApp
+下面的 4.3、4.4、4.5 将分别对这3个模块进行详细介绍。
 
-下面是入口模块 UpdateApp 的内容：
+## 4.3 `update.UpdateApp`
+
+下面是入口模块 `UpdateApp` 的内容：
 
 <pre lang="lua">
 --- The entry of Game
@@ -456,27 +467,27 @@ return UpdateApp
 
 我借用class中的一些代码来实现 UpdateApp 的继承。其实我觉得这个UpdateApp也可以不必写成class的。
 
-**4.3.2 入口函数 update.UpdateApp:run(checkNewUpdatePackage)**
+**4.3.2 入口函数 `update.UpdateApp:run(checkNewUpdatePackage)`**
 
 run 是入口函数，同时接受一个参数，这个参数用于判断是否要检测本地有新的 update.zip 模块。
 
-是的，run 就是那个在 AppDelegate.cpp 中第一个调用的lua函数。
+是的，run 就是那个在 `AppDelegate.cpp` 中第一个调用的lua函数。
 
-这个函数接受一个参数 `checkNewUpdatePackage` 在C++中是使用 true 值来调用的。
+这个函数接受一个参数 `checkNewUpdatePackage` ，在C++调用 `run` 的时候，传递的值是 `true` 。
 
-如果这个值为真，则会检测本地是否拥有新的更新模块，这个检测是通过 `update.updater.hasNewUpdatePackage()` 方法进行的，后面会说到这个方法。
+如果这个值为真，则会检测本地是否拥有新的更新模块，这个检测通过 `update.updater.hasNewUpdatePackage()` 方法进行，后面会说到这个方法。
 
-本地有更新的 update 模块，则直接调用 updateSelf 来更新 update 模块自身；若无则检测是否有项目更新，下载更新的资源，解析它们，处理它们，然后启动主项目。这些工作是通过 `update.updater.checkUpdate()` 完成的，后面会说到这个方法。
+本地有更新的 update 模块，则直接调用 updateSelf 来更新 update 模块自身；若无则检测是否有项目更新，下载更新的资源，解析它们，处理它们，然后启动主项目。这些工作通过 `update.updater.checkUpdate()` 完成，后面会说到这个方法。
 
-若没有任何内容需要更新，则直接调用 runRootScene 来显示主场景了。这后面的内容就交给住场景去做了，update 模块退出历史舞台。
+若没有任何内容需要更新，则直接调用 `runRootScene` 来显示主场景了。这后面的内容就交给住场景去做了，update 模块退出历史舞台。
 
 从上面这个流程可以看出。在更新完成之前，主要的项目代码和资源没有进行任何载入。这也就大致达到了我们 **更新一切** 的需求。因为所有的东西都没有载入，也就不存在更新。只需要保证我载入的内容是最新的就行了。
 
-所以我们只需要保证 update 模块能更新，就达到我们的目标了。
+因此，只要保证 update 模块能更新，就达到我们最开始的目标了。
 
 这个流程还可以保证，如果没有更新，甚至根本就不需要载入 update 模块的场景界面，直接跳转到游戏的主场景即可。
 
-有句代码在 run 函数中至关重要。
+**有句代码在 run 函数中至关重要：**
 
 <pre lang="lua">
 _G["finalRes"] = updater.getResCopy()
@@ -520,11 +531,11 @@ require("update.UpdateApp").new("update"):run(false)
 
 `update.updater.checkUpdate()` 的返回是异步的，下载和解压都需要时间，在这段时间里面，我们需要一个界面。`runUpdateScene` 方法的作用就是显示这个界面。并在更新成功之后调用handler处理函数。
 
-**显示主场景 update.UpdateApp:runRootScene()**
+**4.3.5 显示主场景 update.UpdateApp:runRootScene()**
 
 到了这里，update 包就没有作用了。但由于我们先前没有载入除 update 包外的任何包，这里必须先载入它们。
 
-我上面提到过，finalRes 这个全局变量是一个索引表，它的 lib 对象就是一个包含所有待载入的包（类似于 frameworks_precompiled.zip 这种）的列表。我们通过循环将它们载入内存。
+我上面提到过，finalRes 这个全局变量是一个索引表，它的 lib 对象就是一个包含所有待载入的包（类似于 `frameworks_precompiled.zip` 这种）的列表。我们通过循环将它们载入内存。
 
 对于 `root.RootScene` 这个模块来说，就是标准的quick模块了，它可以使用quick中的任何特性。
 
@@ -537,7 +548,7 @@ end
 require("root.RootScene").new("root"):run()
 </pre>
 
-**4.3.5 怎么使用这个模块**
+**4.3.6 怎么使用这个模块**
 
 你如果要直接拿来就用，这个模块基本上不需要修改。因为本来它就没什么特别的功能。当然，你可以看完下面两个模块再决定。
 
@@ -1169,7 +1180,7 @@ return updater
 不过，我又从quick CV了几个方法过来：
 
 * clone 方法用来完全复制一个table，在复制文件索引列表的时候使用；
-* vardump 方法用来1持久化索引列表，使其作为一个lua文件保存在设备存储器上。CV时有修改。
+* vardump 方法用来1持久化索引列表，使其作为一个lua文件保存在设备存储器上。有修改。
 * writeFile 和 readFile 用于把需要的文件写入设备中，也用它来复制文件（读入一个文件，在另一个地方写入来实现复制）
 * exists 这个和quick实现的不太一样，直接用 CCFileUtils 了。
 
@@ -1258,7 +1269,7 @@ local data = {
 return data
 </pre>
 
-**4.5.3.6 `http://192.168.18.22:8080/updater/res.zip` **
+**4.5.3.7 `http://192.168.18.22:8080/updater/res.zip`**
 
 zip包的文件夹结构大致如下：
 
@@ -1270,7 +1281,7 @@ zip包的文件夹结构大致如下：
 
 zip文件的下载和解压都是由C++完成的，但是下载和解压的路径需要Lua来提供。这个动作完成后，C++会通知Lua更新成功。Lua会接着进行后续操作就使用下面 [4.5.4][13] 中提到的方法来复制资源、合并 uresinfo 。
 
-**4.5.3.7 zresinfo（zip资源索引文件）
+**4.5.3.8 zresinfo（zip资源索引文件）**
 
 zip文件中也包含一个 resinfo.lua ，它用于指示哪些文件需要更新。内容大致如下：
 
@@ -1305,7 +1316,7 @@ return data
 1. 删除 utmp；
 1. 将更新后的 uresinfo 作为lua文件写入 ures 。
 
-**4.5.5 其它方法
+**4.5.5 其它方法**
 
 对 update.updater 的调用一般是这样的顺序：
 
@@ -1313,7 +1324,7 @@ return data
 2. 调用 update 方法执行升级，同时注册事件管理handler；
 3. 升级成功，调用 getResCopy 方法获取最新的 uresinfo 。
 
-# 5. 对 framework 的修改
+# 5 对 framework 的修改
 
 ## 5.1 写一个 getres 方法
 
@@ -1342,7 +1353,7 @@ CCFileUtils:sharedFileUtils:addSearchPath("res/")
 CCFileUtils:sharedFileUtils:addSearchPath("res/pic/")
 </pre>
 
-在这套更新机制中，**我不建议设置搜索路径**，因为素材都是以完整路径格式保存的，这样使用起来更方便和更确定。
+但是，在这套更新机制中，**我不建议设置搜索路径**，因为素材都是以完整路径格式保存的，这样使用起来更方便和更确定。
 
 如果是新项目，那么挺好，我只需要保证素材路径基于 `res` 提供即可，类似这样：
 
@@ -1430,7 +1441,7 @@ end
 
 # 6. 后记
 
-这真是一篇太长的文章了，希望我说清了。
+噢！这真是一篇太长的文章了，真希望我都说清了。
 
 其实还有一些东西在这个机制中没有涉及，例如：
 
@@ -1442,12 +1453,17 @@ end
 
 ## 6.2 更多的更新方式
 
+我在 [需求的复杂性][14] 里面描述了一些需求，例如：
+
 * 如何回滚更新？
 * 如何多个版本共存？
 * 如何对资源进行指纹码化？
 
-这些问题都不难解决。方法自己想，我只能写到这儿了。话说回来，实现了 **更新一切** ，你的又担心什么呢？
+这些问题都不难解决。方法自己想，我只能写到这儿了。
 
+话说回来，实现了 **更新一切** ，你还担心什么呢？
+
+<hr>
 **射手，30分钟够么？**
 
 [1]: http://my.oschina.net/SunLightJuly/blog/180639
@@ -1463,3 +1479,4 @@ end
 [11]: #_updateHandler
 [12]: http://zengrong.net/post/2129.htm
 [13]: #updateFinalResInfo
+[14]: #complexity
