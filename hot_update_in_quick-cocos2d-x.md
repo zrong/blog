@@ -40,7 +40,7 @@ Hot update in quick-cocos2d-x
 
 上面的几个方案侧重于尽量简化用户（使用此方案的程序员）的操作，而简化带来的副作用就是会损失一些灵活性。
 
-Roberto Ierusalimschy 在 [Lua程序设计(第2版)][9] 第15章开头所说：
+正如 Roberto Ierusalimschy 在 [Lua程序设计(第2版)][9] 第15章开头所说：
 
 >通常，Lua不会设置规则（policy）。相反，Lua会提供许多强有力的机制来使开发者有能力实现出最适合的规则。
 
