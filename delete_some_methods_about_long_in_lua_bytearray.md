@@ -1,0 +1,61 @@
+[删除 lua.ByteArray 中与 Long 相关的方法](http://zengrong.net/post/2134.htm)
+
+Delete some methods about Long in lua.ByteArray.
+
+在 [用lua实现ByteArray和ByteArrayVarint][1] 一文中，我介绍了用 lua+lpack+BitOp 实现的 ByteArray 模块，这个模块模仿 AS3 的ByteArray，给从Flash转到quick-cocos2d-x的程序员以亲切感。
+
+这个模块被网友们找出了一些BUG，例如 [这个][2] ， [这个][3] ，[这个][4] ，和 [这个][4] 。
+
+今天，我将这些网友提出的问题一一做了确认和测试，发现有些并非BUG，而是理解有偏差。
+
+但有个不是BUG的问题却可能造成重大的错误，那就是：<!--more-->
+
+**lpack 库操作long值的时候，长度在不同机器上是不统一的。**
+
+看下面这段代码（完整代码 [在此][8]）：
+
+<pre lang="lua">
+require("pack")
+local l = string.pack("l", 32333)
+print(#l)
+local L = string.pack("L", 33333)
+print(#L)
+local i = string.pack("i", 32333)
+print(#i)
+local I = string.pack("I", 33333)
+print(#I)
+</pre>
+
+这段代码在不同的平台上执行得到的结果并不相同。在 Mac 平台上，输出的结果是8,8,4,4，而在 iOS 模拟器中，输出的结果是 4,4,4,4 。
+
+当然，lpack 库的表现并非它的bug，而是因为根据 [C语言标准][6]，long的长度是 **At least 32 bits in size**，这就导致了 long 的长度受到机器字长和编译器的影响。
+
+Mac 版本的 quick-x-player 采用64bit的编译器来编译，因此 long 的长度是8；而 iOS 模拟器采用的可能是32位编译器（以及CPU架构），所以 long 的长度是4.
+
+Apple的新移动设备将采用64bit的CPU架构，但淘汰就设备可能需要很长时间。
+
+何况还有Android。
+
+虽然这并非quick的问题，也不是lpack的问题，甚至不是lua和C语言的问题。但对于quick这样一个跨了4个平台（Win/Mac/iOS/Android）的引擎来说，这种表现显然是不合理的。
+
+虽然 Windows 和 Mac 并非 quick 主要面向的平台，但我们必须考虑在这两个平台上使用 quick-x-player 开发的程序员的使用习惯。
+
+同时，由于 ByteArray 主要用于和服务器通讯（至少在我的项目中是这样），我们也要考虑long在服务器端的不同的处理方式。
+
+因此，我决定从 ByteArray 库中删除4个与Long相关的方法，它们是：
+
+* readLong
+* writeLong
+* readULong
+* writeULong
+
+这些方法已经从我修改的 [quick-cocos2d-x][7] 中移除。我会稍后将其推送给触控。
+
+[1]: http://zengrong.net/post/1968.htm
+[2]: https://github.com/chukong/quick-cocos2d-x/issues/399
+[3]: http://www.cocoachina.com/bbs/read.php?tid=207697
+[4]: http://www.cocoachina.com/bbs/read.php?tid=213295
+[5]: http://www.cocoachina.com/bbs/read.php?tid=207698
+[6]: http://en.wikipedia.org/wiki/C_data_types
+[7]: https://github.com/zrong/quick-cocos2d-x
+[8]: https://github.com/zrong/quick-cocos2d-x/tree/zrong/samples/bytearray
