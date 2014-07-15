@@ -51,7 +51,7 @@ DragonBonesCPP 在quick中的内容，包含在这样几个路径下：
 * texture.png 纹理素材，采用碎图拼接而成
 * texture.xml 碎图拼接的数据文件，和TexturePacker生成的plist的作用相同
 
-# 3 显示Dragon
+# 3 显示
 
 打开 [samples/dragonbones/scripts/demos/DragonDemoEntry.lua][9] 这个文件，让我们看看如何显示一个骨骼动画。
 
@@ -133,7 +133,153 @@ self._db:getAnimation():play()
 
 # 4 换装
 
-**==未完待续==**
+打开 [samples/dragonbones/scripts/demos/DragonSwitchClothes.lua][10] 这个文件，让我们看看如何实现一个简单的换装。
+
+这个范例的效果是这样的：
+
+[![Dragon Switch Clothes][51]][51]
+
+在文件开头，我定义了一个4个元素的table，用来保存每个不同服装的纹理：
+
+<pre lang="lua">
+local _TEXTURES = {
+	"parts/clothes1",
+	"parts/clothes2",
+	"parts/clothes3",
+	"parts/clothes4",
+}
+</pre>
+
+这些纹理的名称，是根据FLA文件的库结构自动生成的，我们可以打开texture.xml这个文件，就能看到这个DragonBones的所有纹理。
+
+在 `_onSwitchClothes` 事件处理函数中，不断循环调用不同的纹理实现换装。
+
+<pre lang="lua">
+function DragonSwitchClothes:_onSwitchClothes()
+	_textureIndex = _textureIndex + 1
+	if _textureIndex > #_TEXTURES then
+		_textureIndex = _textureIndex - #_TEXTURES
+	end
+
+    self._db:setBoneTexture("clothes", _TEXTURES[_textureIndex], "Dragon");
+end
+</pre>
+
+`setBoneTexture` 是为了方便换装而封装在 CCDragonBones 中的一个函数。它的内容如下：
+
+<pre lang="c++">
+void CCDragonBones::setBoneTexture(const char* boneName, const char* textureName, const char* textureAtlasName)
+{
+
+	Cocos2dxFactory* fac = Cocos2dxFactory::getInstance();
+	Object* clothesObj = fac->getTextureDisplay(textureName, textureAtlasName);
+
+	//CCLOG("CLOSE %d", clothesObj);
+
+	Bone* bone = getArmature()->getBone(boneName);
+	CocosNode* oldClothesObj = static_cast<CocosNode*>(bone->getDisplay());
+	bone->setDisplay(clothesObj);
+}
+</pre>
+
+从上面我们可以看出，换装的方法就是根据提供的纹理新建一个对象，然后找到要切换纹理的骨骼，将这个骨骼的显示部分替换成这个纹理对象。
+
+在DragonBones中，有很多方式可以实现换装。因为一个骨骼不一定是一个单独的纹理，还可能是一个逐帧动画对象。这里描述的换装方法，只能把骨骼替换成单个纹理。
+
+以后我会专门撰文描述其它的换装方式。
+
+这个例子其实并不只是说明了换装一种用法，还有如何让动画移动等等。请参考相关代码自行理解。
+
+# 5 追鸟
+
+打开 [samples/dragonbones/scripts/demos/DragonChaseStarling.lua][11] 这个文件，让我们看看Dragon如何孽待一只叫做Starling的小八哥。
+
+这个例子中的小鸟来自基于Flash Stage3D技术的2D引擎 [Starling][12] ，这个引擎也算是cocos2d-x的竞争对手吧 :)
+
+这个范例的效果是这样的：
+
+一个月黑风高的晚上，许多乌鸦在背景的天空中飞。一直红色的小鸟正在挑逗一只胸饿的小龙（请自行脑补……），小龙带着呆萌的眼神挥舞那凶猛的爪子准备抓住小鸟然后OOXX……从此它们过上了幸福的生活……
+
+哦，请原谅我走神。看起来这动人的一幕是这样的：
+
+[![Dragon Chase Starling][52]][52]
+
+在这个例子中，因为要控制小龙的头部、两只爪子根据小鸟的位置而移动，我们需要实现得到这三个部位的骨骼引用：
+
+<pre lang="lua">
+_head = self._db:getArmature():getBone("head")
+_armR = self._db:getArmature():getBone("armUpperR")
+_armL = self._db:getArmature():getBone("armUpperL")
+</pre>
+
+小鸟就是一个CCSprite而已，小龙和上面的创建一样，这里就不贴出代码了：
+
+<pre lang="lua">
+self._starlingBird = display.newSprite("starling.png")
+	:pos(display.left + 20, display.cy)
+	:addTo(self, 10)
+</pre>
+
+当触摸屏幕的时候，需要开启一个计时器来更新。后面所有的更新都在计时器 `self._update` 中进行。
+
+在触摸屏幕并移动的时候，实时更新小鸟的坐标，并记录当前触摸的坐标以供在 `self._update` 的时候计算骨骼的旋转角度。
+
+<pre lang="lua">
+function DragonChaseStarling:_onTouch(event,x, y, px, py)
+	if event == "began" then 
+		if not _isChasing then
+			self:scheduleUpdate(handler(self, self._update));
+			_isChasing = true
+		end
+		return true 
+	end
+	if event == "moved" then 
+		self:_updatePosition(x, y)
+	elseif event == "ended" then
+	end
+end
+
+function DragonChaseStarling:_updatePosition(x, y)
+    _touchX = x
+    _touchY = y
+    self._starlingBird:pos(x,y);
+end
+</pre>
+
+更新骨骼角度的代码在 `self._updateBones` 方法中。
+
+下面的代码计算当前触摸点与小龙的中心点的角度，然后分别设置三个骨骼（头部、左爪，右爪）以及小鸟的旋转。
+
+需要注意几点：
+
+1. DragonBones的中心点在脚底中心，因此身体中心要加上高度的一半；
+2. 每个骨骼的起始角度以及可偏转极限不同，因此使用不同的参数与 `_r` 相乘；
+3. CCDragonBones只是一个CCNode，默认是没有ContentSize的，因此必须先使用 `setContentSize` 设置尺寸。
+
+<pre lang="lua">
+function DragonChaseStarling:_updateBones()
+	local dbsize = self._db:getContentSize()
+    _r = math.pi + math.atan2(self._db:getPositionY() + 
+		dbsize.height / 2-_touchY , 
+		_touchX - self._db:getPositionX())
+    if _r > math.pi then
+        _r = _r - math.pi * 2;
+	end
+    
+    _head.offset:setRotation(_r*0.3);
+    _armR.offset:setRotation(_r*0.8);
+	_armL.offset:setRotation(_r*1.5);
+    self._starlingBird:setRotation(_r*0.2*(180/math.pi));
+end
+</pre>
+
+其它的关于小龙的移动和超范围判断，看源码即可。
+
+# 6 更多
+
+这三个例子只是展示了DragonBones的很小一部分功能。更多的例子和使用方法，请访问 [DragonBones官方网站][13] 下载。
+
+当然，官方网站的例子都是基于 ActionScript3 的。
 
 [1]: http://zengrong.net/post/2106.htm
 [2]: https://github.com/DragonBones/DragonBonesCPP
@@ -144,5 +290,11 @@ self._db:getAnimation():play()
 [7]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/framework/cocos2dx/CCDragonBonesExtend.lua
 [8]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/framework/display.lua#L503
 [9]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/samples/dragonbones/scripts/demos/DragonDemoEntry.lua
+[10]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/samples/dragonbones/scripts/demos/DragonSwitchClothes.lua
+[11]: https://github.com/zrong/quick-cocos2d-x/blob/zrong/samples/dragonbones/scripts/demos/DragonChaseStarling.lua
+[12]: http://gamua.com/starling/
+[13]: http://dragonbones.github.io/
 
 [50]: /wp-content/uploads/2014/07/dragon_entry.png
+[51]: /wp-content/uploads/2014/07/dragon_switchclothes.png
+[52]: /wp-content/uploads/2014/07/dragon_chasestarling.png
