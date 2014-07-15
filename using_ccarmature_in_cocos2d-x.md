@@ -1,3 +1,8 @@
+[在cocos2d-x中使用CCArmature实现骨骼动画](http://zengrong.net/post/1911.htm)
+
+using CCArmature in cocos2d-x.
+
+* <span style="color:red;">2014-07-15更新：</span>更新 在 quick-cocos2d-x 中使用 DragonBonesCPP
 * <span style="color:red;">2014-04-28更新：</span>更新 DragonBones 官方C++版本 for cocos2d-x
 * <span style="color:red;">2013-11-19更新：</span>更新2.2.0bug处理情况
 * <span style="color:red;">2013-10-15更新：</span>更新2.2.0bug处理情况
@@ -5,18 +10,29 @@
 * <span style="color:red;">2013-10-11更新：</span>加入CocoStudio动画编辑器导入 .fla 文件注意事项
 <hr>
 
+## 重要更新 2014-07-15
+
+[在 quick-cocos2d-x 中使用 DragonBonesCPP][quick]
+
 ## 重要更新 2014-04-28
 
-DragonBones 开发组已经对 DragonBones 进行了官方的 C++ 移植，很多问题都不复存在了。详情看这里 [DragonBones 官方C++版本 for cocos2d-x](http://zengrong.net/post/2106.htm) 。
+DragonBones 开发组已经对 DragonBones 进行了官方的 C++ 移植，很多以前我提到的[问题][dbtag]都不复存在了。详情看这里 [DragonBones 官方C++版本 for cocos2d-x][dbcpp] 。
 
 ## 基础知识
 
-要看懂本文，你需要了解骨骼动画（或称关节动画）是什么，以及DragonBones是什么。下面提供了一些资料：
+要看懂本文，你需要了解骨骼动画（或称关节动画）是什么，以及CCArmature 和 DragonBones是什么。下面提供了一些资料：
 
 * [Skeletal Animation (Wikipedia en)][skeletalani]
 * [DragonBones 2.1快速入门指南][dragonbonesstarted]
 * [Skeletal Animation (cocos2d-x wiki en)][skeletalanicocos2d]
 * [骨骼动画详解 (泰然网)][skeletalanicocos2d]
+* [DragonBones 官方C++版本 for cocos2d-x][dbcpp]
+
+注意，本文讲解的是 cocos2d-x 官方版本中自带的 CCArmature 库的使用。这个库是 DragonBones AS3 库的一个不完全移植版，它的官方骨骼动画制作工具是 Cocostudio(CCS)，而不是Flash。
+
+因此，使用Flash制作的骨骼动画，可能会被CCArmaue不完全支持。尤其是在CCArmature针对CCS做了那么多修改和优化之后。
+
+用过CCS的人都知道，这个编辑器超级难用。很难说服美术GGMM去学习这么难用且难看的软件。对于只愿意使用熟悉的工具的美术GGMM来说，或许Flash就是唯一适合的。
 
 To flash veteran: do you remember the 'Moho'?<!--more-->
 
@@ -24,19 +40,21 @@ To flash veteran: do you remember the 'Moho'?<!--more-->
 
 在写这篇文章的时候，DragonBones的官方版本为v2.3。cocos2d-x的稳定版本为2.1.5。
 
-为了使用cocos2d-x，我们需要选择 Zip(XML and PNGs) 的方式，将图像文件导出为独立的图像帧加上XML格式的元数据文件。官方版本的DragonBones，会将元数据分成texture.xml和skeleton.xml两个文件，而cocos2d-x目前不支持这种情况。
+为了使用cocos2d-x，我们需要选择 Zip(XML and PNGs) 的方式，将图像文件导出为独立的图像帧加上XML格式的元数据文件。官方版本的DragonBones Desigin Panel，会将元数据分成texture.xml和skeleton.xml两个文件，而cocos2d-x目前不支持这种情况。
 
-因此，我们需要使用修改过的DragonBones插件。在[CocoStudio的官方论坛中提供了一个这样的插件][cocostudiodl]，版本是2.0。但这个插件有一个bug，我在2.2的基础上重新打包了插件，并修复了bug。详情看这里：[cocos2d-x专用的DragonBones2.2][db224cocos2dx] 。
+因此，我们需要使用修改过的DragonBones Design Panel插件。在[CocoStudio的官方论坛中提供了一个这样的插件][cocostudiodl]，版本是2.0。但这个插件有bug。
 
-使用这个版本的插件，在导出图像文件的时候，会将texture.xml和skeleton.xml文件合并成1个，同时会修改元数据中的部分格式，使其满足cocos2d-x的解析库要求。
+因此，我在2.2的基础上重新打包了插件，并修复了bug。详情看这里：[cocos2d-x专用的DragonBones2.2][db224cocos2dx] 。
+
+使用这个版本的插件，在导出图像文件的时候，会将texture.xml和skeleton.xml文件合并成1个，同时会修改元数据中的部分格式，使其满足cocos2d-x CCArmature 的解析库要求。
 
 **注意：下面提到DragonBones的时候，均指这个修改过的插件。**
 
-## DragonBones输出的图像数据可以导入CocoStudio Action编辑器
+## DragonBones Desigin Panel输出的图像数据可以导入CocoStudio Action编辑器
 
-可以使用CocoStudio的Action编辑器将DragonBones输出的图片导入，然后重新输出成Cocos2d-x支持的格式。这种格式包含一个把碎图拼接好的png文件，一个plist文件和一个json文件。
+可以使用CocoStudio的Action编辑器将DragonBones Design Panel输出的图片导入，然后重新输出成Cocos2d-x支持的格式。这种格式包含一个把碎图拼接好的png文件，一个plist文件和一个json文件。
 
-如何进行上面的导入操作？可以看这个视频：[flash插件 DragonBone导出以及CocoStudio动画编辑器的导入][input2cocostudio]
+如何进行上面的导入操作？可以看这个视频：[flash插件 DragonBone Design Panel导出以及CocoStudio动画编辑器的导入][input2cocostudio]
 
 使用CocoStudio的Action编辑器导出的格式有什么优势呢？
 
@@ -52,17 +70,17 @@ To flash veteran: do you remember the 'Moho'?<!--more-->
 
 ## 为什么不用CocoStudio
 
-既然导入有这样那样的问题，那么直接用CocoStudio做骨骼动画好了，干吗还要用DragonBones？
+既然导入有这样那样的问题，那么直接用CocoStudio做骨骼动画好了，干吗还要用DragonBones Design Panel？
 
-DragonBones有如下优势：
+DragonBones Design Panel有如下优势：
 
-* DragonBones的骨骼动画实现起来非常非常容易；
+* DragonBones的骨骼动画实现起来非常非常容易，在时间轴上放好影片剪辑就行了；
 * 大多数做动画的同学都熟悉Flash，但极少知道CocoStudio，谁都愿意用自己熟悉的软件；
-* Flash和DragonBones的操作体验优于CocoStudio太多。
+* Flash和DragonBones Design Panel的操作体验优于CocoStudio太多。
 
 加上上面提到的不稳定原因，我也无法说服自己使用CocoStudio Action编辑器，更别说把它交给美术MM了。
 
-更何况，我们根本不必把DragonBones生成的文件导入CocoStudio！cocos2d-x能直接支持DragonBones生成的文件！
+更何况，我们根本不必把DragonBones Design Panel生成的文件导入CocoStudio！cocos2d-x能直接支持DragonBones Desian Panel生成的文件！
 
 如果你还是希望用CocoStudo来做骨骼动画，可以参考这篇文章：[使用 CocoStudio 创建 Cocos2d-x 序列帧和骨骼动画][cocostudioskeleton]。
 
@@ -207,7 +225,7 @@ addChild(__armature)
 
 **以上全是我的猜测。**
 
-但即使是官方的TestCPP，如果测试DragonBones导出的Dragon那个Armature动画，也是能看出问题的。下面是动画，请注意尾部顶端、右臂以及腿的动作区别（这两个gif文件很大，要稍微等一会儿才会播放流畅）：
+但即使是官方的TestCPP，如果测试DragonBones Design Panel导出的Dragon那个Armature动画，也是能看出问题的。下面是动画，请注意尾部顶端、右臂以及腿的动作区别（这两个gif文件很大，要稍微等一会儿才会播放流畅）：
 
 *For v2.2.0 testcpp/ExtensionsTest/CocoStudioArmatureTest*
 
@@ -237,3 +255,6 @@ addChild(__armature)
 [sse]: http://zengrong.net/sprite_sheet_editor
 [db224cocos2dx]: http://zengrong.net/post/1915.htm
 [importfla]: http://www.cocoachina.com/bbs/read.php?tid=160314
+[dbtag]: http://zengrong.net/post/tag/dragonbones
+[dbcpp]: http://zengrong.net/post/2106.htm)
+[quick]: http://zengrong.net/post/2133.htm
