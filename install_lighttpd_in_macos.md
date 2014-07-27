@@ -85,7 +85,7 @@ ln -s ~/docs /usr/local/var/www/htdocs/docs
 
 1. 检查配置文件是否出错：`lighttpd -tf /usr/local/etc/lighttpd/lighttpd.conf` ；
 2. 是否配置了80端口但没有使用root用户运行？
-3. 是否没有启动 lighttd ？
+3. 是否没有启动 lighttpd ？
 
 [1]: https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/launchctl.1.html
 [2]: https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man8/launchd.8.html

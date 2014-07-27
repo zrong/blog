@@ -10,7 +10,7 @@ Embeds a browser in cocos2d-x
 
 集成的类叫做 CCWebView，位于 [extensions][4] 之中。
 
-本文基于 cocos2d-x 2.x，下面的 Android 平台部分介绍了一些 cocos2d-x 3.x 的相关信息。
+本文基于 cocos2d-x 2.x，下面的 Android 平台部分介绍了一些 cocos2d-x 3.x的相关信息。
 
 效果如下：<!--more-->
 
@@ -141,7 +141,7 @@ return WebViewTest
 
 使用 `getActivityName()` 方法可以返回传入的包名。
 
-对于 cocos2d-x 3.x，由于Activity继承自NativeActivity，因此需要使用 `getWindowManager().addView()` 来假如Android控件。详见：[Cocos2d-x 3.0beta成功添加Android的webview][7] 。
+对于 cocos2d-x 3.x，由于Activity继承自NativeActivity，因此需要使用 `getWindowManager().addView()` 来加入Android控件。详见：[Cocos2d-x 3.0beta成功添加Android的webview][7] 。
 
 ### iOS 平台
 
