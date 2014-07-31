@@ -66,7 +66,6 @@ DragonBonesCPP 在quick中的内容，包含在这样几个路径下：
 
 <pre lang="lua">
 function DragonDemoEntry:_createDB()
-	print("DragonDemoEntry", display.newDragonBones)
 	self._db = dragonbones.new({
 			skeleton="dragon/skeleton.xml",
 			texture="dragon/texture.xml",
