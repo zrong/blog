@@ -2,6 +2,9 @@
 
 Using DragonBonesCPP in quick-cocos2d-x.
 
+**2014-07-31更新：三件事已经全部搞定，DragonBonesCPP已经推送到了quick-cocos2d-x 官方库。**
+<hr>
+
 # 1 前言
 
 在 [DragonBones 官方C++版本 for cocos2d-x][1] 这篇文章中，我已经简单地介绍过了 [DragonBonesCPP][2] 这套用于取代 CCArmature 的库。
@@ -64,7 +67,7 @@ DragonBonesCPP 在quick中的内容，包含在这样几个路径下：
 <pre lang="lua">
 function DragonDemoEntry:_createDB()
 	print("DragonDemoEntry", display.newDragonBones)
-	self._db = display.newDragonBones({
+	self._db = dragonbones.new({
 			skeleton="dragon/skeleton.xml",
 			texture="dragon/texture.xml",
 			dragonBonesName="Dragon",
@@ -81,12 +84,12 @@ function DragonDemoEntry:_createDB()
 end
 </pre>
 
-`display.newDragonBones` 方法封装在 `display` 库中。它需要1个table格式的参数：
+`dragonbones.new` 方法封装在 `dragonbones` 库中。它需要1个table格式的参数：
 
 * skeleton 骨骼数据的XML文件路径；
 * texture 素材数据的XML文件地址；
-* dragonBonesName skeleton.xml的根元素的name值，查看skeleton.xml即可看到，一般与FLA文件的文件名相同；
 * armatureName 骨骼名称。一个dragonbones文件可以包含多个骨骼，这里一般指定主骨骼；
+* skeletonName skeleton.xml的根元素的name值，查看skeleton.xml即可看到，一般与FLA文件的文件名相同；
 * aniName 播放这个名称指定的动画，空字符串代表不播放动画。
 
 返回的对象是 CCDragonBones 的实例，它继承自 CCNode ，我在framework中使用了 [CCDragonBonesExtend][7] 来增加它的功能。在这个例子中，它被保存到 `self._db` 对象。
