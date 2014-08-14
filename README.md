@@ -134,3 +134,4 @@
 * [项目版本描述规则](http://zengrong.net/post/2132.htm)
 * [在 quick-cocos2d-x 中使用 DragonBonesCPP](http://zengrong.net/post/2133.htm)
 * [删除 lua.ByteArray 中与 Long 相关的方法](http://zengrong.net/post/2134.htm)
+* [Python3 的异常处理](http://zengrong.net/post/2143.htm)

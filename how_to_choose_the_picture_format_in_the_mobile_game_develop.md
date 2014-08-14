@@ -2,6 +2,9 @@
 
 How to choose the picture texture format in the game develop?
 
+**2014-08-01更新：增加ETC1格式**
+<hr>
+
 这是我在知乎上的一个回答，[这里是原文][2]。
 
 回答的前提是：使用OpenGL来渲染。
@@ -81,7 +84,7 @@ unsigned short pixel16 =
 
 ## 5. iOS用什么？
 
-当然是用pvr格式。
+当然是用PVR格式。
 
 pvr是iOS设备的图形芯片 [PowerVR 图形][4] 支持的专用压缩纹理格式。它在PowerVR图形芯片中效率极高，占用显存也小。
 性能对比可以看这里：[In Depth iOS & Cocos2D Performance Analysis with Test Project][1]。
@@ -89,6 +92,16 @@ pvr是iOS设备的图形芯片 [PowerVR 图形][4] 支持的专用压缩纹理�
 ## 6. Android用什么？
 
 Android设备就没有那么好的运气了。由于硬件平台不统一，每个厂商的GPU可能使用不同的纹理压缩格式。所以还是老老实实用PNG比较好。
+
+大部分的Android设备都支持ETC1格式，它也是受OpenGL ES 2.0标准支持的。
+
+ETC1不支持Alpha通道，但可以采用一些方法来处理：[ETC 纹理压缩和 Alpha 通道处理 « Mali 开发人员中心][7] 。
+
+ETC2支持Alpha通道，但需要 [OpenGL ES 3.0标准][8] 支持。
+
+但由于硬件平台不统一，每个厂商的GPU可能使用不同的纹理压缩格式，极少数的GPU甚至对ETC格式支持有问题。
+
+所以在Android设备上，目前可以采用ETC1或者PNG/JPEG格式。
 
 ## 7. 参考文章
 
@@ -105,3 +118,5 @@ Android设备就没有那么好的运气了。由于硬件平台不统一，每�
 [4]: http://www.imgtec.com/cn/powervr/powervr-graphics.asp 
 [5]: http://wiki.c3.91.com/index.php?title=%E6%89%8B%E6%8C%81%E5%B9%B3%E5%8F%B0%E7%BA%B9%E7%90%86%E6%A0%BC%E5%BC%8F%E8%AF%B4%E6%98%8E
 [6]: http://www.igao7.com/1218-vv-gpu.html
+[7]: http://malideveloper.arm.com/cn/develop-for-mali/sample-code/etcv1-texture-compression-and-alpha-channels/
+[8]: https://www.khronos.org/news/press/khronos-releases-opengl-es-3.0-specification
