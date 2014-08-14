@@ -2,7 +2,7 @@
 
 Exception in Python3.
 
-Python3 的异常处理，在官方文档的 [tutorial]][1] 中有说明。
+Python3 的异常处理，在官方文档的 [tutorial][1] 中有说明。
 
 这里把常用的异常处理方法都列出来，方便平时查找。
 
