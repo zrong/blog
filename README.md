@@ -135,3 +135,4 @@
 * [在 quick-cocos2d-x 中使用 DragonBonesCPP](http://zengrong.net/post/2133.htm)
 * [删除 lua.ByteArray 中与 Long 相关的方法](http://zengrong.net/post/2134.htm)
 * [Python3 的异常处理](http://zengrong.net/post/2143.htm)
+* [Flash air 开发iOS游戏在苹果上架，能否热更新？]( http://zengrong.net/post/2146.htm)

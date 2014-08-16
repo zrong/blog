@@ -1,0 +1,40 @@
+[Flash air 开发iOS游戏在苹果上架，能否热更新？]( http://zengrong.net/post/2146.htm)
+
+
+这是我在知乎上的一个回答。原文地址：
+<http://www.zhihu.com/question/24847013/answer/29263899>
+
+我曾经多次被问到过这个问题。正好整理一下思路，免得以后忘了。
+
+## 问：
+
+游戏已经上架，以前的更新方案在苹果更新后，发现更新下来的swf不能正常读入，导致游戏无法进入。不知各位大神有没有什么方法解决。
+
+## 答：
+
+目前，在移动平台上想利用SWF热更新，只有 Android 能做到。<!--more-->
+
+AIR曾经有一个 3.5beta 更新说在 iOS 上支持完整的 SWF 载入（和 PC 上的表现一样），但后来相关的说明被全部删除了，历史都找不到。我估计是 Adobe 和 Apple 没有谈拢。这或许可以说明，在技术上是可行的，但商业策略上 Apple 是坚决反对的。
+
+后来，AIR3.6更新了一个功能，在 ipa 的 AOT 模式中支持多个 SWF 的载入，但仅支持载入打包到 IPA 中的 SWF ，看这里：[Release Notes][1]。
+
+这里有一篇详细的中文介绍：[Adobe AIR读取本地外部SWF文件的功能概览][2]
+
+这篇文章是我上面提到的 Adobe 删除事件之前发布的，因此里面有许多内容后来变化了，阅读的时候要注意。
+
+若我没有记错，文章作者 James Li 已经从 Adobe 离职了。
+
+那么，不利用 SWF 有可能实现热更新么？
+
+可能。
+
+AS 本身是基于 [ECMAScript][3] 的脚本语言，和 JS 相同的祖先。所以只要实现 AS 的解析器就好。已有现成的实现，可以找找，但速度不保证。
+
+在 cocos2d-x 上，lua 的热更新就是这样实现的，参照这个：[quick-cocos2d-x的热更新机制实现][4] 。
+
+当然，Apple 是明文禁止热更新的，所以我们所要做的，就是在 Apple 审核的时候关闭热更新功能。
+
+[1]: http://helpx.adobe.com/flash-player/release-note/fp_116_air_36_release_notes.html#new_features
+[2]: http://bbs.9ria.com/thread-161483-1-1.html
+[3]: http://en.wikipedia.org/wiki/ECMAScript
+[4]: http://zengrong.net/post/2131.htm
