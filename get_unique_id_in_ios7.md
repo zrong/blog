@@ -4,7 +4,7 @@ Get unique identifer in iOS 7
 
 在 iOS 5 中， 可以获取到系统的 UDID(Unique Device Identifier) ，后来被 Apple 禁止掉了。
 
-于是，在 iOS 6 中，打开开始使用 MAC 地址  MAC(Medium/Media Access Control) ，后来又被 Apple 禁止掉了。
+于是，在 iOS 6 中，大家开始使用 MAC 地址  MAC(Medium/Media Access Control) ，后来又被 Apple 禁止掉了。
 
 同样的，OpenUDID 也不能用了：
 
