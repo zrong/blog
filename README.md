@@ -136,3 +136,5 @@
 * [删除 lua.ByteArray 中与 Long 相关的方法](http://zengrong.net/post/2134.htm)
 * [Python3 的异常处理](http://zengrong.net/post/2143.htm)
 * [Flash air 开发iOS游戏在苹果上架，能否热更新？]( http://zengrong.net/post/2146.htm)
+* [我们是否还应该支持 iOS 5？](http://zengrong.net/post/2149.htm)
+* [在 iOS 7 中获取唯一标识符（UDID/UUID）](http://zengrong.net/post/2152.htm)

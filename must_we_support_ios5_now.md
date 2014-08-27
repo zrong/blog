@@ -1,0 +1,29 @@
+[我们是否还应该支持 iOS 5？](http://zengrong.net/post/2149.htm)
+
+Must we support iOS 5 now?
+
+游戏准备上线，纠结于一个API的支持问题。这个 API 从 iOS 6 开始支持。
+
+那么，我们的游戏是否还要支持 iOS 5？
+
+寻找了一些资料：
+
+* [为什么很多 App 都变成 iOS 6 only 的了][1] （2013-01）
+* [iOS 7开放下载27天后渗透率达71%][2]（2013-10-15）
+* [移动互联网用户终端环境分析报告][3]（2013-05~2013-07）
+
+从腾讯的报告中可以看到，在2013年7月，iOS 6的占有率已经高达77%。
+
+从今天 apple 的官方数据来看，iOS 7 的占用率已经达到91%，iOS 6 是8%，剩下的版本只有可怜的 1%。
+
+![iOS 占有率][51]
+
+[As measured by the App Store during a 7‑day period ending August 24, 2014.][4]
+
+看来答案已经很清晰了。
+
+[1]: http://www.zhihu.com/question/20740900
+[2]: http://tech.sina.com.cn/t/2013-10-15/21108818686.shtml
+[3]: http://mta.qq.com/mta/bigdata/?p=63
+[4]: https://developer.apple.com/support/appstore/
+[51]: /wp-content/uploads/2014/08/ios.png
