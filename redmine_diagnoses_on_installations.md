@@ -249,6 +249,8 @@ tmp/cache
 * [Wang Zhe Blog][5]
 * [How do I install Ruby with libyaml on Ubuntu 11.10?][7]
 * [Install Ruby 1.9.3 with libyaml on CentOS][8]
+* [Internal Error 500 on "settings"][9]
+
 
 [rvm]: http://zengrong.net/post/1933.htm
 [install]: http://www.redmine.org/projects/redmine/wiki/RedmineInstall
@@ -260,3 +262,4 @@ tmp/cache
 [6]: http://www.tuicool.com/articles/goto?id=aiqa6bb
 [7]: http://stackoverflow.com/questions/8410885/how-do-i-install-ruby-with-libyaml-on-ubuntu-11-10
 [8]: http://collectiveidea.com/blog/archives/2011/10/31/install-ruby-193-with-libyaml-on-centos/
+[9]: http://www.redmine.org/issues/12861
