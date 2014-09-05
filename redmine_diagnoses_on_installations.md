@@ -18,6 +18,50 @@ Redmine 明确标注了可以使用哪几个版本的 Ruby 。但并没有说哪
 
 [如何使用RVM在Ubuntu 12.04 LTS上安装Ruby on Rails][rvm]
 
+## gem --version
+
+如果在使用gem的时候碰到这样的提示：
+
+<pre lang="bash">
+gem --version
+# /usr/local/lib/ruby/1.9.1/yaml.rb:84:in `<top (required)>':
+# It seems your ruby installation is missing psych (for YAML output).
+# To eliminate this warning, please install libyaml and reinstall your ruby.
+</pre>
+
+这是在编译安装 ruby 的时候没有先安装 libyaml 所致。但是，即使是你安装 libyaml 之后重新安装 ruby ，这个问题还是不能解决。
+
+正确的方法，是安装 libyam-devel 库。下面是在 CentOS 6.3 上安装：
+
+<pre lang="bash">
+yum install libyaml-devel
+</pre>
+
+然后，找到你先前编译 ruby 的目录，进入 `ext/psych/` 文件夹，执行：
+
+<pre lang="bash">
+ruby extconf.rb make make install
+# checking for yaml.h... yes
+# checking for yaml_get_version() in -lyaml... yes
+# creating Makefile
+</pre>
+
+然后再执行一次 `make install` 。如果你已经 clean 了原来的编译内容，那么则需要重新编译。
+
+<pre lang="bash">
+make install
+# compiling to_ruby.c
+# compiling parser.c
+# compiling psych.c
+# compiling emitter.c
+# compiling yaml_tree.c
+# linking shared-object psych.so
+# /usr/bin/install -c -m 0755 psych.so /usr/local/lib/ruby/site_ruby/1.9.1/x86_64-linux
+# installing default psych libraries
+</pre>
+
+再次执行 `gem -v` ，发现 warning 已经消失了。
+
 ## bundle install
 
 **如果碰到 mysql2 问题，就像这样：** <!--more-->
@@ -42,7 +86,7 @@ Redmine 明确标注了可以使用哪几个版本的 Ruby 。但并没有说哪
 
 安装这几个包以解决 mysql2 问题：
 
-<pre lang="BASH">
+<pre lang="bash">
 apt-get install mysql-client libmysqlclient-dev
 </pre>
 
@@ -59,7 +103,7 @@ apt-get install mysql-client libmysqlclient-dev
 >*** extconf.rb failed ***
 
 安装这个包（我没拼错，就是libpq，不是libpg）：
-<pre lang="BASH">
+<pre lang="bash">
 apt-get install libpq-dev
 </pre>
 
@@ -75,7 +119,7 @@ apt-get install libpq-dev
 >*** extconf.rb failed ***
 
 安装这个几个包解决它：
-<pre lang="BASH">
+<pre lang="bash">
 apt-get install imagemagick libmagickwand-dev
 </pre>
 
@@ -172,6 +216,8 @@ yum install policycoreutils-python
 
 * [SELinux permission denied to Phusion Passenger for redmine][1]
 * [Wang Zhe Blog][5]
+* [How do I install Ruby with libyaml on Ubuntu 11.10?][7]
+* [Install Ruby 1.9.3 with libyaml on CentOS][8]
 
 [rvm]: http://zengrong.net/post/1933.htm
 [install]: http://www.redmine.org/projects/redmine/wiki/RedmineInstall
@@ -181,3 +227,5 @@ yum install policycoreutils-python
 [4]: http://www.uddtm.com/os/centos/1013.html
 [5]: http://wangzhe.me/tags/redmine
 [6]: http://www.tuicool.com/articles/goto?id=aiqa6bb
+[7]: http://stackoverflow.com/questions/8410885/how-do-i-install-ruby-with-libyaml-on-ubuntu-11-10
+[8]: http://collectiveidea.com/blog/archives/2011/10/31/install-ruby-193-with-libyaml-on-centos/
