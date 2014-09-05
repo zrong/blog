@@ -138,3 +138,4 @@
 * [Flash air 开发iOS游戏在苹果上架，能否热更新？]( http://zengrong.net/post/2146.htm)
 * [我们是否还应该支持 iOS 5？](http://zengrong.net/post/2149.htm)
 * [在 iOS 7 中获取唯一标识符（UDID/UUID）](http://zengrong.net/post/2152.htm)
+* [Redmine安装过程疑难杂症](http://zengrong.net/post/1936.htm)

@@ -119,7 +119,7 @@ To git@github.com:zrong/quick-cocos2d-x.git
 重命名本地分支： 
 
 <pre lang="BASH">
-# git br -m devel develop
+# git branch -m devel develop
 </pre>
 
 推送本地分支：
