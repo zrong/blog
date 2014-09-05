@@ -6,6 +6,8 @@ Redmine diagnoses on installations.
 
 Redmine的安装，看 [RedmineInstall][install] 就可以搞定。但由于我对Ruby不熟悉，还是碰到了一些问题，下面是个记录。
 
+2014-09-05，进行了一次服务器搬迁，将原来位于香港的服务器搬回内地机房，redmine也要搬过来。因此增加了一些记录。
+
 ## 安装平台的选择
 
 Redmine 明确标注了可以使用哪几个版本的 Ruby 。但并没有说哪个版本比较好。我的感受是 1.9.3 好像比较靠谱。
@@ -211,6 +213,35 @@ yum install policycoreutils-python
 * [selinux阻止服务器启动解决方法(需要安装audit2allow) ][3]
 * [利用 audit2allow 创建自定 SELinux 政策模块][4]
 * [Redmine Error: Phusion Passenger Watchdog Failed to Start][6]
+
+## 进入 Administration-Settings 报 HTTP 500 错误
+
+我将 redmine 整体从另一台服务器搬迁过来之后，终于配置成功。进入后台正常，但进入管理员的设置界面则出现下面的提示：
+
+	Internal error
+
+	An error occurred on the page you were trying to access.
+	If you continue to experience problems please contact your Redmine administrator for assistance.
+
+	If you are the Redmine administrator, check your log files for details about the error.
+
+解决方法：
+
+查看 redmine 的 `tmp/cache` 目录，查看目录结构应该如下所示：
+
+<pre lang="bash">
+[root@localhost redmine]# tree tmp/cache
+tmp/cache
+└── 900
+    └── 0F0
+        └── i18n%2Flanguages_options
+</pre>
+
+停止 redmine，然后删除 `tmp/cache` 目录下的所有文件，再启动 redmine 。
+
+然后 管理员设置界面 Administration-Settings 就可以进入了。
+
+这时查看 `tmp/cache` 目录结构，会发现先前删除的文件和文件夹自动被创建了。
 
 ## 参考
 
