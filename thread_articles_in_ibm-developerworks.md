@@ -10,7 +10,7 @@
 
 # POSIX线程
 
-OSIX 表示可移植操作系統接口（Portable Operating System Interface ，縮寫為 POSIX 是為了讀音更像 UNIX）。電氣和電子工程師協會（Institute of Electrical and Electronics Engineers，IEEE）最初開發 POSIX 標準，是為了提高 UNIX 環境下應用程序的可移植性。具體的說 POSIX 是 IEEE 為要在各種 UNIX 操作系統上運行的軟件定義 API 所規定的一系列互相關聯的標準的總稱，而 X 則表明其對 Unix API 的傳承。Linux 基本上逐步實現了 POSIX 兼容，但並沒有參加正式的 POSIX 認證。當前的 POSIX 文檔分為三個部分：POSIX Kernel API，POSIX 命令和工具集，及 POSIX 一致性測試。Posix 線程（POSIX threads，又稱 Pthreads）是負責 POSIX 的 IEEE 委員會開發的一套線程接口。
+POSIX 表示可移植操作系統接口（Portable Operating System Interface ，縮寫為 POSIX 是為了讀音更像 UNIX）。電氣和電子工程師協會（Institute of Electrical and Electronics Engineers，IEEE）最初開發 POSIX 標準，是為了提高 UNIX 環境下應用程序的可移植性。具體的說 POSIX 是 IEEE 為要在各種 UNIX 操作系統上運行的軟件定義 API 所規定的一系列互相關聯的標準的總稱，而 X 則表明其對 Unix API 的傳承。Linux 基本上逐步實現了 POSIX 兼容，但並沒有參加正式的 POSIX 認證。當前的 POSIX 文檔分為三個部分：POSIX Kernel API，POSIX 命令和工具集，及 POSIX 一致性測試。Posix 線程（POSIX threads，又稱 Pthreads）是負責 POSIX 的 IEEE 委員會開發的一套線程接口。
 
 ## 中文版
 
@@ -28,7 +28,7 @@ Daniel Robbins 從實例入手，逐步講解 POSIX thread 編程技巧，有共
 
 * [(1)一种支持内存共享的简捷工具][3]
 * [(2)称作互斥对象的小玩意][4]
-* [(3)使用条件变量提高效率][12]
+* [(3)使用条件变量提高效率][11]
 
 ## 英文版本
 
