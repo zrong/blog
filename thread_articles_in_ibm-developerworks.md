@@ -6,6 +6,8 @@
 
 由于找不到 IBM developerWorks 中的相关汇总页面，我就人肉汇总了一次。
 
+原文中只有 C 和 C++ 部分的内容，我又加入了 Python 和 HTML5 的内容。
+
 下文的繁体字内容来自 [POSIX線程(pthread)入門文章分享][1]。<!--more-->
 
 # POSIX线程
@@ -38,13 +40,28 @@ Daniel Robbins 從實例入手，逐步講解 POSIX thread 編程技巧，有共
 
 # Posix线程编程指南
 
-
 * [(1)线程的创建和取消][6]
 * [(2)线程私有数据][7]
 * [(3)线程同步][8]
 * [(4)线程终止][9]
 * [(5)杂项][10]
  
+# pthread 内存泄露
+
+## 中文版
+
+[在 POSIX 线程编程中避免内存泄漏][23]
+
+## 英文版
+
+* [Avoiding memory leaks in POSIX thread programming][16]
+
+# 其它 pthread
+
+* [Pthreads arguments passing][18]
+* [POSIX Threads Programming][19]
+* [POSIX thread (pthread) libraries][20]
+
 # Linux线程模型
 
 Linux 最初用的線程模型是 LinuxThread, 它不兼容 POSIX，而且存在一些性能問題，所以目前 Linux 摒棄了它，採用了基於 Pthreads 的 NPTL（Native POSIX Threads Library for Linux）模型， NPTL 修復了 LinuxThread 的許多缺點，並提供了更好的性能。
@@ -53,12 +70,15 @@ Linux 最初用的線程模型是 LinuxThread, 它不兼容 POSIX，而且存在
 * [Linux线程实现机制分析][5]
 * [Linux 线程库性能测试与分析][12]
 
-# 其它
+# HTML5
 
-* [Avoiding memory leaks in POSIX thread programming][16]
-* [Pthreads arguments passing][18]
-* [POSIX Threads Programming][19]
-* [POSIX thread (pthread) libraries][20]
+[深入 HTML5 Web Worker 应用实践：多线程编程][21]
+
+# Python
+
+* [使用 Python 进行线程编程][22]
+* [使用 Python 实现多进程][24]
+
 
 [1]: http://dragonspring.pixnet.net/blog/post/32963482-posix%E7%B7%9A%E7%A8%8B%28pthread%29%E5%85%A5%E9%96%80%E6%96%87%E7%AB%A0%E5%88%86%E4%BA%AB
 [2]: http://www.ibm.com/developerworks/cn/linux/l-threading.html
@@ -80,3 +100,7 @@ Linux 最初用的線程模型是 LinuxThread, 它不兼容 POSIX，而且存在
 [18]: http://www.domaigne.com/blog/computing/pthreads-arguments-passing/
 [19]: https://computing.llnl.gov/tutorials/pthreads/
 [20]: http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html
+[21]: http://www.ibm.com/developerworks/cn/web/1112_sunch_webworker/
+[22]: http://www.ibm.com/developerworks/cn/aix/library/au-threadingpython/
+[23]: http://www.ibm.com/developerworks/cn/linux/l-memory-leaks/
+[24]: http://www.ibm.com/developerworks/cn/aix/library/au-multiprocessing/
