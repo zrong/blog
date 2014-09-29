@@ -142,3 +142,4 @@
 * [各视频站做到自动切换flash和html5播放器的难度有多大？](http://zengrong.net/post/2155.htm)
 * [IBM developerWorks 线程文章汇总](http://zengrong.net/post/2163.htm)
 * [升级Mountain Lion的bash到4.2版本](http://zengrong.net/post/1830.htm)
+* [AIR 15.0 提交 AppStore 错误 ERROR ITMS-9000: Invalid Segment Alignment](http://zengrong.net/post/2165.htm)
