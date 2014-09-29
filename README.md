@@ -141,3 +141,4 @@
 * [Redmine安装过程疑难杂症](http://zengrong.net/post/1936.htm)
 * [各视频站做到自动切换flash和html5播放器的难度有多大？](http://zengrong.net/post/2155.htm)
 * [IBM developerWorks 线程文章汇总](http://zengrong.net/post/2163.htm)
+* [升级Mountain Lion的bash到4.2版本](http://zengrong.net/post/1830.htm)

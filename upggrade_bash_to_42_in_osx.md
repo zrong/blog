@@ -1,0 +1,47 @@
+[升级Mountain Lion的bash到4.2版本](http://zengrong.net/post/1830.htm)
+
+Mountain Line自带的Bash是3.2.58版本，这个版本不支持关联数组的定义。
+
+而我以前写的脚本中，大量使用了关联数组。因此，我需要将Bash升级到4.2版本。
+
+## 安装GCC
+
+如果GCC编译器没有安装，那么需要去[Apple Developer](https://developer.apple.com/downloads/)下载Command Line Tools。我下载的是 `Command Line Tools(OSX Mountain Lion) for Xcode`，文件大小为118MB。
+
+## 下载bash源码
+
+<pre lang="BASH">
+curl https://ftp.gnu.org/gnu/bash/bash-4.2.tar.gz -o ~/Downloads/bash42.gz
+tar xzf ~/Downloads/bash42.gz
+</pre>
+
+## 编译和安装
+
+<pre lang="BASH">
+cd ~/Downloads/bashr42
+./configure && make && sudo make install
+</pre>
+
+## 使用新的bash
+
+新安装的bash在`/usr/local/bin/bash`，与旧的bash并不冲突，需要设置当前用户使用它。
+
+<pre lang="BASH">
+chsh -s /usr/local/bin/bash {user_name}
+sudo bash -c "echo /usr/local/bin/bash >> /private/etc/shells"
+</pre>
+
+关闭终端并重新打开，输入`bash -version` 或 `help`。查看bash安装情况。
+
+## 替换旧的bash
+
+<pre lang="BASH">
+sudo mv /bin/bash /bin/bash3.2.58
+sudo ln -s /usr/local/bin/bash /bin/bash
+</pre>
+
+## 参考文章
+
+* <http://techscienceinterest.blogspot.com/2010/05/change-to-new-bash-shell-41-for-mac-os.html>
+* <http://concisionandconcinnity.blogspot.com/2009/03/upgrade-bash-to-40-in-mac-os-x.html>
+* <https://github.com/kennethreitz/osx-gcc-installer/>
