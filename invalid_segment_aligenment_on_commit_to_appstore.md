@@ -37,7 +37,26 @@ ln -s /usr/bin/ld ld64 # 使用系统自带的 ld 链接工具替换 SDK 中的�
 
 话说 Adobe 的动作也太慢了点。
 
+**2014-09-29 更新**
+
+Adobe 员工 Pahup 已经在论坛上放出了更新的 SDK 下载，可惜，没有 Flex 版本的。详情看 [这里][5] .
+
+转载如下：
+
+We're pleased to share that we have a Win/Mac build with the fix, you can download the SDK (zip for Win, tbz2 for Mac) from [here][6]. We strongly recommend to test the application functionality before trying out the submissions on app store. We really appreciate your patience and support.
+
+Please note, this SDK also sets the MinimumOSVersion to 6.1 in the info.plist of the resulting IPA.
+
+A warning like "ld: warning: CPU_SUBTYPE_ARM_ALL subtype is deprecated" with '-uselegacyAOT no' might occur, but that should be harmless. If you observe any other packaging issues, please report to us as soon as possible with your configuration details.
+
+[Update, the alternate links are following]
+
+* Mac - <https://dh8vjmvwgc27o.cloudfront.net/airsdk_ld64/archive_air_15.0_with_asc2_drm_sdk.tbz2>
+* Win - <https://dh8vjmvwgc27o.cloudfront.net/airsdk_ld64/archive_air_15.0_with_asc2_drm_sdk.zip>
+
 [1]: http://zengrong.net/post/1931.htm
 [2]: http://zengrong.net/post/1865.htm
 [3]: http://zengrong.net/post/1838.htm
 [4]: https://forums.adobe.com/thread/1584796
+[5]: https://forums.adobe.com/message/6770713#6770713
+[6]: https://www.dropbox.com/sh/u6ndunvhbpl41mb/AABE1ApAztphMKSHLKByUcmEa?dl=0
