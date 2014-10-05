@@ -4,7 +4,7 @@
 
 >ITC.apps.assetvalidation.PURPLE_EXECUTABLE_OUT_OF_ALIGNMENT.error.message
 
-我联想到有可能是因为 iOS8 支持的原因，于是在 labs.adobe.com 下载了 2014-09-24 日发布的 AIR 15.0.289 beta 版重新打包，但在提交到 AppStore 的时候收到这样的错误提示：
+我联想到有可能是因为 iOS8 支持的原因，于是在 [labs.adobe.com][7] 下载了 2014-09-24 日发布的 AIR 15.0.289 beta 版重新打包，但在提交到 AppStore 的时候收到这样的错误提示：
 
 >ERROR ITMS-9000: "Invalid Segment Alignment. This app does not have proper segment alignment and should be rebuilt with the latest version of Xcode. Please contact Developer Technical Support if you need further assistance."
 
@@ -21,7 +21,7 @@
 经过努力搜索，终于找到这一篇：[No longer able to submit app to iTunes.][4] ，Adobe 的员工在论坛上给出了临时的解决方案：
 
 <pre lang="shell">
-cd <sdk>/lib/adt/bin/ld64  # 进入AIR SDK 的相关目录
+cd <sdk>/lib/aot/bin/ld64  # 进入AIR SDK 的相关目录
 mv ld64 ld64_orig # 备份原始的链接工具
 ln -s /usr/bin/ld ld64 # 使用系统自带的 ld 链接工具替换 SDK 中的链接工具
 </pre>
@@ -54,9 +54,16 @@ A warning like "ld: warning: CPU_SUBTYPE_ARM_ALL subtype is deprecated" with '-u
 * Mac - <https://dh8vjmvwgc27o.cloudfront.net/airsdk_ld64/archive_air_15.0_with_asc2_drm_sdk.tbz2>
 * Win - <https://dh8vjmvwgc27o.cloudfront.net/airsdk_ld64/archive_air_15.0_with_asc2_drm_sdk.zip>
 
+**2014-10-05 更新**
+
+2014-10-02，Adobe在 [labs.adobe.com][7] 上更新了一个SDK版本，但并没有说明解决了什么问题。有需要的可以尝试。
+
+我需要等到10月8日才可以测试这个版本。
+
 [1]: http://zengrong.net/post/1931.htm
 [2]: http://zengrong.net/post/1865.htm
 [3]: http://zengrong.net/post/1838.htm
 [4]: https://forums.adobe.com/thread/1584796
 [5]: https://forums.adobe.com/message/6770713#6770713
 [6]: https://www.dropbox.com/sh/u6ndunvhbpl41mb/AABE1ApAztphMKSHLKByUcmEa?dl=0
+[7]: http://labs.adobe.com/technologies/flashruntimes/air/
