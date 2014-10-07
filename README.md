@@ -143,3 +143,5 @@
 * [IBM developerWorks 线程文章汇总](http://zengrong.net/post/2163.htm)
 * [升级Mountain Lion的bash到4.2版本](http://zengrong.net/post/1830.htm)
 * [AIR 15.0 提交 AppStore 错误 ERROR ITMS-9000: Invalid Segment Alignment](http://zengrong.net/post/2165.htm)
+* [Python 虚拟环境](http://zengrong.net/post/2167.htm)
+* [cannot use 'throw' with exceptions disabled](http://zengrong.net/post/2168.htm)
