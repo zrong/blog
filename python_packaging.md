@@ -168,7 +168,9 @@ pip 提供了一个 wheel 子命令来安装 wheel 包。当然，需要先安�
 
 上面提到的大部分资料，都是在这里找到，或者是提到：[Python Packaging User Guide][8]。
 
-感谢这篇文章，让我不再纠结，然后又写了本文继续纠结：[Differences between distribute, distutils, setuptools and distutils2?][1] 。
+感谢这篇文章，让我不再纠结，然后又下决心写了本文继续纠结：[Differences between distribute, distutils, setuptools and distutils2?][1] 。
+
+这篇文章也比较碎：[关于python中的setup.py][33]，而且比本文范例更多。
 
 [1]: http://stackoverflow.com/a/14753678
 [2]: https://packaging.python.org/en/latest/technical.html#wheel-vs-egg
@@ -202,3 +204,4 @@ pip 提供了一个 wheel 子命令来安装 wheel 包。当然，需要先安�
 [30]: https://docs.python.org/3/distributing/index.html
 [31]: https://packaging.python.org/en/latest/distributing.html
 [32]: https://docs.python.org/2.7/distutils/index.html
+[33]: http://blog.csdn.net/lynn_kong/article/details/17540207
