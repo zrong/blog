@@ -2,7 +2,7 @@
 
 python virtual enviorments
 
-为了解决包依赖、安装权限和 python 版本问题，程序员们制造了许多工具。做为一个python初学者，我把它们做一个汇总，便于查找。
+为了解决包依赖、安装权限和 python 版本问题，程序员们制造了许多工具。我把它们做一个汇总，便于查找。
 
 这里介绍的工具都是当前流行的，不会包含已经不再维护的工具。<!--more-->
 
@@ -20,7 +20,9 @@ virtualenvwrapper 还有针对 vim 用户和 emacs 用户的 [扩展][8] 。
 
 ## venv
 
-从 Python 3.3 开始，自带了一个虚拟环境 [venv][1]，在 [PEP-405][3] 中可以看到它的详细介绍。它的很多操作都和 virtualenv 类似。
+Python 从3.3 版本开始，自带了一个虚拟环境 [venv][1]，在 [PEP-405][3] 中可以看到它的详细介绍。它的很多操作都和 virtualenv 类似。
+
+因为是从 3.3 版本开始自带的，这个工具也仅仅支持 python 3.3 和以后版本。所以，要在 python2 上使用虚拟环境，依然要利用 [virtualenv][2] 。
 
 在 *nix 系统上，可以直接执行 `pyvenv /path/to/new/virtual/enviorment` 来创建一个虚拟环境，在 Windows 系统上，则可以使用 `python -m venv myenv` 来创建。
 

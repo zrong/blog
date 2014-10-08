@@ -145,3 +145,4 @@
 * [AIR 15.0 提交 AppStore 错误 ERROR ITMS-9000: Invalid Segment Alignment](http://zengrong.net/post/2165.htm)
 * [Python 虚拟环境](http://zengrong.net/post/2167.htm)
 * [cannot use 'throw' with exceptions disabled](http://zengrong.net/post/2168.htm)
+* [Python 包管理工具解惑](http://zengrong.net/post/2169.htm)
