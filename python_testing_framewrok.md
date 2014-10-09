@@ -15,8 +15,7 @@ python 标准库自带的单元测试框架。
 3. [Python Testing - Python Test Frameworks and Strategies][2]
 python 测试框架的文章汇总，主要介绍 [unitest][1]/[nose][21]/[pytest][20]。
 
-另外，IBM developerWorks 上的 [Python 测试框架: 用 Python 测试框架简化测试][4]
-介绍了 [zope.testing][22]/[pytest][20]/[nose][21] 框架。
+另外，IBM developerWorks 上的 [Python 测试框架: 用 Python 测试框架简化测试][4] 介绍了 [zope.testing][22]/[pytest][20]/[nose][21] 框架。
 
 ## 二、源码库
 
