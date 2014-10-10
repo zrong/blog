@@ -52,7 +52,7 @@ Windows 上有一个 pyenv 的替代品，是 [pywin][10] 。它用来在多个�
 
 ## Python Launcher for Windows
 
-Python 从3.3版本开始（又是3.3？），在 Windows 系统中自带了一个 py.exe 启动工具。如果你是使用 Python.org 官网下载的安装包安装的 Python 3.3（或更新版本）环境，那么可以直接在命令提示符中使用这个工具。
+Python 从3.3版本开始（又是3.3？），在 Windows 系统中自带了一个 [py.exe][12] 启动工具。如果你是使用 Python.org 官网下载的安装包安装的 Python 3.3（或更新版本）环境，那么可以直接在命令提示符中使用这个工具。
 
 `py` 可以打开默认的 python 提示符； `py -2.7` 和 `py -3` 打开对应的 Python 版本。
 
