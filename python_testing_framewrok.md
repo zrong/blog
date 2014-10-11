@@ -48,6 +48,12 @@ PyPI 中的每个库，都有下载次数。根据下载次数可以得知库的
 
 [nose][21] 看起来似乎更加流行。就它了。
 
+## 五、其它参考
+
+* [可爱的 Python: Python 中的测试框架][31]
+* [用 Python 编写干净、可测试、高质量的代码][32]
+* [单元测试][33]
+
 [1]: https://docs.python.org/2/library/unittest.html
 [2]: https://wiki.python.org/moin/PythonTestingToolsTaxonomy
 [3]: http://pythontesting.net
@@ -63,4 +69,6 @@ PyPI 中的每个库，都有下载次数。根据下载次数可以得知库的
 [21]: https://github.com/nose-devs/nose
 [22]: https://pypi.python.org/pypi/zope.testing
 [23]: https://pypi.python.org/pypi/py
-
+[31]: http://www.ibm.com/developerworks/cn/linux/l-cptest.html
+[32]: https://www.ibm.com/developerworks/cn/aix/library/au-cleancode/
+[33]: http://hahack.com/wiki/python3-unittest.html

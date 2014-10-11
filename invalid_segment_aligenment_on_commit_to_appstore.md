@@ -43,13 +43,13 @@ Adobe 员工 Pahup 已经在论坛上放出了更新的 SDK 下载，可惜，�
 
 转载如下：
 
-We're pleased to share that we have a Win/Mac build with the fix, you can download the SDK (zip for Win, tbz2 for Mac) from [here][6]. We strongly recommend to test the application functionality before trying out the submissions on app store. We really appreciate your patience and support.
-
-Please note, this SDK also sets the MinimumOSVersion to 6.1 in the info.plist of the resulting IPA.
-
-A warning like "ld: warning: CPU_SUBTYPE_ARM_ALL subtype is deprecated" with '-uselegacyAOT no' might occur, but that should be harmless. If you observe any other packaging issues, please report to us as soon as possible with your configuration details.
-
-[Update, the alternate links are following]
+>We're pleased to share that we have a Win/Mac build with the fix, you can download the SDK (zip for Win, tbz2 for Mac) from [here][6]. We strongly recommend to test the application functionality before trying out the submissions on app store. We really appreciate your patience and support.
+>
+>Please note, this SDK also sets the MinimumOSVersion to 6.1 in the info.plist of the resulting IPA.
+>
+>A warning like "ld: warning: CPU_SUBTYPE_ARM_ALL subtype is deprecated" with '-uselegacyAOT no' might occur, but that should be harmless. If you observe any other packaging issues, please report to us as soon as possible with your configuration details.
+>
+>Update, the alternate links are following
 
 * Mac - <https://dh8vjmvwgc27o.cloudfront.net/airsdk_ld64/archive_air_15.0_with_asc2_drm_sdk.tbz2>
 * Win - <https://dh8vjmvwgc27o.cloudfront.net/airsdk_ld64/archive_air_15.0_with_asc2_drm_sdk.zip>
@@ -58,7 +58,9 @@ A warning like "ld: warning: CPU_SUBTYPE_ARM_ALL subtype is deprecated" with '-u
 
 2014-10-02，Adobe在 [labs.adobe.com][7] 上更新了一个SDK版本，但并没有说明解决了什么问题。有需要的可以尝试。
 
-我需要等到10月8日才可以测试这个版本。
+**2014-10-10 更新**
+
+经确认，这个 SDK 版本已经解决了上述问题。
 
 [1]: http://zengrong.net/post/1931.htm
 [2]: http://zengrong.net/post/1865.htm
