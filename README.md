@@ -147,3 +147,4 @@
 * [cannot use 'throw' with exceptions disabled](http://zengrong.net/post/2168.htm)
 * [Python 包管理工具解惑](http://zengrong.net/post/2169.htm)
 * [Python 测试框架的选择](http://zengrong.net/post/2170.htm)
+* [Python web框架的选择](http://zengrong.net/post/2172.htm)
