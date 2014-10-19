@@ -225,4 +225,3 @@ git config core.filemode false
 * <http://ycyuxin.blog.hexun.com/37440972_d.html>
 * <http://stackoverflow.com/questions/4181870/git-on-windows-what-do-the-crlf-settings-mean>
 * <http://www.360doc.com/content/11/0117/18/2036337_87178762.shtml>
-

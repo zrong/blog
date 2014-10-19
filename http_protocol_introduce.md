@@ -1,4 +1,4 @@
-[转][HTTP POST GET 本质区别详解](http://zengrong.net/post/1802.htm)
+[【转】HTTP POST GET 本质区别详解](http://zengrong.net/post/1802.htm)
 
 原文地址：<http://blog.csdn.net/gideal_wang/article/details/4316691>
 原文作者：gideal_wang

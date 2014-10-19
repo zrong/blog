@@ -1,3 +1,8 @@
+[Flex编译器参数中-swf-version与-target-player之关系](http://zengrong.net/post/1486.htm)
+
+* <span style="color:red">2014-04-11更新：</span>更新Flash Player 13.0/AIR 13.0正式版，加入对Flash Player和AIR的版本号开始同步的说明。
+* <span style="color:red">2014-02-22更新：</span>更新Flash Player 13.0/AIR 13.0 beta版。
+* <span style="color:red">2014-01-18更新：</span>更新Flash Player 12.0/AIR 4.0正式版。
 * <span style="color:red">2013-12-11更新：</span>更新Flash Player 11.9/AIR 3.9正式版。
 * <span style="color:red">2013-04-16更新：</span>更新Flash Player 11.7/AIR 3.7正式版。
 * <span style="color:red">2013-03-10更新：</span>更新Flash Player 11.6/AIR 3.6正式版以及beta 11.7。
@@ -30,6 +35,8 @@
 |11.7 |3.7 |Adobe Flex 4.7/Apache Flex 4.9 |20 |11.7 |2013-04-09|
 |11.8 |3.8 |Adobe Flex 4.7/Apache Flex 4.10 |21 |11.8 |2013-07-09|
 |11.9 |3.9 |Adobe Flex 4.7/Apache Flex 4.11 |22 |11.9 |2013-10-08|
+|12.0 |4.0 |Adobe Flex 4.7/Apache Flex 4.11 |23 |12.0 |2014-01-14|
+|13.0 |13.0|Adobe Flex 4.7/Apache Flex 4.12 |24 |13.0 |2014-04-08|
 
 ##-target-player和-swf-version
 
@@ -68,5 +75,13 @@
 Flex SDK可以和不同版本的Flash Player相配。即使是使用Flex SDK 3.6，同样也可以开发出Flash Player 11.1支持的swf程序。（当然，前提是不使用Flex frameworks提供的组件，仅仅使用Flash Player提供的API）。通过使用不同版本Flash Player提供的playerglobal.swc文件，就可以让旧的Flex SDK兼容新的-swf-version和 -target-player编译属性。当然，也可以让新的Flex SDK兼容旧的-swf-version和-target-player。
 
 例如，目前Adobe官方提供的最新版（也是Adobe Flex的最终版，因为后面会更名为Apache Flex SDK）Flex SDK版本为4.6。根据Adobe的说法，这个版本的Flex SDK的最低支持的-target-player为11.1。这是因为frameworks/libs/player中仅仅提供了11.1版本的playerglobal.swc。我们可以将其他版本的playerglobal.swc复制到该目录下，并修改frameworks/flex-config.xml中的target-player标签，以改变Flex SDK默认编译的swf目标。当然，更方便和灵活的做法是在Flex项目的编译属性中设置-target-player属性。
+
+## Flash Player 和 AIR 的版本号同步
+
+AIR Runtime在Flash Player的10.0版本的时候才发布了1.5版本，这导致了这两位的版本号一直不同步。
+
+在2014年4月14日，Adobe终于做出了一个“重要的”决定，就是让它们的版本号同步！此时，Flash Player和AIR的版本号同为13。
+
+其实它们的底层本来就没什么大的不同，只是AIR增加了一些专用的本地API而已。所以我个人认为或许把它们的名字改成 _Adobe Runtime for Browser_ 和 _Adobe Runtim for Desktop_ 更好些。
 
 这里还有一篇文章介绍：[Versioning in Flash Runtime (-swf-version)](http://blogs.adobe.com/airodynamics/2011/08/16/versioning-in-flash-runtime-swf-version/)

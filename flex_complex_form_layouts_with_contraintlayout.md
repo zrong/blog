@@ -1,4 +1,4 @@
-[Flex - 使用ConstraintLayout创建复杂的表单布局](http://zengrong.net/post/1572.htm)
+[【译】使用ConstraintLayout创建复杂的表单布局](http://zengrong.net/post/1572.htm)
 
 原文地址：[Flex - Complex Form layouts with ContraintLayout](http://blog.devinholloway.com/2012/03/flex-complex-form-layouts-with.html)
 

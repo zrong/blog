@@ -1,4 +1,4 @@
-获取CCArmature动画的播放状态
+[获取CCArmature动画的播放状态](http://zengrong.net/post/1949.htm)
 
 本文介绍如何在 CCArmature 播放的过程中获取动画的播放状态。例如，如何判断 “死亡” 动作已经播放完毕了？如果知道一个 “循环” 动作已经播放了一次？，提纲如下：
 

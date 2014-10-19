@@ -1,4 +1,4 @@
-TTF/OTF 字体瘦身、字符替换和转换
+[TureType/OpenType 字体瘦身、字体转换和字符替换](http://zengrong.net/post/1988.htm)
 
 本文讲解下面一些关于 TTF/OTF 字体的基本知识和操作：
 

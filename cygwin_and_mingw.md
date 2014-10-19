@@ -1,4 +1,4 @@
-[Cygwin与MingGW，如何选择？](http://zengrong.net/post/1557.htm)
+[Cygwin与MinGW/MSYS，如何选择？](http://zengrong.net/post/1557.htm)
 
 <span style="color:red;">2012-11-03更新：</span>加入msys的内容。
 <span style="color:red;">2013-10-15更新：</span>修改表格格式，加入介绍链接。

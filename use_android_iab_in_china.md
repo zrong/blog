@@ -1,6 +1,31 @@
-[在天朝调试Android In-app-billing](http://zengrong.net/post/1801.htm)
+[在中国大陆调试Android In-app-billing]( http://zengrong.net/post/1801.htm)
+
+<span style="color:red;">2013-03-01更新：</span>加入简单解决方案。
+<hr>
 
 历尽艰难险阻终于在中国大陆调试Google Play In-app Billing成功，过程记录如下，方便后来之人。
+
+## 简单解决方案
+
+1. 找一台带有Google Play的手机，不必ROOT；
+1. 找一个米国VPN，在手机上拨通；
+2. 在手机上，删除Google Play的缓存，同时卸载Google Play的更新。  
+Google Play使用普通方法是不能被卸载的，因此可以放心的卸载Google Play的更新；
+3. 重启一次手机，在手机上拨通VPN；
+4. 打开Google Play，如果能够看到付费应用，就说明手机已经支持支付了；
+5. 登录[Google Wallet](http://wallet.google.com)，绑定一张双币种信用卡（亲测招行和民生银行均可用），测试支付。
+
+**心得：**
+
+经过多台手机的测试，可以确定，手机不必Root，不必安装Market Enable，也不必安装米国手机卡，就可以实现Google Play支付。
+我猜测，Google Play检测手机是否可以支付，是通过网络位置判定的。但是由于缓存的原因，临时改用米国VPN是不管用的，必须要清除缓存和Google Play的更新。
+Google Play看到付费应用之后，理论上就可以进行支付了。如果测试还有问题，只需要稍等片刻，或者多测试几次，或者重启手机再测试。
+一定要保证，测试的过程中，你的手机是全程VPN的。
+其实，直接用路由器做梯子，是最保险的。
+
+如果上面的简单方案不管用，还是尝试下面的复杂解决方案把。<!--more-->
+
+##复杂解决方案
 
 ## 一、错误描述
 
@@ -14,20 +39,21 @@ Android的文档写得相当好，根据下面两篇教程，理应顺利通过�
 
 ## 二、原因
 
-这个异常对应的是 `BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE` 错误，Google对它的定义是：<!--more-->
+这个异常对应的是 `BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE` 错误，Google对它的定义是：
 
 >Billing API version is not supported for the type requested
 
 详见这里：[In-app Billing Reference (IAB Version 3)](http://developer.android.com/google/play/billing/billing_reference.html)
-这个含义其实是非常模糊的，我用非常标准和专业的中文翻译一下，它应该是这个意思：
 
->老子就是不支持你在天朝使用，你能怎么着？
+这个含义其实是非常模糊的，我用标准和专业的中文翻译一下，它应该是这个意思：
+
+>老子就是不支持你在天朝使用，元芳，你能怎么着？
 
 血泪教训啊，为了翻译上面那句话，秒秒钟几十亿上下的我的track遍及大江南北，城墙内外……
 
 ## 三、解决条件
 
-Android文档中提供的什么账户啊、产品啊、Developer Console之类的我就不说了，中文不好的就去看英文，英文好的就去看英文。我要说的内容绝不违反党的政策，和12306、GitHub以及城墙都无关。其实我只是欺骗了万恶的美帝。
+Android文档中提供的什么账户啊、产品啊、Developer Console之类的我就不说了，中文不好的就去看英文，英文好的就去看英文。我要说的内容绝不违反党的政策，和12306、GitHub以及城墙都无关。我只是欺骗了万恶的美帝。
 
 Android中的In-app billing其实是调用Google Play实现的。因此要解决上面的问题，首先要让Google Play支持支付。
 
@@ -51,7 +77,7 @@ PC拨上美帝VPN，进入 <https://wallet.google.com> ，账户选择美国，�
 3. 取消定位服务（我不确定是否必须）  
 在Android系统设置中把 `使用wifi定位` 和 `用定位数据改善google服务` 关闭。
 4. 清除Google Play Store的缓存和更新  
-在Android的App管理中，清除Google Play Stroe的程序数据和缓存。Android会有一个提醒，不必管它，哪些东西都会回来的。如果Google Play更新过，也写在更新。Google Play Store一般是保存在Rom中的，所以不会被卸载，只能卸载更新。
+在Android的App管理中，清除Google Play Stroe的程序数据和缓存。Android会有一个提醒，不必管它，哪些东西都会回来的。如果Google Play更新过，也卸载更新。Google Play Store一般是保存在Rom中的，所以不会被卸载，只能卸载更新。
 5. 完成  
 在Android设备中拨上美帝VPN，重新打开Google Play Store。如果你能在首页看到收费应用，就说明已经成功了。
 

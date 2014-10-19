@@ -1,4 +1,4 @@
-[【译】升级Flash Builder 4.6中的AIR SDK](http://zengrong.net/post/1767.htm)
+[【译】升级Flash Builder 4.7中的AIR SDK](http://zengrong.net/post/1767.htm)
 
 原文地址：<http://helpx.adobe.com/flash-builder/kb/overlay-air-sdk-flash-builder.html>
 本文并没有“忠于”原文翻译。

@@ -1,12 +1,12 @@
-[如何创建游戏的续作](http://zengrong.net/post/1574.htm)
+[【译】如何创建游戏的续作](http://zengrong.net/post/1574.htm)
 
-英文原文地址：[How to create the sequel of a game](http://www.emanueleferonato.com/2012/03/26/how-to-create-the-sequel-of-a-game/)
+原文地址：[How to create the sequel of a game](http://www.emanueleferonato.com/2012/03/26/how-to-create-the-sequel-of-a-game/)
 
 这些天，我在研究Box2D，并正在用它开发[SamePhysics](http://www.emanueleferonato.com/2009/01/12/samephysics-my-first-box2d-game/)这个游戏的续作。
 
 这是我的第一个Box2D游戏（你可以从[这里](http://www.emanueleferonato.com/2012/02/06/samephysics-flash-game-source-code-released/)下载它的源码），大家认为它很有趣。于是我决定制作一个更有趣的续作，以改进我在旧版本中错过的那些东西。
 
-这是我的第一个续作，因此我必须在开始编码前考虑一些要注意的事项。现在我把它们共享出来：
+这是我的第一个续作，因此我必须在开始编码前考虑一些要注意的事项。现在我把它们共享出来：<!--more-->
 
 1) 明智地选择值得制作续作的那个游戏
 
@@ -20,13 +20,13 @@
 
 看：
 
-<how_to_create_the_sequel_of_a_game/sam01.png>
+<img src="/wp-content/uploads/2012/03/same01.png" width="640" height="211" class="aligncenter size-full wp-image-1576" />
 
 在物理世界中，左边的红色箱子并没有碰到右边的哪个，但是在玩家看来它们碰到了，所以玩家希望能移除它们。
 
 在续作中，我没有使用定制的接触侦听器类来实现碰撞检测，而是使用了一些技巧来实现了一种容差的“所见即所得”效果。
 
-<how_to_create_the_sequel_of_a_game/sam02.png>
+<img src="/wp-content/uploads/2012/03/same02.png" />
 
 在这张图中，箭头所指的两个箱子没有接触，但是它们之间距离很紧，玩家期望（或者至少希望）它们接触。于是，我让它们接触。除了这种容差处理，还有另外3个要点：
  

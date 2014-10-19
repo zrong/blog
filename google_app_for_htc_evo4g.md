@@ -1,10 +1,15 @@
+[CyanogenMod Rom加入Google Apps官方套件](http://zengrong.net/post/1709.htm)
+
+<span style="color:red;">2013-03-02更新：</span>CyanogenMod的 Wiki已经删除了下载地址页面，因此加入了新的Google Apps下载地址。
+<hr>
+
 LP总抱怨她的HTC EVO 4G速度太慢，今天终于能抽出点时间来刷个机了。
 
 像EVO 4G这种老机器，是肯定没有官方版的ICS可以OTA升级的，只能考虑刷第三方Rom。于是我转战机锋、安卓网等多个论坛，刷了4个Rom，发现要么是吸费软件太多，要么是刷完无法启动，忙活了半个多个小时也没找到满意的Rom。
 
 在重刷第4个Rom的时候，刷机的过程中发现原Rom作者嵌入到刷机代码中的博客地址，终于在[moonlight的博客](http://roms.blog.163.com/)找到了近乎纯净版的CyanogenMod9版本的EVO 4G Rom。而且moonlight也正在放出CM10版本的EVO 4G ROM。
 
-刷了一个moonlight提供的基于CM9的10.18版本之后，我发现Android 4.04在EVO 4G这种老机器上，表现还真不错，似乎比以前的2.3.5都要好点。可惜的是，没有Google Apps可用。
+刷了一个moonlight提供的基于CM9的10.18版本之后，我发现Android 4.04在EVO 4G这种老机器上，表现还真不错，似乎比以前的2.3.5都要好点。可惜的是，没有Google Apps可用。<!--more-->
 
 原来的通讯录是备份在Google账户中的，而没有Google Apps就无法同步原来的通讯录，要导出成VCard格式再用Android通讯录导入。虽然LP不用Google的服务，但是这样一来，就无法再进行通讯录的同步了。我记得原来在玩Samsang i5700的时候，是单独刷过Google官方套件的，只是时间实在太久，记不清怎么弄的了。
 
@@ -22,11 +27,12 @@ LP总抱怨她的HTC EVO 4G速度太慢，今天终于能抽出点时间来刷�
 >*3：Google Apps最新版本与下载*
 >下表所列Google Apps及其下载包，均为官方最新数据。
 >需要的板友，请根据使用设备的Android版本，选择合适的GApps下载包。
+><img src="http://zengrong.net/wp-content/uploads/2012/10/googleapps.png" alt="" title="googleapps" width="800" height="795" class="aligncenter size-full wp-image-1711" />
 
 遗憾的是，该文中提供的GoogleApps的下载地址都是115网盘的，而115网盘已经关闭共享了。
 
 无奈之中找到CyanogenMod的官方WIKI，惊喜地发现这里也有Google Apps提供下载！
 
-<http://wiki.cyanogenmod.com/index.php?title=Latest_Version/Google_Apps>
+<http://goo.im/gapps>
 
 在上面的链接中，根据自己的CM版本下载对应的Google Apps就可以了。至于刷入的方法，和卡刷一样，本文就不提了。

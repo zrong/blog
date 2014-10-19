@@ -1,6 +1,4 @@
-博客地址：<http://zengrong.net/post/1395.htm>
-
-一个未完成的简单eval实现
+[一个未完成的简单AS3 eval实现](http://zengrong.net/post/1395.htm)
 
 AS3没有eval确实不方便，目前我所知有两种方法：
 
@@ -19,7 +17,7 @@ AS3没有eval确实不方便，目前我所知有两种方法：
 
 <pre lang="actionscript">
 /**
- * 站位容器宽高
+ * 占位容器宽高
  */
 private var box_w:int = 600;
 private var box_h:int = 400;

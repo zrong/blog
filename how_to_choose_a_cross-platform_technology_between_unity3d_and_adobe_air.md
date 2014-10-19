@@ -1,3 +1,5 @@
+[Adobe AIR与unity3D都是跨平台，那个更好呢？](http://zengrong.net/post/2027.htm)
+
 这篇文章是我在之乎上的一个回答： http://www.zhihu.com/question/22611908/answer/22051811
 
 碰巧我最近写了这篇文章： [你是否已经放弃了flash,转投其他行业？][1]

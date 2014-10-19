@@ -1,5 +1,11 @@
-[AIR 3.7 Bug:You uploaded an unsigned APK](http://zengrong.net/post/1838.htm)
+[AIR 3.7 SDK Bug:You uploaded an unsigned APK](http://zengrong.net/post/1838.htm)
 
+<span style="color:red;">2013-04-18更新：</span>使用AIR 3.7 SDK打包的APK文件，出现了在某些手机上无法安装的情况，换回AIR SDK 3.6就一切正常。
+<span style="color:red;">2013-04-19更新：</span>使用AIR 3.7 SDK打包的APK文件，在Google In-app Billing支付的时候，也出现了问题。具体表现为，Google Play支付成功，信用卡扣款成功，但Google Playe并没有正常返回支付信息，导致最终的支付无法完成。但改为AIR 3.6 SDK打包就一切正常。
+我推测，是由于Google Play中上传的那个APK是使用AIR 3.6 SDK打包，必须使用AIR 3.7 SDK打包的APK文件替换原来的AIR 3.6 SDK打包的APK，才会支付正常。但由于AIR 3.7 SDK打包的APK在某些设备上无法安装的问题，我不可能再使用AIR 3.7 SDK去打包了。
+<span style="color:red;">2013-04-30更新：</span>根据赵客的建议，向Adobe提交了此BUG：<https://bugbase.adobe.com/index.cfm?event=bug&id=3552540>
+
+<hr>
 将一个需要更新的APK上传到Google Play的时候，Google Play提示我这样的错误：
 
 >Uploaded failed
@@ -21,7 +27,7 @@
 
 终于，在编译了几十个测试包之后，我终于找到了真正原因。
 
-原来导致APK签名错误的罪魁祸首，是图标！
+<span style="font-size:28px;font-weight:bold;">原来导致APK签名错误的罪魁祸首，是图标！</span>
 
 APK的图标是在 **应用程序描述符文件** `app-xml` 中设置的，这是我原来的设置：
 

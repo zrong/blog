@@ -1,10 +1,13 @@
-[完全使用SFTP替代FTP：Sftp+OpenSSH+Chroot设置详解](http://zengrong.net/post/1616.htm)
+[完全使用SFTP替代FTP：SFTP+OpenSSH+ChrootDirectory设置详解](http://zengrong.net/post/1616.htm)
 
-由于采用明文传输用户名和密码，FTP协议是不安全的。在同一机房中只要有一台服务器被黑客控制，它就可能获取到其它服务器上的FTP密码，从而控制其它的服务器。
+<span style="color:red">2012-09-28更新:</span>加入web服务器需求的内容。
+<hr>
+
+由于采用明文传输用户名和密码，FTP协议是不安全的。在同一机房中只要有一台服务器被攻击者控制，它就可能获取到其它服务器上的FTP密码，从而控制其它的服务器。
 
 当然，很多优秀的FTP服务器都已经支持加密。但如果服务器上已经开了[SSH](http://zh.wikipedia.org/wiki/SSH)服务，我们完全可以使用[SFTP](http://zh.wikipedia.org/wiki/SFTP)来传输数据，何必要多开一个进程和端口呢？
 
-下面，我就从账户设置、SSH设置、权限设置这三个方面来讲讲如何使用SFTP完全替代FTP。本教程基于CentOS5.4。
+下面，我就从账户设置、SSH设置、权限设置这三个方面来讲讲如何使用SFTP完全替代FTP。本教程基于CentOS5.4。<!--more-->
 
 ## 范例
 
@@ -21,6 +24,11 @@ SFTP要管理3个目录：
 * 账户www，可以管理所有的3个目录；
 * 账户blog，只能管理blog目录；
 * 账户pay，只能管理pay目录。
+
+web服务器需求：
+
+* 账户blog管理的目录是一个博客网站，使用apache服务器。apache服务器的启动账户是apache账户，组为apache组。
+* 账户blog属于apache组，它上传的文件能够被apache服务器删除。同样的，它也能删除在博客中上传的文件（就是属于apache账户的文件）。
 
 ## 账户设置
 
@@ -41,6 +49,10 @@ groupadd sftp
 useradd -M -d /home/sftp -G sftp www
 useradd -M -d /home/sftp/blog -G sftp blog
 useradd -M -d /home/sftp/pay -G sftp pay
+
+# 将blog账户也加到apache组
+useradd -M -d /home/sftp/blog -G apache blog
+
 #设置3个账户的密码密码
 passwd www
 passwd blog
@@ -93,7 +105,7 @@ Match User www
 	ForceCommand	internal-sftp
 #限制blog和pay用户的根目录
 Match Group sftp
-	ChrootDirectory /home/%u
+	ChrootDirectory %h
 	ForceCommand	internal-sftp
 </pre>
 
@@ -132,8 +144,13 @@ chown www.sftp /home/sftp/homepage/web
 chmod 775 /home/sftp/homepage/web
 </pre>
 
-至此，我们已经实现了所有需要的功能。
+要实现web服务器与blog账户互删文件的权限需求，需要设置umask，让默认创建的文件和目录权限为775即可。将下面的内容写入.bashrc中：
 
+<pre lang="BASH">
+umask 0002
+</pre>
+
+至此，我们已经实现了所有需要的功能。
 <hr>
 参考资料：
 * <http://www.mike.org.cn/articles/centos-sftp-chroot/>
