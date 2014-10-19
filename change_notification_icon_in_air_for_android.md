@@ -1,4 +1,4 @@
-[改变AIR for Android的消息通知栏图标](http://zengrong.net/post/1681.htm)
+[改变AIR for Android消息通知栏默认图标](http://zengrong.net/post/1681.htm)
 
 如果从愤怒的角度来说，这个勉强可以算作AIR的BUG，但我知道不是。估计这事儿也只有我能碰上。且听我细细道来……
 

@@ -1,3 +1,5 @@
+[【译】Adobe数字出版套件(DPS)中PDF与JPG/PNG图像格式的不同](http://zengrong.net/post/1581.htm)
+
 原文地址：[Differences Between PDF and JPG/PNG Image Format for DPS](http://blogs.adobe.com/indesigndocs/2012/03/differences-between-pdf-and-jpgpng-image-format-for-dps.html)
 
 [Adobe数字出版套件(DPS)中PDF与JPG/PNG图像格式的不同](http://zengrong.net/post/1581.htm)

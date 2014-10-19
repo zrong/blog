@@ -1,13 +1,9 @@
-[转]Flash Player 执行模型之可变跑道  
+[【转】Flash Player 执行模型之可变跑道](http://zengrong.net/post/1365.htm)
 
-[本文源码](https://github.com/zrong/blog/blob/master/flash_player_elastic_racetrack.md)
-
-[本文地址](http://zengrong.net/post/1365.htm)
-
-原文地址：<http://blogs.adobe.com/xwlin/2010/04/flash_player_101_-_adobe_max_2009_1.html>  
-转载地址：<http://blog.csdn.net/zlxluofeng/article/details/5516349>  
-演讲人: Lee Thomason (lthomaso@adobe.com)  
-翻译: 林晓伟 (xwlin@adobe.com)  
+* 原文地址：<http://blogs.adobe.com/xwlin/2010/04/flash_player_101_-_adobe_max_2009_1.html>  
+* 转载地址：<http://blog.csdn.net/zlxluofeng/article/details/5516349>  
+* 演讲人: Lee Thomason (lthomaso@adobe.com)  
+* 翻译: 林晓伟 (xwlin@adobe.com)  
 
 上一篇我们介绍了Flash Player的代码库是如何归并一体以及对Flash平台的后期开发产生的影响，在第二节里，我们将重点讨论Flash Player的体系结构及其对开发人员的影响。
 

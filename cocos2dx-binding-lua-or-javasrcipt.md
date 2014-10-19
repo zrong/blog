@@ -1,3 +1,5 @@
+[Cocos2d-x script language binding:Lua or Javascript?](http://zengrong.net/post/1924.htm)
+
 **2014-01-15更新：** 加入Gwill的文章连接。
 <hr>
 

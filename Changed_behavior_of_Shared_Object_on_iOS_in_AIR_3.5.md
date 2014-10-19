@@ -1,4 +1,4 @@
-[在AIR3.5中，iOS上的SharedObject的行为改变](http://zengrong.net/post/1766.htm)
+[【译】在AIR3.5中，iOS上的SharedObject的行为改变](http://zengrong.net/post/1766.htm)
 
 原文地址：<http://blogs.adobe.com/airodynamics/2012/12/10/changed-behavior-of-shared-object-on-ios-in-air-3-5/>
 

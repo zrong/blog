@@ -1,4 +1,4 @@
-[Adobe游戏方面的一周新闻：会议，演示和精挑细选的信息](http://zengrong.net/post/1566.htm)
+[【译】Adobe游戏方面的一周新闻：会议，演示和精挑细选的信息](http://zengrong.net/post/1566.htm)
 原文地址：[A Big Week of News for Adobe’s Gaming Efforts: Conferences, Demos and Screenings Galore](http://blogs.adobe.com/digitalmedia/2012/03/a-big-week-of-news-for-adobes-gaming-efforts-conferences-demos-and-screenings-galore/)
 
 
