@@ -5,7 +5,10 @@ Postid: 114
 Slug: wordpressfavorite
 Nicename: wordpressfavorite
 
-本文原来的位置在[这里](/?p=14)，后来内容越来越多，就作为一个页面把。  
+[WordPress大全](http://zengrong.net/wordpressfavorite)
+
+本文原来的位置在[这里](http://zengrong.net/post/14.htm)，后来内容越来越多，就作为一个页面把。  
+
 最后更新：2007-12-9
 
 **官方**
@@ -60,18 +63,14 @@ Nicename: wordpressfavorite
     WordPress](http://planetozh.com/blog/2004/09/click-counter-plugin-for-wordpress/)
     记录链接的点击次数
 -   [Some Chinese Please  
-   ](http://code.google.com/p/some-chinese-please/ "“Some Chinese Please”是为用中文写作的wordpress blogger准备的拦截spam的plugin。")“Some
-    Chinese Please”是为用中文写作的wordpress
-    blogger准备的拦截spam的plugin。
--   [Spam Comment
-    Killer](http://www.voidpage.com/blog/2007/11/spam-comment-killer.html "默认情况下，插件处于温和状态，该状态适合与 Akismet  插件以及黑名单（在后台->设置->评论中）配合，即当被 Akismet 或黑名单判断为垃圾评论后，进行进一步判别，如果其内容中没有中文或者是 GB2312 编码则直接屏蔽不写入数据。当钩选了后台垃圾评论杀手设置中的“屏蔽一切无中文”的选项，则一切评论内容中只要没有中文或者是 GB2312 编码则一概屏蔽不写入数据。")
+   ](http://code.google.com/p/some-chinese-please/ "“Some Chinese Please”是为用中文写作的wordpress blogger准备的拦截spam的plugin。")“Some Chinese Please”是为用中文写作的wordpress blogger准备的拦截spam的plugin。
+-   [Spam Comment Killer](http://www.voidpage.com/blog/2007/11/spam-comment-killer.html "默认情况下，插件处于温和状态，该状态适合与 Akismet  插件以及黑名单（在后台->设置->评论中）配合，即当被 Akismet 或黑名单判断为垃圾评论后，进行进一步判别，如果其内容中没有中文或者是 GB2312 编码则直接屏蔽不写入数据。当钩选了后台垃圾评论杀手设置中的“屏蔽一切无中文”的选项，则一切评论内容中只要没有中文或者是 GB2312 编码则一概屏蔽不写入数据。")
 -   [Math Comment Spam Protection
     Plugin](http://sw-guide.de/wordpress/plugins/math-comment-spam-protection/ "一道简单数学题挡掉垃圾评论")
 
 **修改**
 
--   [WordPress 2.0.2
-    上传图片标题乱码解决](http://blog.istef.info/2006/04/26/wordpress-202-title-encoding-error-of-inline-upload-bug-and-solution/)
+-   [WordPress 2.0.2上传图片标题乱码解决](http://blog.istef.info/2006/04/26/wordpress-202-title-encoding-error-of-inline-upload-bug-and-solution/)
 -   [如何在WordPress后台中加入表情符号](http://www.zengrong.net/?p=109)
 -   [再增加一些表情符号](http://www.zengrong.net/?p=167)
 -   [给wordpress增加quicktags按钮的方法](http://www.coolcode.cn/?p=102)
@@ -89,8 +88,7 @@ Nicename: wordpressfavorite
 -   [WordPress最好的中文文档](http://blog.jtam.org/wordpress-chinese/)
 -   [WordPress2.1中文包](http://www.myyu.net/2007/01/22/45/)
 -   [WordPress2.1发布](http://yskin.net/2007/01/wordpress-21.html)
--   [WordPress 2.1
-    简体中文语言包](http://www.owind.com/WordPress-cn-ZH/)
+-   [WordPress 2.1简体中文语言包](http://www.owind.com/WordPress-cn-ZH/)
 
 **其他**
 

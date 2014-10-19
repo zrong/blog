@@ -5,7 +5,8 @@ Postid: 183
 Slug: firefox-addons
 Nicename: firefox-addons
 
-我使用的Firefox插件（扩展）  
+[我使用的Firefox插件（扩展）](http://zengrong.net/firefox-addons)
+
 最后更新：2010-5-10
 
 -   [flashgot](http://flashgot.net/)  
@@ -13,7 +14,6 @@ Nicename: firefox-addons
 -   [Tab Mix Plus](http://tmp.garyr.net/)  
     最强悍的标签管理插件
 -   [FoxyProxy](http://foxyproxy.mozdev.org/)  
-
     如果经常使用代理服务器上网并且有多个代理服务器地址，该怎么办？就用它了。
 -   [webdeveloper](http://chrispederick.com/work/webdeveloper/)  
     web开发者必装。
@@ -32,7 +32,6 @@ Nicename: firefox-addons
 -   [Flash Switcher](http://www.zengrong.net/?p=272)  
     可以随意切换Flash Player版本的firefox插件-Flash Switcher
 -   [Firebug](http://www.getfirebug.com/)  
-
     Firebug是Firefox下的一款开发类插件，现属于Firefox的五星级强力推荐插件之一。它集HTML查看和编辑、Javascript控制台、网络状况监视器于一体，是开发JavaScript、CSS、HTML和Ajax的得力助手。Firebug如同一把精巧的瑞士军刀，从各个不同的角度剖析Web页面内部的细节层面，给Web开发者带来很大的便利。[详细介绍](http://www.ooso.net/index.php/archives/294)
 -   [ColorZilla](http://www.iosart.com/firefox/colorzilla/)  
     截取网页中的颜色值
@@ -45,32 +44,19 @@ Nicename: firefox-addons
     切换firefox的语言。需要和firefox语言包配合使用
 -   <a href="http://backword.gneheix.com" target="_blank">backword  
     ![backword](https://addons.mozilla.org/images/previews/backword-5.jpg)  
-
     Backword的主要目标是快捷的收集网页中的陌生词汇及其出现的场合信息，帮助学习英语。
 -   [Adblock\_Plus](http://addons.mozine.cn/firefox/125/)  
-
     ![Adblock\_Plus](http://addons.mozine.cn/images/previews/adblock_plus-1_t.jpg)  
-
     你是否为网页上比其他任何内容都占用加载时间的广告以及大条幅（banners）而烦恼？安装"Adblock
-    Plus"扩展你就可以摆脱它们了。右键点击一个条幅广告，在上下文菜单中选择“Adblock”，它就再也不会被载入了。也可以在侧栏打开
-    Adblock Plus
-    来查看页面的所有元素，然后选择阻止通栏广告。你能在过滤器中使用通配符或正则表达式来阻挡所有广告。
+    Plus"扩展你就可以摆脱它们了。右键点击一个条幅广告，在上下文菜单中选择“Adblock”，它就再也不会被载入了。也可以在侧栏打开Adblock Plus来查看页面的所有元素，然后选择阻止通栏广告。你能在过滤器中使用通配符或正则表达式来阻挡所有广告。
 -   [Firefox Extension Backup Extension
     (FEBE)](https://addons.mozilla.org/addon/2109)  
-    FEBE 允许您快捷备份 Firefox 扩展。事实上，他的功能已不仅仅是备份 -
-    他把您的扩展重新创建成独立的可安装的 .xpi
-    文件。这样您可以很方便的同步办公室和家里的浏览器设置。  
-    FEBE 可以备份您的扩展、主题、和(可选)书签、属性、密码、cookies 以及
-    Firefox 提供的其他任何项目。
+    FEBE 允许您快捷备份 Firefox 扩展。事实上，他的功能已不仅仅是备份 -他把您的扩展重新创建成独立的可安装的 .xpi文件。这样您可以很方便的同步办公室和家里的浏览器设置。FEBE 可以备份您的扩展、主题、和(可选)书签、属性、密码、cookies 以及Firefox 提供的其他任何项目。
 -   [Compact Library Extension Organizer
     (CLEO)](https://addons.mozilla.org/zh-CN/firefox/addon/2942)  
-    CLEO 可以将任意数量的扩展/主题打包成一个单独的，可安装的 .xpi
-    文件。  
-    需要首先安装 FEBE\*
--   [Better
-    Gmail](http://lifehacker.com/software/gmail/lifehacker-code-better-gmail-firefox-extension-251923.php)  
-    这个工具能使你的 GMAIL
-    更加好用。[详细介绍](http://zsk.akaka.com.cn/2007/04/better-gmail-for-yours/)
+    CLEO 可以将任意数量的扩展/主题打包成一个单独的，可安装的 .xpi文件。需要首先安装 FEBE
+-   [Better Gmail](http://lifehacker.com/software/gmail/lifehacker-code-better-gmail-firefox-extension-251923.php)  
+    这个工具能使你的 GMAIL更加好用。[详细介绍](http://zsk.akaka.com.cn/2007/04/better-gmail-for-yours/)
 -   [Personal Menu](http://addons.mozine.cn/firefox/475/)  
     使用 Personal Menu
     您可以隐藏菜单栏中的菜单项(或隐藏菜单栏)，只需很少设置，即可根据您自己的要求安排菜单。  
@@ -131,6 +117,5 @@ Nicename: firefox-addons
 -   Super Tab Mode
 -   UnMHT
 -   AutoProxy  
-
-    　　这是一个国人开发的Firefox代理服务器扩展，通过一份无法访问的域名列表目录，实现自动在代理和非代理之间切换，该域名列表目录由志愿者手动维护。AutoProxy还可实现自定义您自己的代理规则；订阅规则列表；自定义代理服务器等功能。
+    这是一个国人开发的Firefox代理服务器扩展，通过一份无法访问的域名列表目录，实现自动在代理和非代理之间切换，该域名列表目录由志愿者手动维护。AutoProxy还可实现自定义您自己的代理规则；订阅规则列表；自定义代理服务器等功能。
 

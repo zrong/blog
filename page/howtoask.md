@@ -5,10 +5,12 @@ Postid: 17
 Slug: howtoask
 Nicename: howtoask
 
-### 在技术论坛提问的时候，为什么没人理你呢？
+[提问的智慧](http://zengrong.net/howtoask)
 
-### 花10分钟时间看看把，绝对对你有帮助
+## 在技术论坛提问的时候，为什么没人理你呢？
 
-### 英文版：[How To Ask Questions The Smart Way](http://www.catb.org/%7Eesr/faqs/smart-questions.html)
+## 花10分钟时间看看把，绝对对你有帮助
 
-### 中文版：[提问的智慧](http://www.beiww.com/doc/oss/smart-questions.html)
+## 英文版：[How To Ask Questions The Smart Way](http://www.catb.org/%7Eesr/faqs/smart-questions.html)
+
+## 中文版：[提问的智慧](http://www.beiww.com/doc/oss/smart-questions.html)
