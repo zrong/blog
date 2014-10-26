@@ -21,11 +21,18 @@ def _write_list(adir, rf):
 
 def _write_a_file(adir, name, rf):
     with open(os.path.join(adir, str(name)+'.md'), 'r', encoding='utf-8') as f:
+        fmt = '1. %s [%s](http://zengrong.net/%s.htm)\n'
+        time = None
+        title = None
         for line in f:
             if line.startswith('Title:'):
-                rf.write('1. [%s](http://zengrong.net/%s.htm)\n'%(
-                            line[6:].strip(), name))
+                title = line[6:].strip()
+            elif line.startswith('Date:'):
+                time = line[6:16]
                 break
+        if time and title:
+            rf.write(fmt%(time, title, name))
+
 
 def _write_readme():
     with open('README.md', 'w', encoding='utf-8', newline='\n') as f:
