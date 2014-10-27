@@ -207,7 +207,7 @@ MinimalComps的官方版本是不支持皮肤的，而这个就是它支持皮�
 提供纯AS3组件的皮肤和样式的集合。支持Scale9Bitmap
 * [BrowserCanvas](http://www.dncompute.com/blog/2008/06/23/browsercanvas-the-worlds-easiest-way-to-dynamically-resize-flash.html)  
 提供容易的方式动态修改Flash尺寸大小
-* [senocular Layout class](http://www.zengrong.net/?p=352)  
+* [senocular Layout class](http://zengrong.net/post/352.htm)  
 除了布局工具，还有其他许多有用的工具
 * [Yahoo ASTRA: ActionScript Toolkit for Rich Applications](http://developer.yahoo.com/flash/)  
 这是Yahoo开发的一套RIA组件包，包含以下内容
@@ -453,8 +453,8 @@ swf2xml和xml2swf
 编译为swf
 * [SWFObject（原名FlashObject）](http://blog.deconcept.com/swfobject/)  
 将swf嵌入到网页中的JavaScript脚本
-  	* [SWFObject的用法](http://www.zengrong.net/?p=103)
-	* [基于SWFObject的Flash发布模版](http://www.zengrong.net/?p=185)
+  	* [SWFObject的用法](http://zengrong.net/post/103.htm)
+	* [基于SWFObject的Flash发布模版](http://zengrong.net/post/185.htm)
 * [Xray (Flash Debugger)](http://www.osflash.org/xray)
 
 ## 应用

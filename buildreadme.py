@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import re
 
 def _write_list(adir, rf):
     rf.write('# '+adir+'\n\n')
@@ -59,6 +60,28 @@ def _rewrite_title():
                 with open(fpath, 'w', encoding='utf-8', newline='\n') as f:
                     f.write(content)
 
+def _rewrite_url(adir):
+    url = re.compile(r'http://zengrong\.net/\?p=(\d+)', re.S)
+    for afile in os.listdir(adir):
+        if afile.endswith('.md'):
+            content = None
+            fpath = os.path.join(adir, afile)
+            with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
+                content = f.read()
+                matchs = url.findall(content)
+                if len(matchs) > 0:
+                    for num in matchs:
+                        content = content.replace('http://zengrong.net/?p=%s'% num,
+                                'http://zengrong.net/post/%s.htm'%num)
+                else:
+                    content = None
+            if content:
+                with open(fpath, 'w', encoding='utf-8', newline='\n') as f:
+                    f.write(content)
+                    print(fpath)
+
+
 if __name__ == "__main__":
-    _write_readme()
+    #_write_readme()
     #_rewrite_title()
+    _rewrite_url('page')

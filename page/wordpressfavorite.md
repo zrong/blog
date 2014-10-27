@@ -71,10 +71,10 @@ Nicename: wordpressfavorite
 **修改**
 
 -   [WordPress 2.0.2上传图片标题乱码解决](http://blog.istef.info/2006/04/26/wordpress-202-title-encoding-error-of-inline-upload-bug-and-solution/)
--   [如何在WordPress后台中加入表情符号](http://www.zengrong.net/?p=109)
--   [再增加一些表情符号](http://www.zengrong.net/?p=167)
+-   [如何在WordPress后台中加入表情符号](http://zengrong.net/post/109.htm)
+-   [再增加一些表情符号](http://zengrong.net/post/167.htm)
 -   [给wordpress增加quicktags按钮的方法](http://www.coolcode.cn/?p=102)
--   [如何使用SWFObject(FlashObject)插入swf动画](http://www.zengrong.net/?p=103)
+-   [如何使用SWFObject(FlashObject)插入swf动画](http://zengrong.net/post/103.htm)
 -   [为留言增加序号](http://www.kdolphin.com/269)
 
 **教学**

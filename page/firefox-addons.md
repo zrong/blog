@@ -25,11 +25,11 @@ Nicename: firefox-addons
 -   [Download Statusbar](http://downloadstatusbar.mozdev.org/)  
     ![](http://downloadstatusbar.mozdev.org/images/093_3.png)  
     在Firefox的状态栏中显示下载进度和信息，不会显示哪个讨厌的下载管理器了。
--   [FlashTracer](http://www.zengrong.net/?p=268)  
+-   [FlashTracer](http://zengrong.net/post/268.htm)  
     对Flash开发者尤其有用。当使用Debug版本的Flash
     Player时，在Firefox中可以显示页面中浏览的swf影片的所有trace()操作。[安装](https://addons.mozilla.org/firefox/3469/)
     [作者的Blog中的介绍](http://www.sephiroth.it/weblog/archives/2006/10/flashtracer_firefox_extensionphp.php)
--   [Flash Switcher](http://www.zengrong.net/?p=272)  
+-   [Flash Switcher](http://zengrong.net/post/272.htm)  
     可以随意切换Flash Player版本的firefox插件-Flash Switcher
 -   [Firebug](http://www.getfirebug.com/)  
     Firebug是Firefox下的一款开发类插件，现属于Firefox的五星级强力推荐插件之一。它集HTML查看和编辑、Javascript控制台、网络状况监视器于一体，是开发JavaScript、CSS、HTML和Ajax的得力助手。Firebug如同一把精巧的瑞士军刀，从各个不同的角度剖析Web页面内部的细节层面，给Web开发者带来很大的便利。[详细介绍](http://www.ooso.net/index.php/archives/294)
