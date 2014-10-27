@@ -61,7 +61,7 @@ def _rewrite_title():
                     f.write(content)
 
 def _rewrite_url(adir):
-    url = re.compile(r'http://zengrong\.net/\?p=(\d+)', re.S)
+    url = re.compile(r'\]\(/\?p=(\d+)\)', re.S)
     for afile in os.listdir(adir):
         if afile.endswith('.md'):
             content = None
@@ -70,9 +70,10 @@ def _rewrite_url(adir):
                 content = f.read()
                 matchs = url.findall(content)
                 if len(matchs) > 0:
+                    print(afile, matchs)
                     for num in matchs:
-                        content = content.replace('http://zengrong.net/?p=%s'% num,
-                                'http://zengrong.net/post/%s.htm'%num)
+                        content = content.replace('](/?p=%s'% num,
+                                '](http://zengrong.net/post/%s.htm'%num)
                 else:
                     content = None
             if content:
@@ -84,4 +85,4 @@ def _rewrite_url(adir):
 if __name__ == "__main__":
     #_write_readme()
     #_rewrite_title()
-    _rewrite_url('page')
+    _rewrite_url('post')
