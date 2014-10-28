@@ -18,13 +18,11 @@ def _write_list(adir, rf):
     rf.write('# '+adir+'\n\n')
     is_post = adir == 'post'
     names = []
-    for afile in os.listdir(adir):
-        if afile.endswith('.md'):
-            name = afile.split('.')[0]
-            if is_post:
-                names.append(int(name))
-            else:
-                names.append(name)
+    for adir, name, fpath in _get_mdfile(adir):
+        if is_post:
+            names.append(int(name))
+        else:
+            names.append(name)
     if is_post:
         names = sorted(names)
     for name in names:
@@ -55,42 +53,39 @@ def _write_readme():
         _write_list('post', f)
 
 def _rewrite_title():
-    for afile in os.listdir('post'):
-        if afile.endswith('.md'):
-            content = None
-            fpath = os.path.join('post', afile)
-            with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
-                for line in f:
-                    if line.startswith('Title:') and line.find('[转]') > -1:
-                        f.seek(0)
-                        content = True
-                        break
-                if content:
-                     content = f.read().replace('[转]', '【转】')
+    for adir, name, fpath in _get_mdfile('post'):
+        content = None
+        with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
+            for line in f:
+                if line.startswith('Title:') and line.find('[转]') > -1:
+                    f.seek(0)
+                    content = True
+                    break
             if content:
-                with open(fpath, 'w', encoding='utf-8', newline='\n') as f:
-                    f.write(content)
+                 content = f.read().replace('[转]', '【转】')
+        if content:
+            with open(fpath, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(content)
 
 def _rewrite_url(adir):
     url = re.compile(r'\]\(/\?p=(\d+)\)', re.S)
-    for afile in os.listdir(adir):
-        if afile.endswith('.md'):
-            content = None
-            fpath = os.path.join(adir, afile)
-            with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
-                content = f.read()
-                matchs = url.findall(content)
-                if len(matchs) > 0:
-                    print(afile, matchs)
-                    for num in matchs:
-                        content = content.replace('](/?p=%s'% num,
-                                '](http://zengrong.net/post/%s.htm'%num)
-                else:
-                    content = None
-            if content:
-                with open(fpath, 'w', encoding='utf-8', newline='\n') as f:
-                    f.write(content)
-                    print(fpath)
+    for adir, name, fpath in _get_mdfile(adir):
+        content = None
+        fpath = os.path.join(adir, afile)
+        with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
+            content = f.read()
+            matchs = url.findall(content)
+            if len(matchs) > 0:
+                print(afile, matchs)
+                for num in matchs:
+                    content = content.replace('](/?p=%s'% num,
+                            '](http://zengrong.net/post/%s.htm'%num)
+            else:
+                content = None
+        if content:
+            with open(fpath, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(content)
+                print(fpath)
 
 def _rewrite_category():
     sign = 'Category: '
