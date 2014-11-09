@@ -114,3 +114,37 @@ def build():
     #_rewrite_title()
     #_rewrite_url('post')
     _rewrite_category()
+
+def build(gconf, gargs, parser=None):
+    global conf
+    global args
+    conf = gconf
+    args = gargs
+
+    if args.all:
+        _updateAll()
+        return
+
+    noAnyArgs = True
+    if args.submodule:
+        _updateGitSubmodules()
+        noAnyArgs = False
+    if args.cocos:
+        _updateCocos()
+        noAnyArgs = False
+    if args.lua:
+        _updateLua()
+        noAnyArgs = False
+    if args.res:
+        _updateRes()
+        noAnyArgs = False
+
+    argsDict = vars(args)
+    for git in conf.git_conf.keys():
+        if argsDict[git]:
+            _updateAGit(conf.git_conf[git])
+            noAnyArgs = False
+
+    if noAnyArgs and parser:
+        parser.print_help()
+
