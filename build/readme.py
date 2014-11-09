@@ -108,7 +108,8 @@ def _rewrite_category():
             #     f.write(content)
     print(num)
 
-if __name__ == "__main__":
+def build():
+    _write_readme()
     #_write_readme()
     #_rewrite_title()
     #_rewrite_url('post')
