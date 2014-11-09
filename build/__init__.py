@@ -1,1 +1,1 @@
-__all__ = ['readme', 'wordpress']
+__all__ = ['write', 'wordpress']

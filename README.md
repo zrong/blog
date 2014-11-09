@@ -724,4 +724,5 @@
 1. 2014-10-08 [Python 包管理工具解惑](http://zengrong.net/2169.htm)
 1. 2014-10-09 [Python 测试框架的选择](http://zengrong.net/2170.htm)
 1. 2014-10-12 [Python web框架的选择](http://zengrong.net/2172.htm)
+1. 2014-11-05 [Markdown 和 reStructuredText](http://zengrong.net/2185.htm)
 

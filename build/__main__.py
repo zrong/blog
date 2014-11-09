@@ -3,28 +3,25 @@ import sys
 import logging
 import importlib
 from zrong.base import slog, addLoggerHandler
-from hhlb import base, config
+import base
 
 def _build(name, conf, args, parser):
-    pack = importlib.import_module("hhlb."+name)
+    pack = importlib.import_module(name)
     pack.build(conf, args, parser)
 
-addLoggerHandler(slog, 
-        handler=logging.StreamHandler(sys.stdout),
-        debug=logging.DEBUG)
+addLoggerHandler(slog,
+    handler=logging.StreamHandler(sys.stdout),
+    debug=logging.DEBUG)
 gconf = base.Conf()
-workDir = os.path.split(os.path.abspath(__file__))[0]
-confFile = os.path.join(workDir, "build_conf.py")
-confFileTempl = os.path.join(workDir, "build.conf")
-workDir = os.path.abspath(os.path.join(workDir, os.pardir))
+workDir = os.path.abspath(
+    os.path.join(os.path.split(
+    os.path.abspath(__file__))[0], os.pardir))
+confFile = os.path.join(workDir, "build.conf.py")
 if os.path.exists(confFile):
     gconf.readFromFile(confFile)
 else:
-    gconf.init(workDir, confFileTempl, confFile)
-if not config.checkEnv(gconf):
-    exit(1)
+    raise base.BlogError('The configuration "%s" is inexistence!'%confFile)
 
-gargs, subParser = config.checkArgs()
+gargs, subParser = base.checkArgs()
 if gargs:
     _build(gargs.sub_name, gconf, gargs, subParser)
-

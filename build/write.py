@@ -3,6 +3,11 @@
 import os
 import re
 
+
+conf = None
+args = None
+
+
 def _read_file(afile):
     with open(afile, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -52,8 +57,8 @@ def _write_readme():
         _write_list('page', f)
         _write_list('post', f)
 
-def _rewrite_title():
-    for adir, name, fpath in _get_mdfile('post'):
+def _rewrite_title(dirname):
+    for adir, name, fpath in _get_mdfile(dirname):
         content = None
         with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
             for line in f:
@@ -67,9 +72,9 @@ def _rewrite_title():
             with open(fpath, 'w', encoding='utf-8', newline='\n') as f:
                 f.write(content)
 
-def _rewrite_url(adir):
+def _rewrite_url(dirname):
     url = re.compile(r'\]\(/\?p=(\d+)\)', re.S)
-    for adir, name, fpath in _get_mdfile(adir):
+    for adir, name, fpath in _get_mdfile(dirname):
         content = None
         fpath = os.path.join(adir, afile)
         with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
@@ -108,9 +113,16 @@ def _rewrite_category():
             #     f.write(content)
     print(num)
 
+def _rewrite_dir(fun, dirname):
+    if dirname == 'all':
+        fun('post')
+        fun('page')
+        fun('draft')
+    else:
+        fun(dirname)
+
 def build():
     _write_readme()
-    #_write_readme()
     #_rewrite_title()
     #_rewrite_url('post')
     _rewrite_category()
@@ -126,24 +138,18 @@ def build(gconf, gargs, parser=None):
         return
 
     noAnyArgs = True
-    if args.submodule:
-        _updateGitSubmodules()
+    if args.readme:
+        _write_readme()
         noAnyArgs = False
-    if args.cocos:
-        _updateCocos()
+    if args.title:
+        _rewrite_dir(_rewrite_title, args.dirname)
         noAnyArgs = False
-    if args.lua:
-        _updateLua()
+    if args.url:
+        _rewrite_dir(_rewrite_url, args.dirname)
         noAnyArgs = False
-    if args.res:
-        _updateRes()
+    if args.category:
+        _rewrite_category()
         noAnyArgs = False
-
-    argsDict = vars(args)
-    for git in conf.git_conf.keys():
-        if argsDict[git]:
-            _updateAGit(conf.git_conf[git])
-            noAnyArgs = False
 
     if noAnyArgs and parser:
         parser.print_help()
