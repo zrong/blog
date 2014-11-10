@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 import re
 
@@ -7,11 +5,6 @@ import re
 conf = None
 args = None
 
-
-def _read_file(afile):
-    with open(afile, 'r', encoding='utf-8') as f:
-        content = f.read()
-    return content
 
 def _get_mdfile(adir):
     for afile in os.listdir(adir):
@@ -120,12 +113,6 @@ def _rewrite_dir(fun, dirname):
         fun('draft')
     else:
         fun(dirname)
-
-def build():
-    _write_readme()
-    #_rewrite_title()
-    #_rewrite_url('post')
-    _rewrite_category()
 
 def build(gconf, gargs, parser=None):
     global conf

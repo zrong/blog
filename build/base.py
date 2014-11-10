@@ -47,35 +47,17 @@ def checkArgs(argv=None):
         choices = ['post', 'page', 'draft', 'all'],
         help='Rewrite articles by type. The value is [post|page|draft|all].')
 
-    parserRes = subParsers.add_parser('res', 
-        help='Process resources.')
-    parserRes.add_argument('-f', '--force', action='store_true', 
-        help='Remove directory before process.')
-    parserRes.add_argument('-a', '--all', action='store_true', 
-        help='Process all resources.')
-    parserRes.add_argument('-l', '--plst', type=str, nargs='*',
-        help='Process picture plist files.')
-    parserRes.add_argument('-d', '--pdir', type=str, nargs='*',
-        help='Process picture dir files.')
-    parserRes.add_argument('-r', '--arm', type=str, nargs='*',
-        help='Process armature files.')
-    parserRes.add_argument('-n', '--fnt', type=str, nargs='*',
-        help='Process font files.')
-    parserRes.add_argument('-p', '--par', type=str, nargs='*',
-        help='Process particle files.')
-    parserRes.add_argument('-s', '--snd', type=str, nargs='*',
-        help='Process sound files.')
-    parserRes.add_argument('-i', '--ani', type=str, nargs='*',
-        help='Process animation files.')
-    parserRes.add_argument('--lang', type=str, 
-            default='zh_cn', choices=['zh_cn'],
-        help='Process specified language.')
-    parserRes.add_argument('--density', type=str, 
-            default='sd', choices=['sd'],
-        help='Process specified density.')
-    parserRes.add_argument('--vendor', type=str, 
-            default='team1201', choices=['team1201'],
-        help='Process specified vendor.')
+    pp = subParsers.add_parser('wp', 
+        help='Publish blog to wordpress.')
+    pp.add_argument('-u', '--user', type=str, 
+        help='Login username.')
+    pp.add_argument('-p', '--password', type=str, 
+        help='Login password.')
+    pp.add_argument('-s', '--site', type=str, 
+        help='Site url.')
+    pp.add_argument('-c', '--action', type=str,
+        choices=['pub'], 
+        help='Action for wordpress.')
 
     args = parser.parse_args(args=argv)
     if args.sub_name:
