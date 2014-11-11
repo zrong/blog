@@ -2,7 +2,7 @@ import os
 import platform
 import shutil
 import argparse
-from zrong.base import DictBase,slog,writeByTempl
+from zrong.base import DictBase, slog, write_by_templ, list_dir
 
 class BlogError(Exception):
     pass
@@ -10,14 +10,59 @@ class BlogError(Exception):
 class Conf(DictBase):
 
     def init(self, workDir, confFile):
-        self.work_dir = workDir
-        self.readFromFile(confFile)
+        self.site = DictBase(
+        {
+            'user': 'user',
+            'password': 'password',
+            'url': 'http://you-wordpress-blog/xmlrpc.php',
+        })
+        self.directory = DictBase(
+        {
+            'work': workDir,
+            'draft': 'draft',
+            'post': 'post',
+            'page': 'page',
+        })
+        self.files = DictBase(
+        {
+            'ext': '.md',
+            'draftfmt': 'draft_%s',
+        })
+        self.save_to_file(confFile)
 
-    def get_dir(self, name, *path):
-        adir = self.work_dir
+    def get_draft(self, name):
+        draftname = (self.files.draftfmt % str(name))+self.files.ext
+        draftfile = self.get_path(self.directory.draft, draftname)
+        return draftname, draftfile
+
+    def get_new_draft(self, name=None):
+        draftnames = list(list_dir(self.get_path(self.directory.draft)))
+        draftname, draftfile = None, None
+        if name:
+            draftname, draftfile = self.get_draft(name)
+            if draftname in driftnames:
+                raise BlogError('The draft file "%s" is already existence!')
+        else:
+            name = 1
+            draftname, draftfile = self.get_draft(name)
+            while os.path.exists(draftfile):
+                name += 1
+                draftname, draftfile = self.get_draft(name)
+        return draftname, draftfile
+
+    def get_post(self, name):
+        return self.get_path(self.directory.post, name+self.files.ext)
+
+    def get_page(self, name):
+        return self.get_path(self.directory.page, name+self.files.ext)
+
+    def get_path(self, name, *path):
+        workdir = os.path.join(self.directory.work, name)
         if path:
-            return os.path.abspath(os.path.join(adir, *path))
-        return adir
+
+            return os.path.abspath(os.path.join(
+                workdir, *path))
+        return workdir
 
 def checkFTPConf(ftpConf):
     if not ftpConf \
@@ -27,7 +72,7 @@ def checkFTPConf(ftpConf):
         raise BlogError('ftpConf MUST contains following values:'
                 'server,user,password !')
 
-def checkArgs(argv=None):
+def check_args(argv=None):
     parser = argparse.ArgumentParser()
     subParsers = parser.add_subparsers(dest='sub_name', help='sub-commands')
 
@@ -56,8 +101,13 @@ def checkArgs(argv=None):
     pp.add_argument('-s', '--site', type=str, 
         help='Site url.')
     pp.add_argument('-c', '--action', type=str,
-        choices=['pub'], 
+        choices=['new', 'pub', 'update', 'del'], 
         help='Action for wordpress.')
+    pp.add_argument('-t', '--type', type=str,
+        choices=['post', 'page'], default='post',
+        help='Action for wordpress.')
+    pp.add_argument('-i', '--postid',
+        help='The id of post.')
 
     args = parser.parse_args(args=argv)
     if args.sub_name:

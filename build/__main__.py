@@ -20,8 +20,10 @@ confFile = os.path.join(workDir, "build.conf.py")
 if os.path.exists(confFile):
     gconf.readFromFile(confFile)
 else:
-    raise base.BlogError('The configuration "%s" is inexistence!'%confFile)
+    gconf.init(workDir, confFile)
+    slog.info('Please modify build.conf.py!')
+    exit(1)
 
-gargs, subParser = base.checkArgs()
+gargs, subParser = base.check_args()
 if gargs:
     _build(gargs.sub_name, gconf, gargs, subParser)
