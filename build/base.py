@@ -101,13 +101,15 @@ def check_args(argv=None):
     pp.add_argument('-s', '--site', type=str, 
         help='Site url.')
     pp.add_argument('-c', '--action', type=str,
-        choices=['new', 'pub', 'update', 'del'], 
+        choices=['new', 'pub', 'update', 'del', 'show'], 
+        default='show',
         help='Action for wordpress.')
     pp.add_argument('-t', '--type', type=str,
-        choices=['post', 'page'], default='post',
+        choices=['post', 'page', 'option', 'tax', 'term'],
+        default='option',
         help='Action for wordpress.')
-    pp.add_argument('-i', '--postid',
-        help='The id of post.')
+    pp.add_argument('-q', '--query', nargs='*',
+        help='The options for query.')
 
     args = parser.parse_args(args=argv)
     if args.sub_name:
