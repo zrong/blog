@@ -1,4 +1,5 @@
 import os
+import re
 import xmlrpc
 import markdown
 from wordpress_xmlrpc import (
@@ -21,10 +22,29 @@ def _wpcall(method):
     global wp
     if not wp:
         wp = Client(conf.site.url, conf.site.user, conf.site.password)
-    return wp.call(method)
+    try:
+        results = wp.call(method)
+    except xmlrpc.client.Fault as e:
+        slog.error(e)
+        return None
+    return results
 
-def _get_postid():
-    return args.query[0] if args.query else None
+def _get_postid(as_list=False):
+    if not args.query:
+        return None
+    if as_list:
+        postids = []
+        for postid in args.query:
+            match = re.match(r'^(\d+)-(\d+)$', postid)
+            if match:
+                a = int(match.group(1))
+                b = int(match.group(2))
+                for i in range(a,b+1):
+                    postids.append(str(i))
+            else:
+                postids.append(postid)
+        return postids
+    return args.query[0]
 
 def _get_class():
     if args.type == 'post':
@@ -82,28 +102,43 @@ def _wp_new():
         return
 
 def _wp_update():
-    postid = _get_postid()
-    if not postid:
+    postids = _get_postid(as_list=True)
+    if not postids:
         slog.warning('Please provide a post id!')
         return
 
     if args.type not in ('post', 'page'):
         return
-    pfile = conf.get_post(postid)
-    if not os.path.exists(pfile):
-        slog.error('The post file "%s" is inexistance!'%pfile)
-        return
-    txt = read_file(pfile)
-    md = markdown.Markdown(extensions=['markdown.extensions.meta'])
-    html = md.convert(txt)
-    post = _wpcall(GetPost(postid, result_class=_get_class()))
-    meta = md.Meta
-    post.title = meta['title'][0]
-    post.date_modified = meta['modified'][0]
-    post.content = html
-    post.slug = meta['nicename'][0]
-    succ = _wpcall(EditPost(postid, post))
-    print(succ)
+
+    def _update_a_post(postid):
+        pfile = conf.get_post(postid)
+        if not os.path.exists(pfile):
+            slog.error('The post file "%s" is inexistance!'%pfile)
+            return
+        txt = read_file(pfile)
+        md = markdown.Markdown(extensions=['markdown.extensions.meta'])
+        html = md.convert(txt)
+        post = _wpcall(GetPost(postid, result_class=_get_class()))
+        if not post:
+            return
+        meta = md.Meta
+        post.title = meta['title'][0]
+        post.slug = meta['nicename'][0]
+        post.content = html
+        modified = meta.get('modified')
+        if modified:
+            post.date_modified = modified[0]
+
+        succ = _wpcall(EditPost(postid, post))
+        if succ == None:
+            return
+        if succ:
+            slog.info('Update %s successfully!'%postid)
+        else:
+            slog.info('Update %s fail!'%postid)
+
+    for postid in postids:
+        _update_a_post(postid)
 
 def _wp_del():
     pass
@@ -135,10 +170,9 @@ def _wp_show():
 
     if not method:
         return
-    try:
-        results = _wpcall(method)
-    except xmlrpc.client.Fault as e:
-        print(e)
+
+    results = _wpcall(method)
+    if not results:
         return
 
     _print_results(results)
