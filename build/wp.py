@@ -111,17 +111,20 @@ def _wp_update():
         return
 
     def _update_a_post(postid):
-        pfile = conf.get_post(postid)
+        ispage = args.type == 'page'
+        pfile = conf.get_page(postid) if ispage else conf.get_post(postid)
         if not os.path.exists(pfile):
             slog.error('The post file "%s" is inexistance!'%pfile)
             return
         txt = read_file(pfile)
         md = markdown.Markdown(extensions=['markdown.extensions.meta'])
         html = md.convert(txt)
+        meta = md.Meta
+        if ispage:
+            postid = meta['postid'][0]
         post = _wpcall(GetPost(postid, result_class=_get_class()))
         if not post:
             return
-        meta = md.Meta
         post.title = meta['title'][0]
         post.slug = meta['nicename'][0]
         post.content = html

@@ -59,9 +59,7 @@ class Conf(DictBase):
     def get_path(self, name, *path):
         workdir = os.path.join(self.directory.work, name)
         if path:
-
-            return os.path.abspath(os.path.join(
-                workdir, *path))
+            return os.path.abspath(os.path.join(workdir, *path))
         return workdir
 
 def checkFTPConf(ftpConf):
