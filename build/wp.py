@@ -117,7 +117,10 @@ def _wp_update():
             slog.error('The post file "%s" is inexistance!'%pfile)
             return
         txt = read_file(pfile)
-        md = markdown.Markdown(extensions=['markdown.extensions.meta'])
+        md = markdown.Markdown(extensions=[
+            'markdown.extensions.meta',
+            'markdown.extensions.tables',
+            ])
         html = md.convert(txt)
         meta = md.Meta
         if ispage:
