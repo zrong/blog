@@ -5,7 +5,7 @@ from wordpress_xmlrpc import (
         Client, WordPressPost, WordPressPage, 
         WordPressTaxonomy, WordPressTerm)
 from wordpress_xmlrpc.methods.posts import (
-        GetPosts, NewPost, GetPost)
+        GetPosts, NewPost, GetPost, EditPost)
 from wordpress_xmlrpc.methods.users import GetUserInfo
 from wordpress_xmlrpc.methods.options import GetOptions
 from wordpress_xmlrpc.methods.taxonomies import (
@@ -25,6 +25,13 @@ def _wpcall(method):
 
 def _get_postid():
     return args.query[0] if args.query else None
+
+def _get_class():
+    if args.type == 'post':
+        return WordPressPost
+    if args.type == 'page':
+        return WordPressPage
+    return None
 
 def _print_result(result):
     if isinstance(result, WordPressTerm):
@@ -75,19 +82,28 @@ def _wp_new():
         return
 
 def _wp_update():
-    if not _get_postid():
+    postid = _get_postid()
+    if not postid:
         slog.warning('Please provide a post id!')
         return
 
-    pfile = conf.get_post(_get_postid())
+    if args.type not in ('post', 'page'):
+        return
+    pfile = conf.get_post(postid)
     if not os.path.exists(pfile):
         slog.error('The post file "%s" is inexistance!'%pfile)
         return
     txt = read_file(pfile)
     md = markdown.Markdown(extensions=['markdown.extensions.meta'])
     html = md.convert(txt)
-    print(html)
-    print(md.Meta)
+    post = _wpcall(GetPost(postid, result_class=_get_class()))
+    meta = md.Meta
+    post.title = meta['title'][0]
+    post.date_modified = meta['modified'][0]
+    post.content = html
+    post.slug = meta['nicename'][0]
+    succ = _wpcall(EditPost(postid, post))
+    print(succ)
 
 def _wp_del():
     pass
