@@ -10,7 +10,7 @@ from wordpress_xmlrpc.methods.users import GetUserInfo
 from wordpress_xmlrpc.methods.options import GetOptions
 from wordpress_xmlrpc.methods.taxonomies import (
         GetTaxonomies, GetTaxonomy, GetTerms, GetTerm)
-from zrong.base import slog, read_file
+from zrong.base import slog, read_file, DictBase
 
 
 conf = None
@@ -94,16 +94,22 @@ def _wp_del():
 
 def _wp_show():
     method = None
-    if args.type == 'post':
+    if args.type == 'post' or args.type == 'page':
+
+        field = {'post_type':'page'} \
+            if args.type == 'page' else {}
+        field['number'] = args.number
+        field['orderby'] = args.orderby
+        field['order'] = args.order
+
+        resultclass = WordPressPage \
+            if args.type == 'page' else WordPressPost
+
         if args.query:
-            method = GetPost(_get_postid())
+            method = GetPost(_get_postid(), result_class=resultclass)
         else:
-            method = GetPosts()
-    elif args.type == 'page':
-        if args.query:
-            method = GetPost(_get_postid(), result_class=WordPressPage)
-        else:
-            method = GetPosts({'post_type':'page'}, result_class=WordPressPage)
+            method = GetPosts(field, result_class=resultclass)
+
     elif args.type == 'option':
         method = GetOptions([])
     elif args.type == 'tax':

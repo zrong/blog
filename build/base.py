@@ -110,6 +110,17 @@ def check_args(argv=None):
         help='Action for wordpress.')
     pp.add_argument('-q', '--query', nargs='*',
         help='The options for query.')
+    pp.add_argument('-n', '--number', type=int,
+        default=10,
+        help='The amount for GetPosts.')
+    pp.add_argument('-o', '--orderby',
+        choices=['post_modified', 'post_id'],
+        default='post_id',
+        help='To sort the result-set by one column.')
+    pp.add_argument('-d', '--order',
+        choices=['ASC', 'DESC'],
+        default='DESC',
+        help='To sort the records in a descending or a ascending order.')
 
     args = parser.parse_args(args=argv)
     if args.sub_name:
