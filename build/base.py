@@ -3,6 +3,7 @@ import platform
 import shutil
 import argparse
 from zrong.base import DictBase, list_dir
+from wordpress_xmlrpc import (WordPressTerm)
 
 class BlogError(Exception):
     pass
@@ -36,20 +37,45 @@ class Conf(DictBase):
         })
         self.save_to_file()
 
-    def save_terms(self, terms, taxtype):
+    def save_terms(self, terms, taxname):
         termdict = DictBase()
         for term in terms:
-            termdict[term.slug] = DictBase({
-                'id':term.id,
-                'group':term.group,
-                'taxonomy_id':term.taxonomy_id,
-                'name':term.name,
-                'slug':term.slug,
-                'parent':term.parent,
-                'count':term.count,
-                    })
-        self[taxtype] = termdict
+            self.save_term(term, taxname, termdict)
+        self[taxname] = termdict
         self.save_to_file()
+
+    def save_term(self, term, taxname, termdict=None):
+        if termdict == None:
+            termdict = self[taxname]
+        termdict[term.slug] = DictBase({
+            'id':term.id,
+            'group':term.group,
+            'taxonomy':term.taxonomy,
+            'taxonomy_id':term.taxonomy_id,
+            'name':term.name,
+            'slug':term.slug,
+            'description':term.description,
+            'parent':term.parent,
+            'count':term.count,
+                })
+
+    def get_term(self, taxname, slug):
+        if not self[taxname]:
+            return None
+        if not self[taxname][slug]:
+            return None
+        termdict = self[taxname][slug]
+        term = WordPressTerm()
+        term.id = termdict['id']
+        term.group = termdict['group']
+        term.taxonomy = termdict['taxonomy']
+        term.taxonomy_id = termdict['taxonomy_id']
+        term.name = termdict['name']
+        term.slug = termdict['slug']
+        term.description = termdict['description']
+        term.parent = termdict['parent']
+        term.count = termdict['count']
+        return term
 
     def is_article(self, posttype):
         return posttype in Conf.ARTICLE_TYPES
@@ -134,7 +160,7 @@ def check_args(argv=None):
     pp.add_argument('-s', '--site', type=str, 
         help='Site url.')
     pp.add_argument('-c', '--action', type=str,
-        choices=['pub', 'update', 'del', 'show'], 
+        choices=['new', 'update', 'del', 'show'], 
         default='show',
         help='Action for wordpress.')
     pp.add_argument('-t', '--type', type=str,

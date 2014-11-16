@@ -11,7 +11,8 @@ from wordpress_xmlrpc.methods.posts import (
 from wordpress_xmlrpc.methods.users import GetUserInfo
 from wordpress_xmlrpc.methods.options import GetOptions
 from wordpress_xmlrpc.methods.taxonomies import (
-        GetTaxonomies, GetTaxonomy, GetTerms, GetTerm)
+        GetTaxonomies, GetTaxonomy, 
+        GetTerms, GetTerm, NewTerm, EditTerm, DeleteTerm)
 from zrong.base import slog, read_file, DictBase
 
 
@@ -47,17 +48,22 @@ def _get_postid(as_list=False):
         return postids
     return args.query[0]
 
-def _get_terms():
-    if not args.query:
-        slog.error('Please provide a taxonomy name! You can use '
-                '"-c show -t tax" to get one.')
-        return None
-    termtype = args.query[0]
-    if not conf[termtype]:
+def _get_terms(termtype=None, slug=None, force=False):
+    if not termtype:
+        if not args.query:
+            slog.error('Please provide a taxonomy name! You can use '
+                    '"-c show -t tax" to get one.')
+            return None
+        termtype = args.query[0]
+        slug = args.query[1] if len(args.query)>1 else None
+    terms = conf[termtype]
+    if not terms or force:
         results = _wpcall(GetTerms(termtype))
         if results:
             conf.save_terms(results, termtype)
-    return conf[termtype]
+    if terms and slug:
+        return terms[slug]
+    return terms
 
 def _print_result(result):
     if isinstance(result, WordPressTerm):
@@ -83,27 +89,6 @@ def _print_results(results):
     else:
         _print_result(results)
 
-def _get_article_meta(meta, post):
-    adict = DictBase()
-    adict.title = meta['title'][0]
-    adict.slug = meta['nicename'][0]
-    adict.date = meta['date'][0]
-    adict.user = meta['author'][0]
-    modified = meta.get('modified')
-    if modified:
-        adict.modified = modified[0]
-    posttype = meta.get('posttype')
-    if posttype:
-        adict.posttype = posttype[0]
-    else:
-        adict.posttype = 'post'
-    poststatus = meta.get('poststatus')
-    if poststatus:
-        adict.poststatus = poststatus[0]
-    else:
-        adict.poststatus = 'publish'
-    return adict
-
 def _get_article_content(afile):
     if not os.path.exists(afile):
         slog.error('The file "%s" is inexistance!'%afile)
@@ -121,6 +106,12 @@ def _get_article_content(afile):
     adict.slug = meta['nicename'][0]
     adict.date = meta['date'][0]
     adict.user = meta['author'][0]
+    tags = meta.get('tags')
+    if tags:
+        adict.tags = [tag.strip() for tag in tags[0].split(',')]
+    category = meta.get('category')
+    if category:
+        adict.category = [cat.strip() for cat in category[0].split(',')]
     modified = meta.get('modified')
     if modified:
         adict.modified = modified[0]
@@ -136,15 +127,36 @@ def _get_article_content(afile):
         adict.poststatus = 'publish'
     return html,adict 
 
-def _wp_pub():
+def _wp_new():
+    if args.type == 'draft':
+        _wp_new_article()
+    elif args.type == 'term':
+        if len(args.query)<2:
+            slog.error('Provide 2 arguments at least please.')
+        terms = _get_terms(force=True)
+        if terms:
+            termtype = args.query[0]
+            slug = args.query[1]
+            name = args.query[2] if len(args.query)>2 else slug
+            if slug in terms:
+                slog.error('The %s has existed in %s.'%(name, termtype))
+            else:
+                term = WordPressTerm()
+                term.slug = slug
+                term.name = name
+                if len(args.query)>3:
+                    term.description = args.query[3]
+                termid = _wpcall(NewTerm(term))
+                term = _wpcall(GetTerm(name, termid))
+                conf.save_term(term, termtype)
+                conf.save_to_file()
+                slog.info('The term %s has saved.'%name)
+
+def _wp_new_article():
     postid = _get_postid()
     if not postid:
         slog.warning('Please provide a post id!')
         return
-
-    if args.type != 'draft':
-        return
-
     afile, aname = conf.get_draft(postid)
     html, meta = _get_article_content(afile)
 
@@ -175,14 +187,21 @@ def _wp_pub():
     print(newfile, newname)
 
 def _wp_update():
+    if conf.is_article(args.type):
+        _wp_update_article()
+    elif args.type == 'term':
+        _get_terms(force=True)
+        slog.info('Update terms done.')
+
+def _wp_update_article():
     postids = _get_postid(as_list=True)
     if not postids:
         slog.warning('Please provide a post id!')
         return
 
-    if not conf.is_article(args.type):
-        return
-
+    # Update all taxonomy
+    _get_terms('category')
+    _get_terms('post_tag')
     def _update_a_post(postid):
         afile, aname = conf.get_article(postid, args.type)
         html, meta = _get_article_content(afile)
@@ -206,6 +225,27 @@ def _wp_update():
             post.date_modified = meta.modified
         post.post_status = 'publish'
 
+        terms = []
+        print('terms, terms', meta.category, meta.tags)
+        if meta.category:
+            for cat in meta.category:
+                term = conf.get_term('category', cat)
+                if not term:
+                    slog.error('The category "%s" is not in wordpress.'
+                            'Please create it first')
+                    return
+                terms.append(term)
+        if meta.tags:
+            for tag in meta.tags:
+                term = conf.get_term('post_tag', tag)
+                if not term:
+                    slog.error('The category "%s" is not in wordpress.'
+                            'Please create it first')
+                    return
+                terms.append(term)
+               
+        if terms:
+            post.terms = terms
         succ = _wpcall(EditPost(postid, post))
         if succ == None:
             return
