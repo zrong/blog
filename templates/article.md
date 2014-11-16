@@ -1,0 +1,12 @@
+Title: $TITLE
+Date: $DATE
+Modified: $MODIFIED
+Author: $AUTHOR
+Postid: $POSTID
+Slug: $SLUG
+Nicename: $NICENAME
+Category: $CATEGORY
+Tags: $TAGS
+Attachments: $ATTACHEMENTS
+Posttype: $POSTTYPE
+Poststatus: $POSTSTATUS

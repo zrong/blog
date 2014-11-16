@@ -5,6 +5,7 @@ import markdown
 from wordpress_xmlrpc import (
         Client, WordPressPost, WordPressPage, 
         WordPressTaxonomy, WordPressTerm)
+import wordpress_xmlrpc
 from wordpress_xmlrpc.methods.posts import (
         GetPosts, NewPost, GetPost, EditPost)
 from wordpress_xmlrpc.methods.users import GetUserInfo
@@ -24,7 +25,7 @@ def _wpcall(method):
         wp = Client(conf.site.url, conf.site.user, conf.site.password)
     try:
         results = wp.call(method)
-    except xmlrpc.client.Fault as e:
+    except wordpress_xmlrpc.exceptions.InvalidCredentialsError as e:
         slog.error(e)
         return None
     return results
@@ -46,12 +47,17 @@ def _get_postid(as_list=False):
         return postids
     return args.query[0]
 
-def _get_class():
-    if args.type == 'post':
-        return WordPressPost
-    if args.type == 'page':
-        return WordPressPage
-    return None
+def _get_terms():
+    if not args.query:
+        slog.error('Please provide a taxonomy name! You can use '
+                '"-c show -t tax" to get one.')
+        return None
+    termtype = args.query[0]
+    if not conf[termtype]:
+        results = _wpcall(GetTerms(termtype))
+        if results:
+            conf.save_terms(results, termtype)
+    return conf[termtype]
 
 def _print_result(result):
     if isinstance(result, WordPressTerm):
@@ -63,9 +69,10 @@ def _print_result(result):
                 result.parent, result.count)
     elif isinstance(result, WordPressPost):
         slog.info('id=%s, date_modified=%s, '
-                'slug=%s, title=%s', 
+                'slug=%s, title=%s, post_status=%s, post_type=%s', 
                 result.id, str(result.date_modified), 
-                result.slug, result.title)
+                result.slug, result.title,
+                result.post_status, result.post_type)
     else:
         print(result)
 
@@ -76,30 +83,96 @@ def _print_results(results):
     else:
         _print_result(results)
 
-def _wp_check_draft(postid):
-    if not postid:
-        slog.warning('Please provide a post id!')
-        return False
+def _get_article_meta(meta, post):
+    adict = DictBase()
+    adict.title = meta['title'][0]
+    adict.slug = meta['nicename'][0]
+    adict.date = meta['date'][0]
+    adict.user = meta['author'][0]
+    modified = meta.get('modified')
+    if modified:
+        adict.modified = modified[0]
+    posttype = meta.get('posttype')
+    if posttype:
+        adict.posttype = posttype[0]
+    else:
+        adict.posttype = 'post'
+    poststatus = meta.get('poststatus')
+    if poststatus:
+        adict.poststatus = poststatus[0]
+    else:
+        adict.poststatus = 'publish'
+    return adict
 
-    draftname, draftfile = conf.get_draft(postid)
-    if not os.path.exist(draftfile):
-        slog.error('The draft file "%s" is inexistance!'%draftfile)
-        return False
+def _get_article_content(afile):
+    if not os.path.exists(afile):
+        slog.error('The file "%s" is inexistance!'%afile)
+        return None, None
+    txt = read_file(afile)
+    md = markdown.Markdown(extensions=[
+        'markdown.extensions.meta',
+        'markdown.extensions.tables',
+        ])
+    html = md.convert(txt)
+    meta = md.Meta
 
-    return draftfile
+    adict = DictBase()
+    adict.title = meta['title'][0]
+    adict.slug = meta['nicename'][0]
+    adict.date = meta['date'][0]
+    adict.user = meta['author'][0]
+    modified = meta.get('modified')
+    if modified:
+        adict.modified = modified[0]
+    posttype = meta.get('posttype')
+    if posttype:
+        adict.posttype = posttype[0]
+    else:
+        adict.posttype = 'post'
+    poststatus = meta.get('poststatus')
+    if poststatus:
+        adict.poststatus = poststatus[0]
+    else:
+        adict.poststatus = 'publish'
+    return html,adict 
 
 def _wp_pub():
-    dfile = _wp_check_draft(_get_postid())
-    if dfile:
-        txt = read_file(dfile)
-        print('wp_pub', txt)
-
-def _wp_new():
-    try:
-        draftname, draftfile = conf.get_new_draft(_get_postid())
-    except BlogError as e:
-        slog.error(e)
+    postid = _get_postid()
+    if not postid:
+        slog.warning('Please provide a post id!')
         return
+
+    if args.type != 'draft':
+        return
+
+    afile, aname = conf.get_draft(postid)
+    html, meta = _get_article_content(afile)
+
+    if meta.post_type == 'page':
+        post = WordPressPage()
+    else:
+        post = WordPressPost()
+
+    post.content= html
+    post.title = meta.title
+    post.slug = meta.nicename
+    post.date = meta.date
+    post.user = meta.author
+    post.date_modified = meta.modified
+    postid = _wpcall(NewPost(post))
+
+    post.id = postid
+    post.post_status = 'publish'
+    _wpcall(EditPost(post))
+
+    newfile, newname = conf.get_article(postid, )
+    if meta.post_type == 'page':
+        newfile, newname = conf.get_article(post.nicename, meta.post_type)
+    else:
+        newfile, newname = conf.get_article(postid, meta.post_type)
+
+    shutil.move(afile, newfile)
+    print(newfile, newname)
 
 def _wp_update():
     postids = _get_postid(as_list=True)
@@ -107,33 +180,31 @@ def _wp_update():
         slog.warning('Please provide a post id!')
         return
 
-    if args.type not in ('post', 'page'):
+    if not conf.is_article(args.type):
         return
 
     def _update_a_post(postid):
-        ispage = args.type == 'page'
-        pfile = conf.get_page(postid) if ispage else conf.get_post(postid)
-        if not os.path.exists(pfile):
-            slog.error('The post file "%s" is inexistance!'%pfile)
-            return
-        txt = read_file(pfile)
-        md = markdown.Markdown(extensions=[
-            'markdown.extensions.meta',
-            'markdown.extensions.tables',
-            ])
-        html = md.convert(txt)
-        meta = md.Meta
-        if ispage:
-            postid = meta['postid'][0]
-        post = _wpcall(GetPost(postid, result_class=_get_class()))
+        afile, aname = conf.get_article(postid, args.type)
+        html, meta = _get_article_content(afile)
+        resultclass = WordPressPost
+        if args.type == 'page':
+            postid = meta.postid
+            resultclass = WordPressPage
+        elif args.type == 'draft':
+            postid = meta.postid
+            if meta.post_type == 'page':
+                resultclass = WordPressPage
+
+        post = _wpcall(GetPost(postid, result_class=resultclass))
         if not post:
             return
-        post.title = meta['title'][0]
-        post.slug = meta['nicename'][0]
+        _print_results(post)
+        post.title = meta.title
+        post.slug = meta.nicename
         post.content = html
-        modified = meta.get('modified')
-        if modified:
-            post.date_modified = modified[0]
+        if meta.modified:
+            post.date_modified = meta.modified
+        post.post_status = 'publish'
 
         succ = _wpcall(EditPost(postid, post))
         if succ == None:
@@ -167,12 +238,17 @@ def _wp_show():
         else:
             method = GetPosts(field, result_class=resultclass)
 
+    elif args.type == 'draft':
+        for adir, aname, afile in conf.get_mdfiles('draft'):
+            slog.info(afile)
     elif args.type == 'option':
         method = GetOptions([])
     elif args.type == 'tax':
         method = GetTaxonomies()
     elif args.type == 'term':
-        method = GetTerms(args.query[0])
+        terms = _get_terms()
+        if terms:
+            _print_results(terms)
 
     if not method:
         return
@@ -188,7 +264,6 @@ def build(gconf, gargs, parser=None):
     global args
     conf = gconf
     args = gargs
-    print(args)
 
     noAnyArgs = True
     if args.user:

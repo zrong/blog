@@ -1,22 +1,20 @@
 import os
 import re
+import markdown
+import shutil
+from zrong.base import read_file, slog
+from base import BlogError
 
 
 conf = None
 args = None
 
 
-def _get_mdfile(adir):
-    for afile in os.listdir(adir):
-        if afile.endswith('.md'):
-            name = afile.split('.')[0]
-            yield (adir, name, os.path.join(adir, afile))
-
 def _write_list(adir, rf):
     rf.write('# '+adir+'\n\n')
     is_post = adir == 'post'
     names = []
-    for adir, name, fpath in _get_mdfile(adir):
+    for adir, name, fpath in self.get_mdfiles(adir):
         if is_post:
             names.append(int(name))
         else:
@@ -50,24 +48,13 @@ def _write_readme():
         _write_list('page', f)
         _write_list('post', f)
 
-def _rewrite_title(dirname):
-    for adir, name, fpath in _get_mdfile(dirname):
-        content = None
-        with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
-            for line in f:
-                if line.startswith('Title:') and line.find('[转]') > -1:
-                    f.seek(0)
-                    content = True
-                    break
-            if content:
-                 content = f.read().replace('[转]', '【转】')
-        if content:
-            with open(fpath, 'w', encoding='utf-8', newline='\n') as f:
-                f.write(content)
-
 def _rewrite_url(dirname):
+    """
+    Get wrong URL form articles, then convert them to a correct pattern.
+    """
+
     url = re.compile(r'\]\(/\?p=(\d+)\)', re.S)
-    for adir, name, fpath in _get_mdfile(dirname):
+    for adir, name, fpath in conf.get_mdfiles(dirname):
         content = None
         fpath = os.path.join(adir, afile)
         with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
@@ -86,33 +73,25 @@ def _rewrite_url(dirname):
                 print(fpath)
 
 def _rewrite_category():
-    sign = 'Category: '
+    md = markdown.Markdown(extensions=[
+        'markdown.extensions.meta',
+        ])
     num = 0
-    for adir,name,fpath in _get_mdfile('post'):
-        content = None
-        with open(fpath, 'r', encoding='utf-8', newline='\n') as f:
-            for line in f:
-                if line.startswith(sign):
-                    f.seek(0)
-                    line = line[len(sign):]
-                    cats = line.split(',')
-                    if len(cats) > 1:
-                        content = True
-                    break
-        if content:
+    for adir,name,fpath in conf.get_mdfiles('post'):
+        md.convert(read_file(fpath))
+        cats = [cat.strip() for cat in md.Meta['category'][0].split(',')]
+        if len(cats)>1:
             print(name, cats)
             num = num + 1
-            # with open(fpath, 'w', encoding='utf-8', newline='\n') as f:
-            #     f.write(content)
     print(num)
 
-def _rewrite_dir(fun, dirname):
-    if dirname == 'all':
-        fun('post')
-        fun('page')
-        fun('draft')
-    else:
-        fun(dirname)
+def _write_new(name):
+    try:
+        dfile, dname = conf.get_new_draft(name)
+    except BlogError as e:
+        slog.critical(e)
+        return
+    shutil.copyfile(conf.get_path('templates', 'article.md'), dfile)
 
 def build(gconf, gargs, parser=None):
     global conf
@@ -120,22 +99,15 @@ def build(gconf, gargs, parser=None):
     conf = gconf
     args = gargs
 
-    if args.all:
-        _updateAll()
-        return
-
     noAnyArgs = True
     if args.readme:
         _write_readme()
         noAnyArgs = False
-    if args.title:
-        _rewrite_dir(_rewrite_title, args.dirname)
-        noAnyArgs = False
-    if args.url:
-        _rewrite_dir(_rewrite_url, args.dirname)
-        noAnyArgs = False
     if args.category:
         _rewrite_category()
+        noAnyArgs = False
+    if args.new:
+        _write_new(args.name)
         noAnyArgs = False
 
     if noAnyArgs and parser:
