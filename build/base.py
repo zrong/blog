@@ -148,8 +148,10 @@ def check_args(argv=None):
         help='Rewrite articles by type. The value is [post|page|draft|all].')
     pw.add_argument('-n', '--new', action='store_true',
         help='Create a new blog article in draft.')
+    pw.add_argument('-a', '--analytic', action='store_true',
+        help='Analytic the articles.')
     pw.add_argument('--name', type=str,
-        help='Provide a draft article name.')
+        help='Provide a article name.')
 
     pp = subParsers.add_parser('wp', 
         help='Publish blog to wordpress.')

@@ -2,7 +2,7 @@ import os
 import re
 import markdown
 import shutil
-from zrong.base import read_file, slog
+from zrong.base import read_file, slog, list_dir
 from base import BlogError
 
 
@@ -93,6 +93,30 @@ def _write_new(name):
         return
     shutil.copyfile(conf.get_path('templates', 'article.md'), dfile)
 
+def _write_analytic():
+    if args.name:
+        match = re.match(r'^(\d*)-(\d*)$', args.name)
+        a,b = None,None
+        if match:
+            if match.group(1):
+                a = int(match.group(1))
+            if match.group(2):
+                b = int(match.group(2))
+            dirlist = []
+            for f in list_dir(conf.get_path(args.dirname)):
+                if not f.endswith('.md'):
+                    continue
+                fname = int(f.split('.')[0])
+                if a != None:
+                    if fname < a:
+                        continue
+                if b != None:
+                    if fname > b:
+                        continue
+                dirlist.append(fname)
+            abc = sorted(dirlist)
+            slog.info('\n'.join([str(item) for item in sorted(dirlist)]))
+
 def build(gconf, gargs, parser=None):
     global conf
     global args
@@ -108,6 +132,9 @@ def build(gconf, gargs, parser=None):
         noAnyArgs = False
     if args.new:
         _write_new(args.name)
+        noAnyArgs = False
+    if args.analytic:
+        _write_analytic()
         noAnyArgs = False
 
     if noAnyArgs and parser:
