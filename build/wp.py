@@ -48,19 +48,18 @@ def _get_postid(as_list=False):
         return postids
     return args.query[0]
 
-def _get_terms(termtype=None, slug=None, force=False):
-    if not termtype:
-        if not args.query:
-            slog.error('Please provide a taxonomy name! You can use '
-                    '"-c show -t tax" to get one.')
-            return None
-        termtype = args.query[0]
-        slug = args.query[1] if len(args.query)>1 else None
-    terms = conf[termtype]
+def _get_terms(query, force=False):
+    if len(query )== 0:
+        slog.error('Please provide a taxonomy name! You can use '
+                '"-c show -t tax" to get one.')
+        return None
+    taxname = query[0]
+    slug = args.query[1] if len(args.query)>1 else None
+    terms = conf[taxname]
     if not terms or force:
-        results = _wpcall(GetTerms(termtype))
+        results = _wpcall(GetTerms(taxname))
         if results:
-            conf.save_terms(results, termtype)
+            conf.save_terms(results, taxname)
     if terms and slug:
         return terms[slug]
     return terms
@@ -131,26 +130,7 @@ def _wp_new():
     if args.type == 'draft':
         _wp_new_article()
     elif args.type == 'term':
-        if len(args.query)<2:
-            slog.error('Provide 2 arguments at least please.')
-        terms = _get_terms(force=True)
-        if terms:
-            termtype = args.query[0]
-            slug = args.query[1]
-            name = args.query[2] if len(args.query)>2 else slug
-            if slug in terms:
-                slog.error('The %s has existed in %s.'%(name, termtype))
-            else:
-                term = WordPressTerm()
-                term.slug = slug
-                term.name = name
-                if len(args.query)>3:
-                    term.description = args.query[3]
-                termid = _wpcall(NewTerm(term))
-                term = _wpcall(GetTerm(name, termid))
-                conf.save_term(term, termtype)
-                conf.save_to_file()
-                slog.info('The term %s has saved.'%name)
+        _wp_new_term()
 
 def _wp_new_article():
     postid = _get_postid()
@@ -184,14 +164,40 @@ def _wp_new_article():
         newfile, newname = conf.get_article(postid, meta.post_type)
 
     shutil.move(afile, newfile)
-    print(newfile, newname)
+    slog.info('Move "%s" to "%s".'%(newfile, newname))
+
+def _wp_new_term():
+    if len(args.query)<2:
+        slog.error('Provide 2 arguments at least please.')
+    term = _get_terms(args.query, force=True)
+    if term:
+        slog.error('The term "%s" has been in wordpress.'%args.query[1])
+    else:
+        taxname = args.query[0]
+        slug = args.query[1]
+        name = args.query[2] if len(args.query)>2 else slug
+        term = WordPressTerm()
+        term.slug = slug
+        term.name = name
+        term.taxonomy = taxname
+        if len(args.query)>3:
+            term.description = args.query[3]
+        termid = _wpcall(NewTerm(term))
+        if not termid:
+            return
+        term = _wpcall(GetTerm(taxname, termid))
+        if not term:
+            return
+        slog.info('The term %s(%s) has created.'%(name, termid))
+        conf.save_term(term, taxname)
+        conf.save_to_file()
+        slog.info('The term %s has saved.'%name)
 
 def _wp_update():
     if conf.is_article(args.type):
         _wp_update_article()
     elif args.type == 'term':
-        _get_terms(force=True)
-        slog.info('Update terms done.')
+        _wp_update_term()
 
 def _wp_update_article():
     postids = _get_postid(as_list=True)
@@ -200,8 +206,8 @@ def _wp_update_article():
         return
 
     # Update all taxonomy
-    _get_terms('category')
-    _get_terms('post_tag')
+    _get_terms(['category'])
+    _get_terms(['post_tag'])
     def _update_a_post(postid):
         afile, aname = conf.get_article(postid, args.type)
         html, meta = _get_article_content(afile)
@@ -226,21 +232,20 @@ def _wp_update_article():
         post.post_status = 'publish'
 
         terms = []
-        print('terms, terms', meta.category, meta.tags)
         if meta.category:
             for cat in meta.category:
                 term = conf.get_term('category', cat)
                 if not term:
                     slog.error('The category "%s" is not in wordpress.'
-                            'Please create it first')
+                            'Please create it first'%cat)
                     return
                 terms.append(term)
         if meta.tags:
             for tag in meta.tags:
                 term = conf.get_term('post_tag', tag)
                 if not term:
-                    slog.error('The category "%s" is not in wordpress.'
-                            'Please create it first')
+                    slog.error('The tag "%s" is not in wordpress.'
+                            'Please create it first'%tag)
                     return
                 terms.append(term)
                
@@ -256,6 +261,39 @@ def _wp_update_article():
 
     for postid in postids:
         _update_a_post(postid)
+
+def _wp_update_term():
+    term = _get_terms(args.query, force=True)
+    print('term', term)
+    if len(args.query) > 2:
+        if not term:
+            slog.error('The term %s is not existend.'%str(args.query))
+            return
+        taxname = args.query[0]
+        term = _wpcall(GetTerm(taxname, term.id))
+        if term:
+            term.slug = args.query[1]
+            term.name = args.query[2]
+            if len(args.query)>3:
+                term.description = args.query[3]
+            # post_get can not support parent.
+            if term.taxonomy == 'post_tag':
+                term.parent = None
+            issucc = _wpcall(EditTerm(term.id, term))
+            if issucc:
+                conf.save_term(term, taxname)
+                conf.save_to_file()
+                slog.info('The term %s(%s) has saved.'%(term.slug, term.id))
+            else:
+                slog.info('The term %s(%s) saves unsuccessfully.'%(term.slug,
+                    term.id))
+        else:
+            slog.info('Can not get term "%s".'%args.query[1])
+    else:
+        if term:
+            slog.info('Update terms done.')
+        else:
+            slog.warning('No terms.')
 
 def _wp_del():
     pass
@@ -286,15 +324,18 @@ def _wp_show():
     elif args.type == 'tax':
         method = GetTaxonomies()
     elif args.type == 'term':
-        terms = _get_terms()
+        terms = _get_terms(args.query)
         if terms:
             _print_results(terms)
+        else:
+            slog.warning('No term %s!'%str(args.query))
 
     if not method:
         return
 
     results = _wpcall(method)
     if not results:
+        slog.warning('No results for showing.')
         return
 
     _print_results(results)
