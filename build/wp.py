@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import markdown
+from datetime import (datetime, timedelta)
 from wordpress_xmlrpc import (
         Client, WordPressPost, WordPressPage, 
         WordPressTaxonomy, WordPressTerm)
@@ -91,6 +92,10 @@ def _print_results(results):
     else:
         _print_result(results)
 
+def _get_datetime(datestring):
+    dt = datetime.strptime(datestring, '%Y-%m-%d %H:%M:%S')
+    return dt - timedelta(hours=8)
+
 def _get_article_content(afile):
     if not os.path.exists(afile):
         slog.error('The file "%s" is inexistance!'%afile)
@@ -108,7 +113,7 @@ def _get_article_content(afile):
     adict.postid = meta['postid'][0]
     adict.nicename = meta['nicename'][0]
     adict.slug = meta['slug'][0]
-    adict.date = meta['date'][0]
+    adict.date = _get_datetime(meta['date'][0])
     adict.author = meta['author'][0]
     tags = meta.get('tags')
     if tags:
@@ -118,7 +123,7 @@ def _get_article_content(afile):
         adict.category = [cat.strip() for cat in category[0].split(',')]
     modified = meta.get('modified')
     if modified:
-        adict.modified = modified[0]
+        adict.modified = _get_datetime(modified[0])
     posttype = meta.get('posttype')
     if posttype:
         adict.posttype = posttype[0]
@@ -273,6 +278,7 @@ def _update_a_article(postid):
     post.slug = meta.nicename
     post.date = meta.date
     post.content = html
+    post.post_status = meta.poststatus
     if meta.modified:
         post.date_modified = meta.modified
     post.post_status = meta.post_status
