@@ -95,7 +95,8 @@ class Conf(DictBase):
         if name:
             draftfile, draftname = self.get_draft(name)
             if draftname in draftnames:
-                raise BlogError('The draft file "%s" is already existence!')
+                raise BlogError('The draft file "%s" is already existence!'%
+                        draftname)
         else:
             name = 1
             draftfile, draftname = self.get_draft(name)

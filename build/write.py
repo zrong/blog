@@ -92,6 +92,7 @@ def _write_new(name):
         slog.critical(e)
         return
     shutil.copyfile(conf.get_path('templates', 'article.md'), dfile)
+    slog.info('The draft file "%s" has created.'%dfile)
 
 def _write_analytic():
     if args.name:

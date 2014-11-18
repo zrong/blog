@@ -3,7 +3,7 @@ Date: 2011-08-18 12:29:04
 Author: zrong
 Postid: 1403
 Slug: sprite_sheet_editor
-Nicename: as3plist
+Nicename: sprite_sheet_editor
 Attachments: 1407, 1408, 1409, 1410, 1411, 1412
 
 [Sprite Sheet Editor](http://zengrong.net/sprite_sheet_editor)

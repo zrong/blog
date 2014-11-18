@@ -1,6 +1,6 @@
 import os
 import re
-import xmlrpc
+import shutil
 import markdown
 from wordpress_xmlrpc import (
         Client, WordPressPost, WordPressPage, 
@@ -13,7 +13,7 @@ from wordpress_xmlrpc.methods.options import GetOptions
 from wordpress_xmlrpc.methods.taxonomies import (
         GetTaxonomies, GetTaxonomy, 
         GetTerms, GetTerm, NewTerm, EditTerm, DeleteTerm)
-from zrong.base import slog, read_file, DictBase
+from zrong.base import slog, read_file, write_by_templ, DictBase
 
 
 conf = None
@@ -48,7 +48,7 @@ def _get_postid(as_list=False):
         return postids
     return args.query[0]
 
-def _get_terms(query, force=False):
+def _get_terms_from_wp(query, force=False):
     if len(query )== 0:
         slog.error('Please provide a taxonomy name! You can use '
                 '"-c show -t tax" to get one.')
@@ -73,18 +73,21 @@ def _print_result(result):
                 result.taxonomy_id, result.name, result.slug,
                 result.parent, result.count)
     elif isinstance(result, WordPressPost):
-        slog.info('id=%s, date_modified=%s, '
+        slog.info('id=%s, date=%s, date_modified=%s, '
                 'slug=%s, title=%s, post_status=%s, post_type=%s', 
-                result.id, str(result.date_modified), 
+                result.id, str(result.date), str(result.date_modified), 
                 result.slug, result.title,
                 result.post_status, result.post_type)
     else:
-        print(result)
+        slog.info(result)
 
 def _print_results(results):
     if isinstance(results, list):
         for result in results:
             _print_result(result)
+    elif isinstance(results, dict):
+        for k,v in results.items():
+            slog.info('%s %s'%(k, str(v)))
     else:
         _print_result(results)
 
@@ -102,9 +105,11 @@ def _get_article_content(afile):
 
     adict = DictBase()
     adict.title = meta['title'][0]
-    adict.slug = meta['nicename'][0]
+    adict.postid = meta['postid'][0]
+    adict.nicename = meta['nicename'][0]
+    adict.slug = meta['slug'][0]
     adict.date = meta['date'][0]
-    adict.user = meta['author'][0]
+    adict.author = meta['author'][0]
     tags = meta.get('tags')
     if tags:
         adict.tags = [tag.strip() for tag in tags[0].split(',')]
@@ -126,6 +131,26 @@ def _get_article_content(afile):
         adict.poststatus = 'publish'
     return html,adict 
 
+def _get_terms_from_meta(categories, tags):
+    terms = []
+    if categories:
+        for cat in categories:
+            term = conf.get_term('category', cat)
+            if not term:
+                slog.error('The category "%s" is not in wordpress.'
+                        ' Please create it first.'%cat)
+                return None
+            terms.append(term)
+    if tags:
+        for tag in tags:
+            term = conf.get_term('post_tag', tag)
+            if not term:
+                slog.error('The tag "%s" is not in wordpress.'
+                        'Please create it first'%tag)
+                return None
+            terms.append(term)
+    return terms
+
 def _wp_new():
     if args.type == 'draft':
         _wp_new_article()
@@ -140,6 +165,10 @@ def _wp_new_article():
     afile, aname = conf.get_draft(postid)
     html, meta = _get_article_content(afile)
 
+    # Update all taxonomy befor new a article.
+    _get_terms_from_wp(['category'])
+    _get_terms_from_wp(['post_tag'])
+
     if meta.post_type == 'page':
         post = WordPressPage()
     else:
@@ -151,47 +180,54 @@ def _wp_new_article():
     post.date = meta.date
     post.user = meta.author
     post.date_modified = meta.modified
+    post.post_status = meta.poststatus
+    post.terms = _get_terms_from_meta(meta.category, meta.tags)
+    if not post.terms:
+        slog.warning('Please provide some terms.')
+        return
     postid = _wpcall(NewPost(post))
 
-    post.id = postid
-    post.post_status = 'publish'
-    _wpcall(EditPost(post))
+    if postid:
+        write_by_templ(afile, afile, {'POSTID':postid, 'SLUG':postid})
+    else:
+        return
 
-    newfile, newname = conf.get_article(postid, )
+    newfile, newname = None, None
     if meta.post_type == 'page':
         newfile, newname = conf.get_article(post.nicename, meta.post_type)
     else:
         newfile, newname = conf.get_article(postid, meta.post_type)
 
     shutil.move(afile, newfile)
-    slog.info('Move "%s" to "%s".'%(newfile, newname))
+    slog.info('Move "%s" to "%s".'%(afile, newfile))
 
 def _wp_new_term():
-    if len(args.query)<2:
+    if not args.query or len(args.query)<2:
         slog.error('Provide 2 arguments at least please.')
-    term = _get_terms(args.query, force=True)
+        return
+    term = _get_terms_from_wp(args.query, force=True)
     if term:
         slog.error('The term "%s" has been in wordpress.'%args.query[1])
-    else:
-        taxname = args.query[0]
-        slug = args.query[1]
-        name = args.query[2] if len(args.query)>2 else slug
-        term = WordPressTerm()
-        term.slug = slug
-        term.name = name
-        term.taxonomy = taxname
-        if len(args.query)>3:
-            term.description = args.query[3]
-        termid = _wpcall(NewTerm(term))
-        if not termid:
-            return
-        term = _wpcall(GetTerm(taxname, termid))
-        if not term:
-            return
-        slog.info('The term %s(%s) has created.'%(name, termid))
-        conf.save_term(term, taxname)
-        conf.save_to_file()
-        slog.info('The term %s has saved.'%name)
+        return
+    taxname = args.query[0]
+    slug = args.query[1]
+    name = args.query[2] if len(args.query)>2 else slug
+    term = WordPressTerm()
+    term.slug = slug
+    term.name = name
+    term.taxonomy = taxname
+    if len(args.query)>3:
+        term.description = args.query[3]
+    termid = _wpcall(NewTerm(term))
+    if not termid:
+        return
+    term = _wpcall(GetTerm(taxname, termid))
+    if not term:
+        return
+    slog.info('The term %s(%s) has created.'%(name, termid))
+    conf.save_term(term, taxname)
+    conf.save_to_file()
+    slog.info('The term %s has saved.'%name)
 
 def _wp_update():
     if conf.is_article(args.type):
@@ -206,65 +242,58 @@ def _wp_update_article():
         return
 
     # Update all taxonomy
-    _get_terms(['category'])
-    _get_terms(['post_tag'])
-    def _update_a_post(postid):
-        afile, aname = conf.get_article(postid, args.type)
-        html, meta = _get_article_content(afile)
-        resultclass = WordPressPost
-        if args.type == 'page':
-            postid = meta.postid
-            resultclass = WordPressPage
-        elif args.type == 'draft':
-            postid = meta.postid
-            if meta.post_type == 'page':
-                resultclass = WordPressPage
-
-        post = _wpcall(GetPost(postid, result_class=resultclass))
-        if not post:
-            return
-        _print_results(post)
-        post.title = meta.title
-        post.slug = meta.nicename
-        post.content = html
-        if meta.modified:
-            post.date_modified = meta.modified
-        post.post_status = 'publish'
-
-        terms = []
-        if meta.category:
-            for cat in meta.category:
-                term = conf.get_term('category', cat)
-                if not term:
-                    slog.error('The category "%s" is not in wordpress.'
-                            'Please create it first'%cat)
-                    return
-                terms.append(term)
-        if meta.tags:
-            for tag in meta.tags:
-                term = conf.get_term('post_tag', tag)
-                if not term:
-                    slog.error('The tag "%s" is not in wordpress.'
-                            'Please create it first'%tag)
-                    return
-                terms.append(term)
-               
-        if terms:
-            post.terms = terms
-        succ = _wpcall(EditPost(postid, post))
-        if succ == None:
-            return
-        if succ:
-            slog.info('Update %s successfully!'%postid)
-        else:
-            slog.info('Update %s fail!'%postid)
+    _get_terms_from_wp(['category'])
+    _get_terms_from_wp(['post_tag'])
 
     for postid in postids:
-        _update_a_post(postid)
+        _update_a_article(postid)
+
+def _update_a_article(postid):
+    afile, aname = conf.get_article(postid, args.type)
+    html, meta = _get_article_content(afile)
+    if not html:
+        return
+    resultclass = WordPressPost
+    if args.type == 'page':
+        postid = meta.postid
+        resultclass = WordPressPage
+    elif args.type == 'draft':
+        postid = meta.postid
+        if meta.post_type == 'page':
+            resultclass = WordPressPage
+
+    post = _wpcall(GetPost(postid, result_class=resultclass))
+    if not post:
+        slog.warning('No post "%s"!'%postid)
+        return
+    slog.info('Old article:')
+    _print_results(post)
+    post.title = meta.title
+    post.user = meta.author
+    post.slug = meta.nicename
+    post.date = meta.date
+    post.content = html
+    if meta.modified:
+        post.date_modified = meta.modified
+    post.post_status = meta.post_status
+
+    terms = _get_terms_from_meta(meta.category, meta.tags)
+    if terms:
+        post.terms = terms
+    else:
+        slog.warning('Please provide some terms.')
+        return
+
+    succ = _wpcall(EditPost(postid, post))
+    if succ == None:
+        return
+    if succ:
+        slog.info('Update %s successfully!'%postid)
+    else:
+        slog.info('Update %s fail!'%postid)
 
 def _wp_update_term():
-    term = _get_terms(args.query, force=True)
-    print('term', term)
+    term = _get_terms_from_wp(args.query, force=True)
     if len(args.query) > 2:
         if not term:
             slog.error('The term %s is not existend.'%str(args.query))
@@ -300,22 +329,10 @@ def _wp_del():
 
 def _wp_show():
     method = None
-    if args.type == 'post' or args.type == 'page':
-
-        field = {'post_type':'page'} \
-            if args.type == 'page' else {}
-        field['number'] = args.number
-        field['orderby'] = args.orderby
-        field['order'] = args.order
-
-        resultclass = WordPressPage \
-            if args.type == 'page' else WordPressPost
-
-        if args.query:
-            method = GetPost(_get_postid(), result_class=resultclass)
-        else:
-            method = GetPosts(field, result_class=resultclass)
-
+    if args.type == 'post':
+        method = _wp_show_post()
+    elif args.type == 'page':
+        method = _wp_show_page()
     elif args.type == 'draft':
         for adir, aname, afile in conf.get_mdfiles('draft'):
             slog.info(afile)
@@ -324,7 +341,7 @@ def _wp_show():
     elif args.type == 'tax':
         method = GetTaxonomies()
     elif args.type == 'term':
-        terms = _get_terms(args.query)
+        terms = _get_terms_from_wp(args.query)
         if terms:
             _print_results(terms)
         else:
@@ -339,6 +356,26 @@ def _wp_show():
         return
 
     _print_results(results)
+
+def _wp_show_page():
+    field = {'post_type':'page'}
+    field['number'] = args.number
+    field['orderby'] = args.orderby
+    field['order'] = args.order
+
+    if args.query:
+        return GetPost(_get_postid(), result_class=WordPressPage)
+    return GetPosts(field, result_class=WordPressPage)
+
+def _wp_show_post():
+    field = {}
+    field['number'] = args.number
+    field['orderby'] = args.orderby
+    field['order'] = args.order
+
+    if args.query:
+        return GetPost(_get_postid())
+    return GetPosts(field)
 
 def build(gconf, gargs, parser=None):
     global conf
