@@ -203,8 +203,8 @@ def _wp_new_article():
     else:
         newfile, newname = conf.get_article(postid, meta.post_type)
 
-    shutil.move(afile, newfile)
     slog.info('Move "%s" to "%s".'%(afile, newfile))
+    shutil.move(afile, newfile)
 
 def _wp_new_term():
     if not args.query or len(args.query)<2:
