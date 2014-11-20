@@ -1,0 +1,169 @@
+Title: 在 setuptools 中使用 dependency_links
+Date: 2014-11-20 18:26:51
+Modified: 2014-11-20 18:26:53
+Author: zrong
+Postid: $POSTID
+Slug: $SLUG
+Nicename: using-dependenty_links-in-setuptools
+Category: technology
+Tags: python
+Posttype: post
+Poststatus: publish
+
+# 1. 关于 build 工具集
+
+我开发的所有项目，都会提供一个 build 工具集，这个工具集为开发人员提供了所有可用的功能，包括：
+
+1. 更新版本库；
+2. 初始化项目；
+3. 资源处理；
+3. 打包、发布；
+4. 模版生成；
+5. ……
+
+以前写 AS 的时候，我使用 Bash+Ant 开发工具集，现在转向使用 Python。
+
+正在开发的这个工具集，是 [hhlb][1] ，其中，HHL 是我们的项目代号，b 代表 build。 <!--more-->
+
+# 2. 架构调整
+
+这个工具集一直是以脚本的形式调用的。但我正在把它改为使用独立命令行的形式调用。
+
+例如，这是脚本的调用方式：
+
+    python3 /path/to/hhlb.py init -af
+
+而这是命令行的调用方式：
+
+    hhlb init -af
+
+这样一来，更新和管理都变得容易，其他的程序员也不必再维护一个和他们毫无关系的工具集的源码仓库，他们只需要安装或者更新 hhlb 这个工具就行了，就像这样（hhlb 工具的安装包在内网服务器中）：
+
+    pip install http://192.168.18.18/project/hhl/tool/hhlb-0.1.0.tar.gz
+
+每次更新 hhlb 工具，我只需要提供一个新的 gz 包，然后通知大家更新：
+
+    pip install http://192.168.18.18/project/hhl/tool/hhlb-0.1.3.tar.gz
+
+为了降低 url 拼写错误的可能，我在项目源码仓库中建立了一个 `requirements.txt` 文件，里面的内容如下：
+<a name="#requirements"></a>
+
+    http://192.168.18.18/project/hhl/tool/hhlb-0.1.0.tar.gz
+
+每次更新库，我只需要修改文件内容指向新的下载链接，大家更新源码库，然后这样操作就可以了：
+
+    pip install -r requirements.txt
+
+大家都赞同这样的架构，然后我就开始实施。
+
+# 3. 安装问题
+
+hhlb 依赖我写的一个名为 [zrong][2] 的 python 库。这个库并没有发布到 [PyPI][3] 上，因此，我采用 [dependency_links][4] 参数进行部署。
+
+完整的 `setup.py` 的内容是这样的：
+
+    #!/usr/bin/env python
+
+    from setuptools import setup
+
+    requires = ['zrong<=0.2.1']
+
+    dependency_links = [
+        'http://192.168.18.18/project/hhl/tool/zrong-0.2.1.tar.gz'
+        ]
+
+    entry_points = {
+        'console_scripts': [
+            'hhlb = hhlb:main',
+        ]
+    }
+
+    setup(
+        name="hhlb",
+        version="0.1.0",
+        url='http://zengrong.net/',
+        author='zrong',
+        author_email='zrongzrong@gmail.com',
+        description="A tool to build HHL project.",
+        packages=['hhlb'],
+        include_package_data=True,
+        install_requires=requires,
+        entry_points=entry_points,
+        dependency_links = dependency_links,
+        classifiers=[
+            'Development Status :: 5 - Production/Stable',
+             'Environment :: Console',
+             'Operating System :: OS Independent',
+             'Programming Language :: Python :: 3.4',
+             'Topic :: Internet :: WWW/HTTP',
+             'Topic :: Software Development :: Libraries :: Python Modules',
+        ],
+        test_suite='hhlb.test',
+    )
+
+使用 `python setup.py sdist` 之后，得到一个 `hhlb-0.1.0.tar.gz` 文件，我可以使用 `pip install hhlb-0.1.0.tar.gz` 进行安装。
+
+就在此时，pip 报错了。
+
+    -> % pip install $hhl/build/dist/hhlb-0.1.0.tar.gz
+    Unpacking /Volumes/HD1/works/hhl/build/dist/hhlb-0.1.0.tar.gz
+      Running setup.py (path:/var/folders/3g/w_67mm9d7bs3kgzkfwj516k80000gq/T/pip-i234hels-build/setup.py) egg_info for package from file:///Volumes/HD1/works/hhl/build/dist/hhlb-0.1.0.tar.gz
+
+    Downloading/unpacking zrong<=0.2.1 (from hhlb==0.1.0)
+      Could not find any downloads that satisfy the requirement zrong<=0.2.1 (from hhlb==0.1.0)
+    Cleaning up...
+    No distributions at all found for zrong<=0.2.1 (from hhlb==0.1.0)
+    Storing debug log for failure in /Users/zrong/.pip/pip.log
+
+这个错误说明 pip 其实并没有去处理 `dependency_links` 指示的内容内容。
+
+# 4. 解决问题
+
+在 stackoverflow 上翻来翻去，从这两个问题中找到了答案：
+
+- [Setuptools unable to use link from dependency_links][5]
+- [How can I make setuptools install a package that's not on PyPI?][6]
+
+要想简单地解决这个问题，可以使用 [--process-dependency-links][7] 参数通知 pip 强制处理 `depencency_links` 参数。就像下面这样：
+
+    -> % pip install --process-dependency-links $hhl/build/dist/hhlb-0.1.0.tar.gz
+    Unpacking /Volumes/HD1/works/hhl/build/dist/hhlb-0.1.0.tar.gz
+      Running setup.py (path:/var/folders/3g/w_67mm9d7bs3kgzkfwj516k80000gq/T/pip-juu7d582-build/setup.py) egg_info for package from file:///Volumes/HD1/works/hhl/build/dist/hhlb-0.1.0.tar.gz
+
+      Dependency Links processing has been deprecated with an accelerated time schedule and will be removed in pip 1.6
+    Downloading/unpacking zrong<=0.2.1 (from hhlb==0.1.0)
+      http://192.168.18.18/project/hhl/tool/zrong-0.2.1.tar.gz#egg=zrong-0.2.1 uses an insecure transport scheme (http). Consider using https if 192.168.18.18 has it available
+      Downloading zrong-0.2.1.tar.gz
+      Running setup.py (path:/Users/zrong/pythonenv/testhhlb/build/zrong/setup.py) egg_info for package zrong
+
+    Installing collected packages: zrong, hhlb
+      Running setup.py install for zrong
+
+      Running setup.py install for hhlb
+
+        Installing hhlb script to /Users/zrong/pythonenv/testhhlb/bin
+    Successfully installed zrong hhlb
+    Cleaning up...
+
+但这样的体验并不好。
+
+首先，pip 无论如何都会去 [PyPI][3] 搜索 zrong 这个包，这会花去不少时间。
+
+其次，这个参数将在 pip 1.6 版本被移除。因为这是 [a bad practice][8] 。
+
+因此，正确的做法应该是这样的：
+
+将我 [前面提到][#requirements] 的 `requirements.txt` 的内容进行修改。就像下面这样就可以啦！
+
+    http://192.168.18.18/project/hhl/tool/zrong-0.2.1.tar.gz
+    http://192.168.18.18/project/hhl/tool/hhlb-0.1.0.tar.gz
+
+
+[1]: http://doc.zengrong.net/1201/hhl/client/build.html
+[2]: https://github.com/zrong/python/
+[3]: https://pypi.python.org/
+[4]: http://pythonhosted.org/setuptools/setuptools.html#dependencies-that-aren-t-in-pypi
+[5]: http://stackoverflow.com/questions/17366784/setuptools-unable-to-use-link-from-dependency-links
+[6]: http://stackoverflow.com/questions/3472430/how-can-i-make-setuptools-install-a-package-thats-not-on-pypi
+[7]: http://pip.readthedocs.org/en/latest/reference/pip_install.html#cmdoption--process-dependency-links
+[8]: https://groups.google.com/forum/#!topic/pypa-dev/tJ6HHPQpyJ4
