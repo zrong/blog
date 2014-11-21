@@ -174,7 +174,7 @@ def _wp_new_article():
     _get_terms_from_wp(['category'])
     _get_terms_from_wp(['post_tag'])
 
-    if meta.post_type == 'page':
+    if meta.posttype == 'page':
         post = WordPressPage()
     else:
         post = WordPressPost()
@@ -198,10 +198,10 @@ def _wp_new_article():
         return
 
     newfile, newname = None, None
-    if meta.post_type == 'page':
-        newfile, newname = conf.get_article(post.nicename, meta.post_type)
+    if meta.posttype == 'page':
+        newfile, newname = conf.get_article(post.nicename, meta.posttype)
     else:
-        newfile, newname = conf.get_article(postid, meta.post_type)
+        newfile, newname = conf.get_article(postid, meta.posttype)
 
     slog.info('Move "%s" to "%s".'%(afile, newfile))
     shutil.move(afile, newfile)
@@ -281,7 +281,6 @@ def _update_a_article(postid):
     post.post_status = meta.poststatus
     if meta.modified:
         post.date_modified = meta.modified
-    post.post_status = meta.post_status
 
     terms = _get_terms_from_meta(meta.category, meta.tags)
     if terms:
