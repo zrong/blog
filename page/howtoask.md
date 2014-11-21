@@ -26,7 +26,11 @@ Nicename: howtoask
 
 若你不在中国范围内，访问这个地址可能会出现一些奇怪的提示。
 
+有时候，你可能会收到这样的回答：[lmgtfy][lmgtfy] ，不要生气，他们是善意的。
+
 [en1]: http://www.catb.org/%7Eesr/faqs/smart-questions.html
 [en2]: http://doc.zengrong.net/smart-questions/en.html
 [cn1]: http://www.beiww.com/doc/oss/smart-questions.html
 [cn2]: http://doc.zengrong.net/smart-questions/cn.html
+
+[lmgtfy]: http://lmgtfy.com/?q=how+to+ask

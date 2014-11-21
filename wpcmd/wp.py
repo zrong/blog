@@ -285,7 +285,7 @@ def _update_a_article(postid):
     terms = _get_terms_from_meta(meta.category, meta.tags)
     if terms:
         post.terms = terms
-    else:
+    elif args.type == 'post':
         slog.warning('Please provide some terms.')
         return
 
