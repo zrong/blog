@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import markdown
+from markdown.extensions.codehilite import CodeHiliteExtension
 from datetime import (datetime, timedelta)
 from wordpress_xmlrpc import (
         Client, WordPressPost, WordPressPage, 
@@ -104,6 +105,7 @@ def _get_article_content(afile):
     md = markdown.Markdown(extensions=[
         'markdown.extensions.meta',
         'markdown.extensions.tables',
+        CodeHiliteExtension(linenums=False, guess_lang=False),
         ])
     html = md.convert(txt)
     meta = md.Meta
