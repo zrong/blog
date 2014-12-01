@@ -2,13 +2,7 @@ from wpcmd.base import Action
 
 class NewAction(Action):
 
-    def _wp_new(self):
-        if self.args.type == 'draft':
-            _wp_new_article()
-        elif self.args.type == 'term':
-            _wp_new_term()
-
-    def _wp_new_article(self):
+    def _new_article(self):
         postid = self.get_postid()
         if not postid:
             slog.warning('Please provide a post id!')
@@ -52,7 +46,7 @@ class NewAction(Action):
         slog.info('Move "%s" to "%s".'%(afile, newfile))
         shutil.move(afile, newfile)
 
-    def _wp_new_term(self):
+    def _new_term(self):
         if not self.args.query or len(self.args.query)<2:
             slog.error('Provide 2 arguments at least please.')
             return
@@ -79,6 +73,14 @@ class NewAction(Action):
         self.conf.save_term(term, taxname)
         self.conf.save_to_file()
         slog.info('The term %s has saved.'%name)
+
+    def go(self):
+        print(self.args)
+        if self.args.type == 'draft':
+            self._new_article()
+        elif self.args.type == 'term':
+            self._new_term()
+
 
 def build(gconf, gargs, parser=None):
     action = NewAction(gconf, gargs, parser)

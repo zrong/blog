@@ -1,14 +1,9 @@
 from wpcmd.base import Action
+from zrong.base import slog
 
 class UpdateAction(Action):
 
-    def _wp_update(self):
-        if self.conf.is_article(self.args.type):
-            self._wp_update_article()
-        elif self.args.type == 'term':
-            self._wp_update_term()
-
-    def _wp_update_article(self):
+    def _update_article(self):
         postids = self.get_postid(as_list=True)
         if not postids:
             slog.warning('Please provide a post id!')
@@ -65,7 +60,7 @@ class UpdateAction(Action):
         else:
             slog.info('Update %s fail!'%postid)
 
-    def _wp_update_term(self):
+    def _update_term(self):
         term = self.get_terms_from_wp(self.args.query, force=True)
         if len(self.args.query) > 2:
             if not term:
@@ -96,6 +91,13 @@ class UpdateAction(Action):
                 slog.info('Update terms done.')
             else:
                 slog.warning('No terms.')
+
+    def go(self):
+        print(self.args)
+        if self.conf.is_article(self.args.type):
+            self._update_article()
+        elif self.args.type == 'term':
+            self._update_term()
 
 
 def build(gconf, gargs, parser=None):

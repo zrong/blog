@@ -1,13 +1,39 @@
+from zrong.base import slog
 from wpcmd.base import Action
+from wordpress_xmlrpc import (WordPressPost, WordPressPage)
+from wordpress_xmlrpc.methods.posts import (GetPosts, GetPost)
+from wordpress_xmlrpc.methods.options import GetOptions
+from wordpress_xmlrpc.methods.taxonomies import (GetTaxonomies)
 
 class ShowAction(Action):
 
-    def _wp_show(self):
+    def _show_page(self):
+        field = {'post_type':'page'}
+        field['number'] = self.args.number
+        field['orderby'] = self.args.orderby
+        field['order'] = self.args.order
+
+        if self.args.query:
+            return GetPost(_get_postid(), result_class=WordPressPage)
+        return GetPosts(field, result_class=WordPressPage)
+
+    def _show_post(self):
+        field = {}
+        field['number'] = self.args.number
+        field['orderby'] = self.args.orderby
+        field['order'] = self.args.order
+
+        if self.args.query:
+            return GetPost(_get_postid())
+        return GetPosts(field)
+
+    def go(self):
+        print(self.args)
         method = None
         if self.args.type == 'post':
-            method = _wp_show_post()
+            method = self._show_post()
         elif self.args.type == 'page':
-            method = _wp_show_page()
+            method = self._show_page()
         elif self.args.type == 'draft':
             for adir, aname, afile in self.conf.get_mdfiles('draft'):
                 slog.info(afile)
@@ -16,9 +42,9 @@ class ShowAction(Action):
         elif self.args.type == 'tax':
             method = GetTaxonomies()
         elif self.args.type == 'term':
-            terms = _get_terms_from_wp(self.args.query)
+            terms = self.get_terms_from_wp(self.args.query)
             if terms:
-                _print_results(terms)
+                self.print_results(terms)
             else:
                 slog.warning('No term %s!'%str(self.args.query))
 
@@ -30,27 +56,8 @@ class ShowAction(Action):
             slog.warning('No results for showing.')
             return
 
-        _print_results(results)
+        self.print_results(results)
 
-    def _wp_show_page(self):
-        field = {'post_type':'page'}
-        field['number'] = self.args.number
-        field['orderby'] = self.args.orderby
-        field['order'] = self.args.order
-
-        if self.args.query:
-            return GetPost(_get_postid(), result_class=WordPressPage)
-        return GetPosts(field, result_class=WordPressPage)
-
-    def _wp_show_post(self):
-        field = {}
-        field['number'] = self.args.number
-        field['orderby'] = self.args.orderby
-        field['order'] = self.args.order
-
-        if self.args.query:
-            return GetPost(_get_postid())
-        return GetPosts(field)
 
 def build(gconf, gargs, parser=None):
     action = ShowAction(gconf, gargs, parser)

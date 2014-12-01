@@ -5,7 +5,8 @@ import shutil
 import argparse
 import datetime
 from zrong.base import DictBase, list_dir, slog
-from wordpress_xmlrpc import (WordPressTerm, Client)
+from wordpress_xmlrpc import (Client, 
+        WordPressPost, WordPressPage, WordPressTerm)
 from wordpress_xmlrpc.exceptions import InvalidCredentialsError 
 
 class BlogError(Exception):
@@ -18,9 +19,9 @@ class Action(object):
         self.args = gargs
         self.parser = gparser
         self._wp = None
-        self.update_a_article()
+        self._update_site_config()
 
-    def get_postid(as_list=False):
+    def get_postid(self, as_list=False):
         if not self.args.query:
             return None
         if as_list:
@@ -161,7 +162,7 @@ class Action(object):
                     removeslash = self.args.site
                 self.conf.site.url = '%s/xmlrpc.php'%removeslash
 
-    def wpcall(self):
+    def wpcall(self, method):
         if not self._wp:
             self._wp = Client(self.conf.site.url, 
                     self.conf.site.user, 
@@ -173,12 +174,13 @@ class Action(object):
             return None
         return results
 
-    def build(self):
-        if self.args.action:
-            eval('_wp_'+self.args.action)()
-            noAnyArgs = False
+    def go(self):
+        pass
 
-        if noAnyArgs and self.parser:
+    def build(self):
+        if self.args.type:
+            self.go()
+        elif self.parser:
             self.parser.print_help()
 
 class Conf(DictBase):
@@ -366,8 +368,8 @@ def check_args(argv=None):
     pn.add_argument('-s', '--site', type=str, 
         help='Site url.')
     pn.add_argument('-t', '--type', type=str,
-        choices=['post', 'page', 'draft','tag', 'category'],
-        default='option',
+        choices=['draft', 'post', 'page', 'tag', 'category'],
+        default='post',
         help='Content type of wordpress.')
     pn.add_argument('-q', '--query', nargs='*',
         help='The options for query.')
