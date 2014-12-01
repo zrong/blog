@@ -1,12 +1,185 @@
 import os
+import re
 import platform
 import shutil
 import argparse
-from zrong.base import DictBase, list_dir
-from wordpress_xmlrpc import (WordPressTerm)
+import datetime
+from zrong.base import DictBase, list_dir, slog
+from wordpress_xmlrpc import (WordPressTerm, Client)
+from wordpress_xmlrpc.exceptions import InvalidCredentialsError 
 
 class BlogError(Exception):
     pass
+
+class Action(object):
+
+    def __init__(self, gconf, gargs, gparser):
+        self.conf = gconf
+        self.args = gargs
+        self.parser = gparser
+        self._wp = None
+        self.update_a_article()
+
+    def get_postid(as_list=False):
+        if not self.args.query:
+            return None
+        if as_list:
+            postids = []
+            for postid in self.args.query:
+                match = re.match(r'^(\d+)-(\d+)$', postid)
+                if match:
+                    a = int(match.group(1))
+                    b = int(match.group(2))
+                    for i in range(a,b+1):
+                        postids.append(str(i))
+                else:
+                    postids.append(postid)
+            return postids
+        return self.args.query[0]
+
+    def get_terms_from_wp(self, query, force=False):
+        if len(query)== 0:
+            slog.error('Please provide a taxonomy name! You can use '
+                    '"-c show -t tax" to get one.')
+            return None
+        taxname = query[0]
+        slug = self.args.query[1] if len(self.args.query)>1 else None
+        terms = self.conf[taxname]
+        if not terms or force:
+            results = _wpcall(GetTerms(taxname))
+            if results:
+                self.conf.save_terms(results, taxname)
+        if terms and slug:
+            return terms[slug]
+        return terms
+
+    def print_result(self, result):
+        if isinstance(result, WordPressTerm):
+            slog.info('id=%s, group=%s, '
+                    'taxnomy_id=%s, name=%s, slug=%s, '
+                    'parent=%s, count=%d', 
+                    result.id, result.group, 
+                    result.taxonomy_id, result.name, result.slug,
+                    result.parent, result.count)
+        elif isinstance(result, WordPressPost):
+            slog.info('id=%s, date=%s, date_modified=%s, '
+                    'slug=%s, title=%s, post_status=%s, post_type=%s', 
+                    result.id, str(result.date), str(result.date_modified), 
+                    result.slug, result.title,
+                    result.post_status, result.post_type)
+        else:
+            slog.info(result)
+
+    def print_results(self, results):
+        if isinstance(results, list):
+            for result in results:
+                self.print_result(result)
+        elif isinstance(results, dict):
+            for k,v in results.items():
+                slog.info('%s %s'%(k, str(v)))
+        else:
+            self.print_result(results)
+
+    def get_datetime(self, datestring):
+        dt = datetime.strptime(datestring, '%Y-%m-%d %H:%M:%S')
+        return dt - timedelta(hours=8)
+
+    def get_article_content(self, afile):
+        if not os.path.exists(afile):
+            slog.error('The file "%s" is inexistance!'%afile)
+            return None, None
+        txt = read_file(afile)
+        md = markdown.Markdown(extensions=[
+            'markdown.extensions.meta',
+            'markdown.extensions.tables',
+            CodeHiliteExtension(linenums=False, guess_lang=False),
+            ])
+        html = md.convert(txt)
+        meta = md.Meta
+
+        adict = DictBase()
+        adict.title = meta['title'][0]
+        adict.postid = meta['postid'][0]
+        adict.nicename = meta['nicename'][0]
+        adict.slug = meta['slug'][0]
+        adict.date = self.get_datetime(meta['date'][0])
+        adict.author = meta['author'][0]
+        tags = meta.get('tags')
+        if tags:
+            adict.tags = [tag.strip() for tag in tags[0].split(',')]
+        category = meta.get('category')
+        if category:
+            adict.category = [cat.strip() for cat in category[0].split(',')]
+        modified = meta.get('modified')
+        if modified:
+            adict.modified = self.get_datetime(modified[0])
+        posttype = meta.get('posttype')
+        if posttype:
+            adict.posttype = posttype[0]
+        else:
+            adict.posttype = 'post'
+        poststatus = meta.get('poststatus')
+        if poststatus:
+            adict.poststatus = poststatus[0]
+        else:
+            adict.poststatus = 'publish'
+        return html,adict 
+
+    def get_terms_from_meta(self, categories, tags):
+        terms = []
+        if categories:
+            for cat in categories:
+                term = self.conf.get_term('category', cat)
+                if not term:
+                    slog.error('The category "%s" is not in wordpress.'
+                            ' Please create it first.'%cat)
+                    return None
+                terms.append(term)
+        if tags:
+            for tag in tags:
+                term = self.conf.get_term('post_tag', tag)
+                if not term:
+                    slog.error('The tag "%s" is not in wordpress.'
+                            'Please create it first'%tag)
+                    return None
+                terms.append(term)
+        return terms
+
+    def _update_site_config(self):
+        if self.args.user:
+            self.conf.site.user = self.args.user
+        if self.args.password:
+            self.conf.site.password = self.args.password
+        if self.args.site:
+            if self.args.site.rfind('xmlrpc.php')>0:
+                self.conf.site.url = self.args.site
+            else:
+                removeslash = self.args.site.rfind('/')
+                if removeslash == len(self.args.site)-1:
+                    removeslash = self.args.site[0:removeslash]
+                else:
+                    removeslash = self.args.site
+                self.conf.site.url = '%s/xmlrpc.php'%removeslash
+
+    def wpcall(self):
+        if not self._wp:
+            self._wp = Client(self.conf.site.url, 
+                    self.conf.site.user, 
+                    self.conf.site.password)
+        try:
+            results = self._wp.call(method)
+        except InvalidCredentialsError as e:
+            slog.error(e)
+            return None
+        return results
+
+    def build(self):
+        if self.args.action:
+            eval('_wp_'+self.args.action)()
+            noAnyArgs = False
+
+        if noAnyArgs and self.parser:
+            self.parser.print_help()
 
 class Conf(DictBase):
 
@@ -133,7 +306,7 @@ def checkFTPConf(ftpConf):
                 'server,user,password !')
 
 def check_args(argv=None):
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog='wpcmd')
     subParsers = parser.add_subparsers(dest='sub_name', help='sub-commands')
 
     pw = subParsers.add_parser('write', 
@@ -183,6 +356,62 @@ def check_args(argv=None):
         choices=['ASC', 'DESC'],
         default='DESC',
         help='To sort the records in a descending or a ascending order.')
+
+    pn = subParsers.add_parser('new', 
+        help='Create some new content.')
+    pn.add_argument('-u', '--user', type=str, 
+        help='Login username.')
+    pn.add_argument('-p', '--password', type=str, 
+        help='Login password.')
+    pn.add_argument('-s', '--site', type=str, 
+        help='Site url.')
+    pn.add_argument('-t', '--type', type=str,
+        choices=['post', 'page', 'draft','tag', 'category'],
+        default='option',
+        help='Content type of wordpress.')
+    pn.add_argument('-q', '--query', nargs='*',
+        help='The options for query.')
+
+    ps = subParsers.add_parser('show', 
+        help='Show wordpress contents.')
+    ps.add_argument('-u', '--user', type=str, 
+        help='Login username.')
+    ps.add_argument('-p', '--password', type=str, 
+        help='Login password.')
+    ps.add_argument('-s', '--site', type=str, 
+        help='Site url.')
+    ps.add_argument('-t', '--type', type=str,
+        choices=['post', 'page', 'draft','option','tax','term'],
+        default='option',
+        help='Content type of wordpress.')
+    ps.add_argument('-n', '--number', type=int,
+        default=10,
+        help='The amount for GetPosts.')
+    ps.add_argument('-o', '--orderby',
+        choices=['post_modified', 'post_id'],
+        default='post_id',
+        help='To sort the result-set by one column.')
+    ps.add_argument('-d', '--order',
+        choices=['ASC', 'DESC'],
+        default='DESC',
+        help='To sort the records in a descending or a ascending order.')
+    ps.add_argument('-q', '--query', nargs='*',
+        help='The options for query.')
+
+    pu = subParsers.add_parser('update', 
+        help='Update wordpress contents.')
+    pu.add_argument('-u', '--user', type=str, 
+        help='Login username.')
+    pu.add_argument('-p', '--password', type=str, 
+        help='Login password.')
+    pu.add_argument('-s', '--site', type=str, 
+        help='Site url.')
+    pu.add_argument('-t', '--type', type=str,
+        choices=['post', 'page', 'option', 'tag', 'category'],
+        default='post',
+        help='Content type of wordpress.')
+    pu.add_argument('-q', '--query', nargs='*',
+        help='The options for query.')
 
     args = parser.parse_args(args=argv)
     if args.sub_name:
