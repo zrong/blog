@@ -85,15 +85,6 @@ def _rewrite_category():
             num = num + 1
     print(num)
 
-def _write_new(name):
-    try:
-        dfile, dname = conf.get_new_draft(name)
-    except BlogError as e:
-        slog.critical(e)
-        return
-    shutil.copyfile(conf.get_path('templates', 'article.md'), dfile)
-    slog.info('The draft file "%s" has created.'%dfile)
-
 def _write_analytic():
     if args.name:
         match = re.match(r'^(\d*)-(\d*)$', args.name)
@@ -130,9 +121,6 @@ def build(gconf, gargs, parser=None):
         noAnyArgs = False
     if args.category:
         _rewrite_category()
-        noAnyArgs = False
-    if args.new:
-        _write_new(args.name)
         noAnyArgs = False
     if args.analytic:
         _write_analytic()

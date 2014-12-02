@@ -3,8 +3,10 @@ import re
 import platform
 import shutil
 import argparse
-import datetime
-from zrong.base import DictBase, list_dir, slog
+import markdown
+from datetime import (datetime, timedelta)
+from markdown.extensions.codehilite import CodeHiliteExtension
+from zrong.base import DictBase, list_dir, slog, read_file
 from wordpress_xmlrpc import (Client, 
         WordPressPost, WordPressPage, WordPressTerm)
 from wordpress_xmlrpc.exceptions import InvalidCredentialsError 
@@ -323,8 +325,6 @@ def check_args(argv=None):
     pw.add_argument('-d', '--dirname', type=str, default='post',
         choices = ['post', 'page', 'draft', 'all'],
         help='Rewrite articles by type. The value is [post|page|draft|all].')
-    pw.add_argument('-n', '--new', action='store_true',
-        help='Create a new blog article in draft.')
     pw.add_argument('-a', '--analytic', action='store_true',
         help='Analytic the articles.')
     pw.add_argument('--name', type=str,
@@ -371,7 +371,7 @@ def check_args(argv=None):
     pn.add_argument('-t', '--type', type=str,
         choices=['post', 'page', 'tag', 'category'],
         default='post',
-        help='Content type of wordpress.')
+        help='Create a new content in wordpress.')
     pn.add_argument('-q', '--query', nargs='*',
         help='The options for query.')
 

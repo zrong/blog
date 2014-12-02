@@ -1,5 +1,7 @@
 from wpcmd.base import Action
 from zrong.base import slog
+from wordpress_xmlrpc import (WordPressPost, WordPressPage)
+from wordpress_xmlrpc.methods.posts import (GetPost, EditPost)
 from wordpress_xmlrpc.methods.taxonomies import (GetTerm, EditTerm)
 
 class UpdateAction(Action):
@@ -11,6 +13,11 @@ class UpdateAction(Action):
             return
         afile, aname = self.conf.get_draft(postid)
         html, meta = self.get_article_content(afile)
+
+        if meta.poststatus == 'draft':
+            slog.warning('The post status of draft "%s" is "draft", '
+                'please modify it to "publish".'%postid)
+            return
 
         # Update all taxonomy before create a new article.
         self.get_terms_from_wp(['category'])
@@ -70,10 +77,6 @@ class UpdateAction(Action):
         if self.args.type == 'page':
             postid = meta.postid
             resultclass = WordPressPage
-        elif self.args.type == 'draft':
-            postid = meta.postid
-            if meta.post_type == 'page':
-                resultclass = WordPressPage
 
         post = self.wpcall(GetPost(postid, result_class=resultclass))
         if not post:
