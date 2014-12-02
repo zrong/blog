@@ -13,9 +13,16 @@ class ShowAction(Action):
         field['orderby'] = self.args.orderby
         field['order'] = self.args.order
 
+        method = None
         if self.args.query:
-            return GetPost(_get_postid(), result_class=WordPressPage)
-        return GetPosts(field, result_class=WordPressPage)
+            method = GetPost(_get_postid(), result_class=WordPressPage)
+        else:
+            method =  GetPosts(field, result_class=WordPressPage)
+        results = self.wpcall(method)
+        if results:
+            self.print_results(results)
+        else:
+            slog.warning('No results for showing.')
 
     def _show_post(self):
         field = {}
@@ -23,40 +30,66 @@ class ShowAction(Action):
         field['orderby'] = self.args.orderby
         field['order'] = self.args.order
 
+        method = None
         if self.args.query:
-            return GetPost(_get_postid())
-        return GetPosts(field)
+            method = GetPost(_get_postid())
+        else:
+            method = GetPosts(field)
+        results = self.wpcall(method)
+        if results:
+            self.print_results(results)
+        else:
+            slog.warning('No results for showing.')
+
+    def _show_options(self):
+        results = self.wpcall(GetOptions([]))
+        if results:
+            self.print_results(results)
+        else:
+            slog.warning('No results for showing.')
+
+    def _show_tax(self):
+        results = self.wpcall(GetTaxonomies())
+        if results:
+            self.print_results(results)
+        else:
+            slog.warning('No results for showing.')
+
+    def _show_term(self):
+        typ = self.args.type
+        q = self.args.query
+        if typ == 'tag':
+            typ = 'post_tag'
+        info = None
+        if typ == 'term':
+            terms = self.get_terms_from_wp(q)
+            info = str(self.args.query)
+        else:
+            query = [typ]
+            if q and len(q)>0:
+                query.append(q[0])
+            terms = self.get_terms_from_wp(query)
+            info = str(query)
+        if terms:
+            self.print_results(terms)
+        else:
+            slog.warning('No term %s!'%info)
 
     def go(self):
         print(self.args)
-        method = None
         if self.args.type == 'post':
-            method = self._show_post()
+            self._show_post()
         elif self.args.type == 'page':
-            method = self._show_page()
+            self._show_page()
         elif self.args.type == 'draft':
             for adir, aname, afile in self.conf.get_mdfiles('draft'):
                 slog.info(afile)
         elif self.args.type == 'option':
-            method = GetOptions([])
+            self._show_options()
         elif self.args.type == 'tax':
-            method = GetTaxonomies()
-        elif self.args.type == 'term':
-            terms = self.get_terms_from_wp(self.args.query)
-            if terms:
-                self.print_results(terms)
-            else:
-                slog.warning('No term %s!'%str(self.args.query))
-
-        if not method:
-            return
-
-        results = self.wpcall(method)
-        if not results:
-            slog.warning('No results for showing.')
-            return
-
-        self.print_results(results)
+            self._show_tax()
+        elif self.args.type in ('term', 'category', 'tag'):
+            self._show_term()
 
 
 def build(gconf, gargs, parser=None):

@@ -8,6 +8,7 @@ from zrong.base import DictBase, list_dir, slog
 from wordpress_xmlrpc import (Client, 
         WordPressPost, WordPressPage, WordPressTerm)
 from wordpress_xmlrpc.exceptions import InvalidCredentialsError 
+from wordpress_xmlrpc.methods.taxonomies import (GetTerms)
 
 class BlogError(Exception):
     pass
@@ -39,15 +40,15 @@ class Action(object):
         return self.args.query[0]
 
     def get_terms_from_wp(self, query, force=False):
-        if len(query)== 0:
+        if not query or len(query)== 0:
             slog.error('Please provide a taxonomy name! You can use '
-                    '"-c show -t tax" to get one.')
+                    '"show -t tax" to get one.')
             return None
         taxname = query[0]
-        slug = self.args.query[1] if len(self.args.query)>1 else None
+        slug = query[1] if len(query)>1 else None
         terms = self.conf[taxname]
         if not terms or force:
-            results = _wpcall(GetTerms(taxname))
+            results = self.wpcall(GetTerms(taxname))
             if results:
                 self.conf.save_terms(results, taxname)
         if terms and slug:
@@ -368,7 +369,7 @@ def check_args(argv=None):
     pn.add_argument('-s', '--site', type=str, 
         help='Site url.')
     pn.add_argument('-t', '--type', type=str,
-        choices=['draft', 'post', 'page', 'tag', 'category'],
+        choices=['post', 'page', 'tag', 'category'],
         default='post',
         help='Content type of wordpress.')
     pn.add_argument('-q', '--query', nargs='*',
@@ -383,7 +384,7 @@ def check_args(argv=None):
     ps.add_argument('-s', '--site', type=str, 
         help='Site url.')
     ps.add_argument('-t', '--type', type=str,
-        choices=['post', 'page', 'draft','option','tax','term'],
+        choices=['post', 'page', 'draft','option','tax','term','category','tag'],
         default='option',
         help='Content type of wordpress.')
     ps.add_argument('-n', '--number', type=int,
@@ -409,7 +410,7 @@ def check_args(argv=None):
     pu.add_argument('-s', '--site', type=str, 
         help='Site url.')
     pu.add_argument('-t', '--type', type=str,
-        choices=['post', 'page', 'option', 'tag', 'category'],
+        choices=['post', 'page', 'draft', 'option', 'tag', 'category'],
         default='post',
         help='Content type of wordpress.')
     pu.add_argument('-q', '--query', nargs='*',

@@ -1,20 +1,65 @@
 from wpcmd.base import Action
 from zrong.base import slog
+from wordpress_xmlrpc.methods.taxonomies import (GetTerm, EditTerm)
 
 class UpdateAction(Action):
 
-    def _update_article(self):
+    def _update_a_draft(self):
+        postid = self.get_postid()
+        if not postid:
+            slog.warning('Please provide a post id!')
+            return
+        afile, aname = self.conf.get_draft(postid)
+        html, meta = self.get_article_content(afile)
+
+        # Update all taxonomy before create a new article.
+        self.get_terms_from_wp(['category'])
+        self.get_terms_from_wp(['post_tag'])
+
+        if meta.posttype == 'page':
+            post = WordPressPage()
+        else:
+            post = WordPressPost()
+
+        post.content= html
+        post.title = meta.title
+        post.slug = meta.nicename
+        post.date = meta.date
+        post.user = meta.author
+        post.date_modified = meta.modified
+        post.post_status = meta.poststatus
+        post.terms = self.get_terms_from_meta(meta.category, meta.tags)
+        if not post.terms:
+            slog.warning('Please provide some terms.')
+            return
+        postid = _wpcall(NewPost(post))
+
+        if postid:
+            write_by_templ(afile, afile, {'POSTID':postid, 'SLUG':postid})
+        else:
+            return
+
+        newfile, newname = None, None
+        if meta.posttype == 'page':
+            newfile, newname = self.conf.get_article(post.nicename, meta.posttype)
+        else:
+            newfile, newname = self.conf.get_article(postid, meta.posttype)
+
+        slog.info('Move "%s" to "%s".'%(afile, newfile))
+        shutil.move(afile, newfile)
+
+    def _update_articles(self):
         postids = self.get_postid(as_list=True)
         if not postids:
             slog.warning('Please provide a post id!')
             return
 
-        # Update all taxonomy
+        # Update all taxonomy before create a new article.
         self.get_terms_from_wp(['category'])
         self.get_terms_from_wp(['post_tag'])
 
         for postid in postids:
-            _update_a_article(postid)
+            self._update_a_article(postid)
 
     def _update_a_article(self, postid):
         afile, aname = self.conf.get_article(postid, self.args.type)
@@ -61,32 +106,37 @@ class UpdateAction(Action):
             slog.info('Update %s fail!'%postid)
 
     def _update_term(self):
-        term = self.get_terms_from_wp(self.args.query, force=True)
-        if len(self.args.query) > 2:
+        typ = 'post_tag' if self.args.type == 'tag' else self.args.type
+        q = self.args.query 
+        term = None
+        query = [typ]
+        if q and len(q) > 1:
+            query.append(q[0])
+            term = self.get_terms_from_wp(query, force=True)
             if not term:
                 slog.error('The term %s is not existend.'%str(self.args.query))
                 return
-            taxname = self.args.query[0]
-            term = self.wpcall(GetTerm(taxname, term.id))
+            term = self.wpcall(GetTerm(typ, term.id))
             if term:
-                term.slug = self.args.query[1]
-                term.name = self.args.query[2]
-                if len(self.args.query)>3:
-                    term.description = self.args.query[3]
+                term.slug = q[0]
+                term.name = q[1]
+                if len(q)>2:
+                    term.description = q[2]
                 # post_get can not support parent.
                 if term.taxonomy == 'post_tag':
                     term.parent = None
                 issucc = self.wpcall(EditTerm(term.id, term))
                 if issucc:
-                    self.conf.save_term(term, taxname)
+                    self.conf.save_term(term, typ)
                     self.conf.save_to_file()
                     slog.info('The term %s(%s) has saved.'%(term.slug, term.id))
                 else:
                     slog.info('The term %s(%s) saves unsuccessfully.'%(term.slug,
                         term.id))
             else:
-                slog.info('Can not get term "%s".'%self.args.query[1])
+                slog.info('Can not get term "%s".'%typ)
         else:
+            term = self.get_terms_from_wp(query, force=True)
             if term:
                 slog.info('Update terms done.')
             else:
@@ -94,9 +144,11 @@ class UpdateAction(Action):
 
     def go(self):
         print(self.args)
-        if self.conf.is_article(self.args.type):
-            self._update_article()
-        elif self.args.type == 'term':
+        if self.args.type == 'draft':
+            self._update_a_draft()
+        elif self.args.type in ('post', 'page'):
+            self._update_articles()
+        elif self.args.type in ('tag', 'category'):
             self._update_term()
 
 
