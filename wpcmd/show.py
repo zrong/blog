@@ -4,6 +4,7 @@ from wordpress_xmlrpc import (WordPressPost, WordPressPage)
 from wordpress_xmlrpc.methods.posts import (GetPosts, GetPost)
 from wordpress_xmlrpc.methods.options import GetOptions
 from wordpress_xmlrpc.methods.taxonomies import (GetTaxonomies)
+from wordpress_xmlrpc.methods.media import (GetMediaLibrary, GetMediaItem)
 
 class ShowAction(Action):
 
@@ -75,6 +76,29 @@ class ShowAction(Action):
         else:
             slog.warning('No term %s!'%info)
 
+    def _show_medialib(self):
+        field = {}
+        field['number'] = self.args.number
+        extra = self.get_dict_from_query(self.args.query)
+        if extra:
+            for k,v in extra.items():
+                field[k] = v
+        results = self.wpcall(GetMediaLibrary(field))
+        if results:
+            self.print_results(results)
+        else:
+            slog.warning('No results for showing.')
+
+    def _show_mediaitem(self):
+        if not self.args.query or len(self.args.query) == 0:
+            slog.error('Please provide a attachment_id!')
+            return
+        result = self.wpcall(GetMediaItem(self.args.query[0]))
+        if result:
+            self.print_result(result)
+        else:
+            slog.warning('No results for showing.')
+
     def go(self):
         print(self.args)
         if self.args.type == 'post':
@@ -90,6 +114,10 @@ class ShowAction(Action):
             self._show_tax()
         elif self.args.type in ('term', 'category', 'tag'):
             self._show_term()
+        elif self.args.type == 'medialib':
+            self._show_medialib()
+        elif self.args.type == 'mediaitem':
+            self._show_mediaitem()
 
 
 def build(gconf, gargs, parser=None):

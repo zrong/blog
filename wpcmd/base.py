@@ -8,7 +8,7 @@ from datetime import (datetime, timedelta)
 from markdown.extensions.codehilite import CodeHiliteExtension
 from zrong.base import DictBase, list_dir, slog, read_file
 from wordpress_xmlrpc import (Client, 
-        WordPressPost, WordPressPage, WordPressTerm)
+        WordPressPost, WordPressPage, WordPressTerm, WordPressMedia)
 from wordpress_xmlrpc.exceptions import InvalidCredentialsError 
 from wordpress_xmlrpc.methods.taxonomies import (GetTerms)
 
@@ -23,6 +23,23 @@ class Action(object):
         self.parser = gparser
         self._wp = None
         self._update_site_config()
+
+    def _update_site_config(self):
+        if self.args.user:
+            self.conf.site.user = self.args.user
+        if self.args.password:
+            self.conf.site.password = self.args.password
+        if self.args.site:
+            if self.args.site.rfind('xmlrpc.php')>0:
+                self.conf.site.url = self.args.site
+            else:
+                removeslash = self.args.site.rfind('/')
+                if removeslash == len(self.args.site)-1:
+                    removeslash = self.args.site[0:removeslash]
+                else:
+                    removeslash = self.args.site
+                self.conf.site.url = '%s/xmlrpc.php'%removeslash
+
 
     def get_postid(self, as_list=False):
         if not self.args.query:
@@ -40,6 +57,15 @@ class Action(object):
                     postids.append(postid)
             return postids
         return self.args.query[0]
+
+    def get_dict_from_query(self, query):
+        if query:
+            d = {}
+            for v in query:
+                value = v.split('=')
+                d[value[0]] = value[1]
+            return d
+        return None
 
     def get_terms_from_wp(self, query, force=False):
         if not query or len(query)== 0:
@@ -71,6 +97,14 @@ class Action(object):
                     result.id, str(result.date), str(result.date_modified), 
                     result.slug, result.title,
                     result.post_status, result.post_type)
+        elif isinstance(result, WordPressMedia):
+            slog.info('id=%s, parent=%s, title=%s, '
+                    'description=%s, caption=%s, date_created=%s, link=%s, '
+                    'thumbnail=%s, metadata=%s', 
+                    result.id, result.parent, result.title, 
+                    result.description, result.caption, str(result.date_created), 
+                    result.link,
+                    result.thumbnail, result.metadata)
         else:
             slog.info(result)
 
@@ -148,22 +182,6 @@ class Action(object):
                     return None
                 terms.append(term)
         return terms
-
-    def _update_site_config(self):
-        if self.args.user:
-            self.conf.site.user = self.args.user
-        if self.args.password:
-            self.conf.site.password = self.args.password
-        if self.args.site:
-            if self.args.site.rfind('xmlrpc.php')>0:
-                self.conf.site.url = self.args.site
-            else:
-                removeslash = self.args.site.rfind('/')
-                if removeslash == len(self.args.site)-1:
-                    removeslash = self.args.site[0:removeslash]
-                else:
-                    removeslash = self.args.site
-                self.conf.site.url = '%s/xmlrpc.php'%removeslash
 
     def wpcall(self, method):
         if not self._wp:
@@ -343,7 +361,9 @@ def check_args(argv=None):
         default='show',
         help='Action for wordpress.')
     pp.add_argument('-t', '--type', type=str,
-        choices=['post', 'page', 'draft', 'option', 'tax', 'term'],
+        choices=['post', 'page', 'draft', 'option', 
+            'tax', 'term', 'category', 'tag', 
+            'medialib', 'mediaitem'],
         default='option',
         help='Action for wordpress.')
     pp.add_argument('-q', '--query', nargs='*',
@@ -384,7 +404,10 @@ def check_args(argv=None):
     ps.add_argument('-s', '--site', type=str, 
         help='Site url.')
     ps.add_argument('-t', '--type', type=str,
-        choices=['post', 'page', 'draft','option','tax','term','category','tag'],
+        choices=['post', 'page', 'draft',
+            'option','tax','term',
+            'category','tag',
+            'medialib', 'mediaitem'],
         default='option',
         help='Content type of wordpress.')
     ps.add_argument('-n', '--number', type=int,
