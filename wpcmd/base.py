@@ -161,7 +161,13 @@ class Action(object):
             adict.poststatus = poststatus[0]
         else:
             adict.poststatus = 'publish'
-        return html,adict 
+        attachments = meta.get('attachments')
+        if attachments:
+            adict.attachments = [att.strip() for att in attachments[0].split(',')]
+        return html,adict,self._get_images(txt)
+
+    def _get_images(self, txt):
+        return re.findall(u'/image/\d{4}/\d{2}/.*', txt, re.M)
 
     def get_terms_from_meta(self, categories, tags):
         terms = []

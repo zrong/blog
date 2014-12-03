@@ -1,3 +1,4 @@
+import re
 from wpcmd.base import Action
 from zrong.base import slog
 from wordpress_xmlrpc import (WordPressPost, WordPressPage)
@@ -12,7 +13,7 @@ class UpdateAction(Action):
             slog.warning('Please provide a post id!')
             return
         afile, aname = self.conf.get_draft(postid)
-        html, meta = self.get_article_content(afile)
+        html, meta, images = self.get_article_content(afile)
 
         if meta.poststatus == 'draft':
             slog.warning('The post status of draft "%s" is "draft", '
@@ -70,7 +71,8 @@ class UpdateAction(Action):
 
     def _update_a_article(self, postid):
         afile, aname = self.conf.get_article(postid, self.args.type)
-        html, meta = self.get_article_content(afile)
+        html, meta, images = self.get_article_content(afile)
+
         if not html:
             return
         resultclass = WordPressPost
