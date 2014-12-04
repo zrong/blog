@@ -83,6 +83,7 @@ class ShowAction(Action):
         if extra:
             for k,v in extra.items():
                 field[k] = v
+        print(field)
         results = self.wpcall(GetMediaLibrary(field))
         if results:
             self.print_results(results)

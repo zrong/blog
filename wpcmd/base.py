@@ -3,10 +3,9 @@ import re
 import platform
 import shutil
 import argparse
-import markdown
+from xmlrpc.client import Fault
 from datetime import (datetime, timedelta)
-from markdown.extensions.codehilite import CodeHiliteExtension
-from zrong.base import DictBase, list_dir, slog, read_file
+from zrong.base import DictBase, list_dir, slog
 from wordpress_xmlrpc import (Client, 
         WordPressPost, WordPressPage, WordPressTerm, WordPressMedia)
 from wordpress_xmlrpc.exceptions import InvalidCredentialsError 
@@ -122,53 +121,6 @@ class Action(object):
         dt = datetime.strptime(datestring, '%Y-%m-%d %H:%M:%S')
         return dt - timedelta(hours=8)
 
-    def get_article_content(self, afile):
-        if not os.path.exists(afile):
-            slog.error('The file "%s" is inexistance!'%afile)
-            return None, None
-        txt = read_file(afile)
-        md = markdown.Markdown(extensions=[
-            'markdown.extensions.meta',
-            'markdown.extensions.tables',
-            CodeHiliteExtension(linenums=False, guess_lang=False),
-            ])
-        html = md.convert(txt)
-        meta = md.Meta
-
-        adict = DictBase()
-        adict.title = meta['title'][0]
-        adict.postid = meta['postid'][0]
-        adict.nicename = meta['nicename'][0]
-        adict.slug = meta['slug'][0]
-        adict.date = self.get_datetime(meta['date'][0])
-        adict.author = meta['author'][0]
-        tags = meta.get('tags')
-        if tags:
-            adict.tags = [tag.strip() for tag in tags[0].split(',')]
-        category = meta.get('category')
-        if category:
-            adict.category = [cat.strip() for cat in category[0].split(',')]
-        modified = meta.get('modified')
-        if modified:
-            adict.modified = self.get_datetime(modified[0])
-        posttype = meta.get('posttype')
-        if posttype:
-            adict.posttype = posttype[0]
-        else:
-            adict.posttype = 'post'
-        poststatus = meta.get('poststatus')
-        if poststatus:
-            adict.poststatus = poststatus[0]
-        else:
-            adict.poststatus = 'publish'
-        attachments = meta.get('attachments')
-        if attachments:
-            adict.attachments = [att.strip() for att in attachments[0].split(',')]
-        return html,adict,self._get_images(txt)
-
-    def _get_images(self, txt):
-        return re.findall(u'/image/\d{4}/\d{2}/.*', txt, re.M)
-
     def get_terms_from_meta(self, categories, tags):
         terms = []
         if categories:
@@ -197,6 +149,9 @@ class Action(object):
         try:
             results = self._wp.call(method)
         except InvalidCredentialsError as e:
+            slog.error(e)
+            return None
+        except Fault as e:
             slog.error(e)
             return None
         return results
