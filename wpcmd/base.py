@@ -309,38 +309,6 @@ def check_args(argv=None):
     pw.add_argument('--name', type=str,
         help='Provide a article name.')
 
-    pp = subParsers.add_parser('wp', 
-        help='Publish blog to wordpress.')
-    pp.add_argument('-u', '--user', type=str, 
-        help='Login username.')
-    pp.add_argument('-p', '--password', type=str, 
-        help='Login password.')
-    pp.add_argument('-s', '--site', type=str, 
-        help='Site url.')
-    pp.add_argument('-c', '--action', type=str,
-        choices=['new', 'update', 'del', 'show'], 
-        default='show',
-        help='Action for wordpress.')
-    pp.add_argument('-t', '--type', type=str,
-        choices=['post', 'page', 'draft', 'option', 
-            'tax', 'term', 'category', 'tag', 
-            'medialib', 'mediaitem'],
-        default='option',
-        help='Action for wordpress.')
-    pp.add_argument('-q', '--query', nargs='*',
-        help='The options for query.')
-    pp.add_argument('-n', '--number', type=int,
-        default=10,
-        help='The amount for GetPosts.')
-    pp.add_argument('-o', '--orderby',
-        choices=['post_modified', 'post_id'],
-        default='post_id',
-        help='To sort the result-set by one column.')
-    pp.add_argument('-d', '--order',
-        choices=['ASC', 'DESC'],
-        default='DESC',
-        help='To sort the records in a descending or a ascending order.')
-
     pn = subParsers.add_parser('new', 
         help='Create some new content.')
     pn.add_argument('-u', '--user', type=str, 

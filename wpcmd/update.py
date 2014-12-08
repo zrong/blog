@@ -4,10 +4,10 @@ import mimetypes
 from xmlrpc.client import Binary
 import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
-from zrong.base import DictBase, slog, read_file, write_file
+from zrong.base import DictBase, slog, read_file, write_file, write_by_templ
 from wpcmd.base import Action
 from wordpress_xmlrpc import (WordPressPost, WordPressPage)
-from wordpress_xmlrpc.methods.posts import (GetPost, EditPost)
+from wordpress_xmlrpc.methods.posts import (GetPost, EditPost, NewPost)
 from wordpress_xmlrpc.methods.media import (UploadFile)
 from wordpress_xmlrpc.methods.taxonomies import (GetTerm, EditTerm)
 
@@ -102,7 +102,7 @@ class UpdateAction(Action):
         if not post.terms:
             slog.warning('Please provide some terms.')
             return
-        postid = _wpcall(NewPost(post))
+        postid = self.wpcall(NewPost(post))
 
         if postid:
             write_by_templ(afile, afile, {'POSTID':postid, 'SLUG':postid})
@@ -235,7 +235,7 @@ class UpdateAction(Action):
                 slog.warning('No terms.')
 
     def go(self):
-        print(self.args)
+        #print(self.args)
         if self.args.type == 'draft':
             self._update_a_draft()
         elif self.args.type in ('post', 'page'):
