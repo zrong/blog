@@ -2,6 +2,8 @@ import shutil
 import datetime
 from zrong.base import slog, write_by_templ
 from wpcmd.base import Action,BlogError
+from wordpress_xmlrpc import (WordPressTerm)
+from wordpress_xmlrpc.methods.taxonomies import (NewTerm)
 
 class NewAction(Action):
 

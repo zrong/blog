@@ -64,10 +64,11 @@ class UpdateAction(Action):
         meta = md.Meta
 
         adict = self._get_article_metadata(meta)
-        return html,adict,txt,self._get_images(txt)
+        return html,adict,txt,self._get_medias(txt)
 
-    def _get_images(self, txt):
-        return re.findall(u'image/\d{4}/\d{2}/.*', txt, re.M)
+    def _get_medias(self, txt):
+        return [(item, item.split('/')[-1]) for item in \
+                re.findall(u'%s/draft/.*'%self.conf.directory.media, txt, re.M)]
 
     def _update_a_draft(self):
         postid = self.get_postid()
@@ -105,7 +106,7 @@ class UpdateAction(Action):
         postid = self.wpcall(NewPost(post))
 
         if postid:
-            write_by_templ(afile, afile, {'POSTID':postid, 'SLUG':postid})
+            write_by_templ(afile, afile, {'POSTID':postid, 'SLUG':postid}, True)
         else:
             return
 
@@ -182,17 +183,24 @@ class UpdateAction(Action):
     def _update_medias(self, medias, txt):
         slog.info('Ready for upload some medias to WordPress.')
         attach_ids = []
-        for media in medias:
+        urlre = re.compile(r'wp-content/.*/(\d{4}/\d{2}/).*')
+        for path, name in medias:
             bits = None
-            with open(self.conf.get_path(media), 'rb') as m:
-                    bits = Binary(m.read()).data
+            mediafile = self.conf.get_media(path)
+            with open(mediafile, 'rb') as m:
+                bits = Binary(m.read()).data
             amedia = {}
-            amedia['name'] = os.path.split(media)[1]
-            amedia['type'] = mimetypes.guess_type(media)[0]
+            amedia['name'] = name
+            amedia['type'] = mimetypes.guess_type(path)[0]
             amedia['bits'] = bits
             upd = self.wpcall(UploadFile(amedia))
-            txt = txt.replace(media, upd['url'])
+            txt = txt.replace(path, upd['url'])
+            match = urlre.search(upd['url'])
+            targetdir = self.conf.get_media(match.group(1))
+            if not os.path.exists(targetdir):
+                os.makedirs(targetdir)
             attach_ids.append(upd['id'])
+            shutil.move(mediafile, os.path.join(targetdir, name))
         # Add attachments to the TOF.
         txt = 'Attachments: %s\n%s'%s(','.join(attach_ids), txt)
         return txt

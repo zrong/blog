@@ -186,6 +186,7 @@ class Conf(DictBase):
             'draft': 'draft',
             'post': 'post',
             'page': 'page',
+            'media': 'image',
         })
         self.files = DictBase(
         {
@@ -273,6 +274,12 @@ class Conf(DictBase):
         if path:
             return os.path.abspath(os.path.join(workdir, *path))
         return workdir
+
+    def get_media(self, *path):
+        mediadir = self.get_path(self.directory.media)
+        if path:
+            return os.path.join(mediadir, *path)
+        return mediadir
 
     def get_mdfiles(self, posttype):
         for afile in os.listdir(self.get_path(posttype)):
