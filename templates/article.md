@@ -7,6 +7,6 @@ Slug: $SLUG
 Nicename: $NICENAME
 Category: $CATEGORY
 Tags: $TAGS
-Attachments: $ATTACHEMENTS
+Attachments: $ATTACHMENTS
 Posttype: $POSTTYPE
 Poststatus: $POSTSTATUS

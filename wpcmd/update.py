@@ -74,8 +74,10 @@ class UpdateAction(Action):
         attach = 0
         if not meta.attachments:
             attach = 1
-        elif meta.attachments[0] == '$ATTACHEMENTS':
+        elif meta.attachments[0] == '$ATTACHMENTS':
             attach = 2
+        elif len(meta.attachments)>0:
+            attach = 3
 
         if medias and attach>0:
             txt,attachids = self._update_medias(medias, txt)
@@ -83,8 +85,16 @@ class UpdateAction(Action):
             if attach == 1:
                 # Add attachments to the TOF.
                 txt = 'Attachments: %s\n%s'%(idstxt, txt)
-            else:
-                txt = Template(txt).safe_substitute(ATTACHEMENTS=idstxt)
+                slog.info('Fill attachments: %s.'%idstxt)
+            elif attach == 2:
+                txt = Template(txt).safe_substitute(ATTACHMENTS=idstxt)
+                slog.info('Fill attachments: %s.'%idstxt)
+            elif attach == 3:
+                slog.info('Add new attachments: %s.'%idstxt)
+                meta.attachments += attachids
+                txt = re.sub(r'^Attachments: .*$', 
+                        'Attachments: '+ ','.join(meta.attachments),
+                        txt, 0, re.M)
 
             write_file(afile, txt)
             html, meta, txt, medias = self._get_article_content(txt, True)
@@ -95,7 +105,7 @@ class UpdateAction(Action):
 
     def _get_medias(self, txt):
         return [(item, item.split('/')[-1]) for item in \
-                re.findall(u'%s/draft/[\w\.]*'%self.conf.directory.media, txt, re.M)]
+                re.findall(u'%s/draft/[\w\.\-]*'%self.conf.directory.media, txt, re.M)]
 
     def _update_a_draft(self):
         postid = self.get_postid()
@@ -207,6 +217,7 @@ class UpdateAction(Action):
         for path, name in medias:
             bits = None
             mediafile = self.conf.get_path(path)
+            print(mediafile)
             with open(mediafile, 'rb') as m:
                 bits = Binary(m.read()).data
             amedia = {}
