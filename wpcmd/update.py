@@ -1,6 +1,8 @@
 import os
 import re
 import mimetypes
+import shutil
+from string import Template
 from xmlrpc.client import Binary
 import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
@@ -52,13 +54,14 @@ class UpdateAction(Action):
         else:
             if not os.path.exists(afile):
                 slog.error('The file "%s" is inexistance!'%afile)
-                return None, None
+                return None, None, None, None
             txt = read_file(afile)
-            md = markdown.Markdown(extensions=[
-                'markdown.extensions.meta',
-                'markdown.extensions.tables',
-                CodeHiliteExtension(linenums=False, guess_lang=False),
-                ])
+
+        md = markdown.Markdown(extensions=[
+            'markdown.extensions.meta',
+            'markdown.extensions.tables',
+            CodeHiliteExtension(linenums=False, guess_lang=False),
+            ])
 
         html = md.convert(txt)
         meta = md.Meta
@@ -66,9 +69,33 @@ class UpdateAction(Action):
         adict = self._get_article_metadata(meta)
         return html,adict,txt,self._get_medias(txt)
 
+    def _get_and_update_article_content(self, afile, istxt=False):
+        html, meta, txt, medias = self._get_article_content(afile)
+        attach = 0
+        if not meta.attachments:
+            attach = 1
+        elif meta.attachments[0] == '$ATTACHEMENTS':
+            attach = 2
+
+        if medias and attach>0:
+            txt,attachids = self._update_medias(medias, txt)
+            idstxt = ','.join(attachids)
+            if attach == 1:
+                # Add attachments to the TOF.
+                txt = 'Attachments: %s\n%s'%(idstxt, txt)
+            else:
+                txt = Template(txt).safe_substitute(ATTACHEMENTS=idstxt)
+
+            write_file(afile, txt)
+            html, meta, txt, medias = self._get_article_content(txt, True)
+            if medias:
+                slog.error('Medias in the article is maybe wrong!')
+                return None, None, None, None
+        return html, meta, txt, medias
+
     def _get_medias(self, txt):
         return [(item, item.split('/')[-1]) for item in \
-                re.findall(u'%s/draft/.*'%self.conf.directory.media, txt, re.M)]
+                re.findall(u'%s/draft/[\w\.]*'%self.conf.directory.media, txt, re.M)]
 
     def _update_a_draft(self):
         postid = self.get_postid()
@@ -76,7 +103,7 @@ class UpdateAction(Action):
             slog.warning('Please provide a post id!')
             return
         afile, aname = self.conf.get_draft(postid)
-        html, meta, txt, images = self._get_article_content(afile)
+        html, meta, txt, medias = self._get_and_update_article_content(afile)
 
         if meta.poststatus == 'draft':
             slog.warning('The post status of draft "%s" is "draft", '
@@ -130,18 +157,11 @@ class UpdateAction(Action):
         self.get_terms_from_wp(['post_tag'])
 
         for postid in postids:
-            self._update_a_article(postid)
+            self._update_an_article(postid)
 
-    def _update_a_article(self, postid):
+    def _update_an_article(self, postid):
         afile, aname = self.conf.get_article(postid, self.args.type)
-        html, meta, txt, medias = self._get_article_content(afile)
-        if medias and not meta.attachments:
-            txt = self._update_medias(medias, txt)
-            write_file(afile, txt)
-            html, meta, txt, medias = self._get_article_content(txt, True)
-            if medias:
-                slog.error('Medias in the article is maybe wrong!')
-                return
+        html, meta, txt, medias = self._get_and_update_article_content(afile)
 
         if not html:
             return
@@ -186,7 +206,7 @@ class UpdateAction(Action):
         urlre = re.compile(r'wp-content/.*/(\d{4}/\d{2}/).*')
         for path, name in medias:
             bits = None
-            mediafile = self.conf.get_media(path)
+            mediafile = self.conf.get_path(path)
             with open(mediafile, 'rb') as m:
                 bits = Binary(m.read()).data
             amedia = {}
@@ -201,9 +221,7 @@ class UpdateAction(Action):
                 os.makedirs(targetdir)
             attach_ids.append(upd['id'])
             shutil.move(mediafile, os.path.join(targetdir, name))
-        # Add attachments to the TOF.
-        txt = 'Attachments: %s\n%s'%s(','.join(attach_ids), txt)
-        return txt
+        return txt, attach_ids
 
     def _update_term(self):
         typ = 'post_tag' if self.args.type == 'tag' else self.args.type
