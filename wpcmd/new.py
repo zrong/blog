@@ -3,7 +3,7 @@ import datetime
 from zrong.base import slog, write_by_templ
 from wpcmd.base import Action,BlogError
 from wordpress_xmlrpc import (WordPressTerm)
-from wordpress_xmlrpc.methods.taxonomies import (NewTerm)
+from wordpress_xmlrpc.methods.taxonomies import (NewTerm,GetTerm)
 
 class NewAction(Action):
 
@@ -38,11 +38,14 @@ class NewAction(Action):
         if not self.args.query or len(self.args.query)<1:
             slog.error('Provide 1 arguments at least please.')
             return
-        term = self.get_terms_from_wp(self.args.query, force=True)
+        query = self.get_term_query()
+        print('query:', query)
+        term = self.get_terms_from_wp(query, force=True)
+        print(term)
         if term:
             slog.error('The term "%s" has been in wordpress.'%self.args.query[0])
             return
-        taxname = self.args.type
+        taxname = query[0]
         slug = self.args.query[0]
         name = self.args.query[1] if len(self.args.query)>1 else slug
         term = WordPressTerm()

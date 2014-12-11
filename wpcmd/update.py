@@ -235,15 +235,14 @@ class UpdateAction(Action):
         return txt, attach_ids
 
     def _update_term(self):
-        typ = 'post_tag' if self.args.type == 'tag' else self.args.type
         q = self.args.query 
         term = None
-        query = [typ]
+        query = self.get_term_query()
+        typ = query[0]
         if q and len(q) > 1:
-            query.append(q[0])
             term = self.get_terms_from_wp(query, force=True)
             if not term:
-                slog.error('The term %s is not existend.'%str(self.args.query))
+                slog.error('The term %s is not existend.'%str(q))
                 return
             term = self.wpcall(GetTerm(typ, term.id))
             if term:

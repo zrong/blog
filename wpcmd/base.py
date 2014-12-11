@@ -66,6 +66,20 @@ class Action(object):
             return d
         return None
 
+    def get_term_query(self):
+        typ = self.args.type
+        q = self.args.query
+        query = []
+        if typ == 'term':
+            query = q
+        else:
+            if typ == 'tag':
+                typ = 'post_tag'
+            query.append(typ)
+            if q and len(q)>0:
+                query.append(q[0])
+        return query
+
     def get_terms_from_wp(self, query, force=False):
         if not query or len(query)== 0:
             slog.error('Please provide a taxonomy name! You can use '
