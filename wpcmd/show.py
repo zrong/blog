@@ -57,20 +57,9 @@ class ShowAction(Action):
             slog.warning('No results for showing.')
 
     def _show_term(self):
-        typ = self.args.type
-        q = self.args.query
-        if typ == 'tag':
-            typ = 'post_tag'
-        info = None
-        if typ == 'term':
-            terms = self.get_terms_from_wp(q)
-            info = str(self.args.query)
-        else:
-            query = [typ]
-            if q and len(q)>0:
-                query.append(q[0])
-            terms = self.get_terms_from_wp(query)
-            info = str(query)
+        query = self.get_term_query()
+        info = str(query)
+        terms = self.get_terms_from_wp(query)
         if terms:
             self.print_results(terms)
         else:

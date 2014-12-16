@@ -12,8 +12,8 @@
 1. 2005-10-08 [提问的智慧](http://zengrong.net/howtoask.htm)
 1. 2009-04-30 [Linux软件](http://zengrong.net/linux-software.htm)
 1. 2013-08-22 [Platform ANEs](http://zengrong.net/platform-anes.htm)
-1. 2011-04-19 [SpriteSheetPacker](http://zengrong.net/spritesheetpacker.htm)
 1. 2011-08-18 [Sprite Sheet Editor](http://zengrong.net/sprite_sheet_editor.htm)
+1. 2011-04-19 [SpriteSheetPacker](http://zengrong.net/spritesheetpacker.htm)
 1. 2006-03-07 [WordPress大全](http://zengrong.net/wordpressfavorite.htm)
 
 # post
@@ -63,7 +63,6 @@
 1. 2005-10-27 [RIA站点收集](http://zengrong.net/46.htm)
 1. 2005-11-02 [Red5](http://zengrong.net/47.htm)
 1. 2005-11-01 [【转】打领带全教程](http://zengrong.net/49.htm)
-1. 2005-11-02 [【转】IP地址信息查询(WHOIS)服务的原理](http://zengrong.net/50.htm)
 1. 2005-10-31 [【转】IP地址信息查询(WHOIS)服务的原理](http://zengrong.net/51.htm)
 1. 2005-11-04 [Yahoo的Flash地图服务](http://zengrong.net/52.htm)
 1. 2005-04-30 [分析localToGlobal()和globalToLocal()](http://zengrong.net/53.htm)
@@ -725,4 +724,15 @@
 1. 2014-10-09 [Python 测试框架的选择](http://zengrong.net/2170.htm)
 1. 2014-10-12 [Python web框架的选择](http://zengrong.net/2172.htm)
 1. 2014-11-05 [Markdown 和 reStructuredText](http://zengrong.net/2185.htm)
+1. 2014-11-18 [博客静态化工作](http://zengrong.net/2187.htm)
+1. 2014-11-19 [从 quick 转向 cocos2d-x 3.3 lua](http://zengrong.net/2188.htm)
+1. 2014-11-20 [在 setuptools 中使用 dependency_links](http://zengrong.net/2190.htm)
+1. 2014-11-21 [__main__.py 和 __init__.py](http://zengrong.net/2192.htm)
+1. 2014-11-26 [cocos2d-x v2 和 v3 对照手册](http://zengrong.net/2193.htm)
+1. 2014-11-26 [cocos2d-x 3.3 lua 相关修改](http://zengrong.net/2194.htm)
+1. 2014-11-27 [页游效果能否媲美端游](http://zengrong.net/2195.htm)
+1. 2014-11-28 [怎么理解Vim以及怎么学](http://zengrong.net/2196.htm)
+1. 2014-11-28 [开始使用Docker（未完待续）](http://zengrong.net/2197.htm)
+1. 2014-11-30 [Socket 与 WebSocket](http://zengrong.net/2199.htm)
+1. 2014-12-08 [在 Python 虚拟环境中使用 PyQt5](http://zengrong.net/2205.htm)
 

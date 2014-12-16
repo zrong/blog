@@ -66,6 +66,20 @@ class Action(object):
             return d
         return None
 
+    def get_term_query(self):
+        typ = self.args.type
+        q = self.args.query
+        query = []
+        if typ == 'term':
+            query = q
+        else:
+            if typ == 'tag':
+                typ = 'post_tag'
+            query.append(typ)
+            if q and len(q)>0:
+                query.append(q[0])
+        return query
+
     def get_terms_from_wp(self, query, force=False):
         if not query or len(query)== 0:
             slog.error('Please provide a taxonomy name! You can use '
@@ -186,6 +200,7 @@ class Conf(DictBase):
             'draft': 'draft',
             'post': 'post',
             'page': 'page',
+            'media': 'image',
         })
         self.files = DictBase(
         {
@@ -274,6 +289,12 @@ class Conf(DictBase):
             return os.path.abspath(os.path.join(workdir, *path))
         return workdir
 
+    def get_media(self, *path):
+        mediadir = self.get_path(self.directory.media)
+        if path:
+            return os.path.join(mediadir, *path)
+        return mediadir
+
     def get_mdfiles(self, posttype):
         for afile in os.listdir(self.get_path(posttype)):
             if afile.endswith('.md'):
@@ -308,38 +329,6 @@ def check_args(argv=None):
         help='Analytic the articles.')
     pw.add_argument('--name', type=str,
         help='Provide a article name.')
-
-    pp = subParsers.add_parser('wp', 
-        help='Publish blog to wordpress.')
-    pp.add_argument('-u', '--user', type=str, 
-        help='Login username.')
-    pp.add_argument('-p', '--password', type=str, 
-        help='Login password.')
-    pp.add_argument('-s', '--site', type=str, 
-        help='Site url.')
-    pp.add_argument('-c', '--action', type=str,
-        choices=['new', 'update', 'del', 'show'], 
-        default='show',
-        help='Action for wordpress.')
-    pp.add_argument('-t', '--type', type=str,
-        choices=['post', 'page', 'draft', 'option', 
-            'tax', 'term', 'category', 'tag', 
-            'medialib', 'mediaitem'],
-        default='option',
-        help='Action for wordpress.')
-    pp.add_argument('-q', '--query', nargs='*',
-        help='The options for query.')
-    pp.add_argument('-n', '--number', type=int,
-        default=10,
-        help='The amount for GetPosts.')
-    pp.add_argument('-o', '--orderby',
-        choices=['post_modified', 'post_id'],
-        default='post_id',
-        help='To sort the result-set by one column.')
-    pp.add_argument('-d', '--order',
-        choices=['ASC', 'DESC'],
-        default='DESC',
-        help='To sort the records in a descending or a ascending order.')
 
     pn = subParsers.add_parser('new', 
         help='Create some new content.')

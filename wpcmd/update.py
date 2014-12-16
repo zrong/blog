@@ -1,13 +1,15 @@
 import os
 import re
 import mimetypes
+import shutil
+from string import Template
 from xmlrpc.client import Binary
 import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
-from zrong.base import DictBase, slog, read_file, write_file
+from zrong.base import DictBase, slog, read_file, write_file, write_by_templ
 from wpcmd.base import Action
 from wordpress_xmlrpc import (WordPressPost, WordPressPage)
-from wordpress_xmlrpc.methods.posts import (GetPost, EditPost)
+from wordpress_xmlrpc.methods.posts import (GetPost, EditPost, NewPost)
 from wordpress_xmlrpc.methods.media import (UploadFile)
 from wordpress_xmlrpc.methods.taxonomies import (GetTerm, EditTerm)
 
@@ -52,22 +54,58 @@ class UpdateAction(Action):
         else:
             if not os.path.exists(afile):
                 slog.error('The file "%s" is inexistance!'%afile)
-                return None, None
+                return None, None, None, None
             txt = read_file(afile)
-            md = markdown.Markdown(extensions=[
-                'markdown.extensions.meta',
-                'markdown.extensions.tables',
-                CodeHiliteExtension(linenums=False, guess_lang=False),
-                ])
+
+        md = markdown.Markdown(extensions=[
+            'markdown.extensions.meta',
+            'markdown.extensions.tables',
+            CodeHiliteExtension(linenums=False, guess_lang=False),
+            ])
 
         html = md.convert(txt)
         meta = md.Meta
 
         adict = self._get_article_metadata(meta)
-        return html,adict,txt,self._get_images(txt)
+        return html,adict,txt,self._get_medias(txt)
 
-    def _get_images(self, txt):
-        return re.findall(u'image/\d{4}/\d{2}/.*', txt, re.M)
+    def _get_and_update_article_content(self, afile, istxt=False):
+        html, meta, txt, medias = self._get_article_content(afile)
+        attach = 0
+        if not meta.attachments:
+            attach = 1
+        elif meta.attachments[0] == '$ATTACHMENTS':
+            attach = 2
+        elif len(meta.attachments)>0:
+            attach = 3
+
+        if medias and attach>0:
+            txt,attachids = self._update_medias(medias, txt)
+            idstxt = ','.join(attachids)
+            if attach == 1:
+                # Add attachments to the TOF.
+                txt = 'Attachments: %s\n%s'%(idstxt, txt)
+                slog.info('Fill attachments: %s.'%idstxt)
+            elif attach == 2:
+                txt = Template(txt).safe_substitute(ATTACHMENTS=idstxt)
+                slog.info('Fill attachments: %s.'%idstxt)
+            elif attach == 3:
+                slog.info('Add new attachments: %s.'%idstxt)
+                meta.attachments += attachids
+                txt = re.sub(r'^Attachments: .*$', 
+                        'Attachments: '+ ','.join(meta.attachments),
+                        txt, 0, re.M)
+
+            write_file(afile, txt)
+            html, meta, txt, medias = self._get_article_content(txt, True)
+            if medias:
+                slog.error('Medias in the article is maybe wrong!')
+                return None, None, None, None
+        return html, meta, txt, medias
+
+    def _get_medias(self, txt):
+        return [(item, item.split('/')[-1]) for item in \
+                re.findall(u'%s/draft/[\w\.\-]*'%self.conf.directory.media, txt, re.M)]
 
     def _update_a_draft(self):
         postid = self.get_postid()
@@ -75,7 +113,7 @@ class UpdateAction(Action):
             slog.warning('Please provide a post id!')
             return
         afile, aname = self.conf.get_draft(postid)
-        html, meta, txt, images = self._get_article_content(afile)
+        html, meta, txt, medias = self._get_and_update_article_content(afile)
 
         if meta.poststatus == 'draft':
             slog.warning('The post status of draft "%s" is "draft", '
@@ -102,10 +140,10 @@ class UpdateAction(Action):
         if not post.terms:
             slog.warning('Please provide some terms.')
             return
-        postid = _wpcall(NewPost(post))
+        postid = self.wpcall(NewPost(post))
 
         if postid:
-            write_by_templ(afile, afile, {'POSTID':postid, 'SLUG':postid})
+            write_by_templ(afile, afile, {'POSTID':postid, 'SLUG':postid}, True)
         else:
             return
 
@@ -129,18 +167,11 @@ class UpdateAction(Action):
         self.get_terms_from_wp(['post_tag'])
 
         for postid in postids:
-            self._update_a_article(postid)
+            self._update_an_article(postid)
 
-    def _update_a_article(self, postid):
+    def _update_an_article(self, postid):
         afile, aname = self.conf.get_article(postid, self.args.type)
-        html, meta, txt, medias = self._get_article_content(afile)
-        if medias and not meta.attachments:
-            txt = self._update_medias(medias, txt)
-            write_file(afile, txt)
-            html, meta, txt, medias = self._get_article_content(txt, True)
-            if medias:
-                slog.error('Medias in the article is maybe wrong!')
-                return
+        html, meta, txt, medias = self._get_and_update_article_content(afile)
 
         if not html:
             return
@@ -182,31 +213,36 @@ class UpdateAction(Action):
     def _update_medias(self, medias, txt):
         slog.info('Ready for upload some medias to WordPress.')
         attach_ids = []
-        for media in medias:
+        urlre = re.compile(r'wp-content/.*/(\d{4}/\d{2}/).*')
+        for path, name in medias:
             bits = None
-            with open(self.conf.get_path(media), 'rb') as m:
-                    bits = Binary(m.read()).data
+            mediafile = self.conf.get_path(path)
+            print(mediafile)
+            with open(mediafile, 'rb') as m:
+                bits = Binary(m.read()).data
             amedia = {}
-            amedia['name'] = os.path.split(media)[1]
-            amedia['type'] = mimetypes.guess_type(media)[0]
+            amedia['name'] = name
+            amedia['type'] = mimetypes.guess_type(path)[0]
             amedia['bits'] = bits
             upd = self.wpcall(UploadFile(amedia))
-            txt = txt.replace(media, upd['url'])
+            txt = txt.replace(path, upd['url'])
+            match = urlre.search(upd['url'])
+            targetdir = self.conf.get_media(match.group(1))
+            if not os.path.exists(targetdir):
+                os.makedirs(targetdir)
             attach_ids.append(upd['id'])
-        # Add attachments to the TOF.
-        txt = 'Attachments: %s\n%s'%s(','.join(attach_ids), txt)
-        return txt
+            shutil.move(mediafile, os.path.join(targetdir, name))
+        return txt, attach_ids
 
     def _update_term(self):
-        typ = 'post_tag' if self.args.type == 'tag' else self.args.type
         q = self.args.query 
         term = None
-        query = [typ]
+        query = self.get_term_query()
+        typ = query[0]
         if q and len(q) > 1:
-            query.append(q[0])
             term = self.get_terms_from_wp(query, force=True)
             if not term:
-                slog.error('The term %s is not existend.'%str(self.args.query))
+                slog.error('The term %s is not existend.'%str(q))
                 return
             term = self.wpcall(GetTerm(typ, term.id))
             if term:
@@ -235,7 +271,7 @@ class UpdateAction(Action):
                 slog.warning('No terms.')
 
     def go(self):
-        print(self.args)
+        #print(self.args)
         if self.args.type == 'draft':
             self._update_a_draft()
         elif self.args.type in ('post', 'page'):
