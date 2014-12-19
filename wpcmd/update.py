@@ -6,6 +6,8 @@ from string import Template
 from xmlrpc.client import Binary
 import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
+from markdown.extensions.fenced_code import (FencedCodeExtension,
+        FencedBlockPreprocessor)
 from zrong.base import DictBase, slog, read_file, write_file, write_by_templ
 from wpcmd.base import Action
 from wordpress_xmlrpc import (WordPressPost, WordPressPage)
@@ -57,10 +59,22 @@ class UpdateAction(Action):
                 return None, None, None, None
             txt = read_file(afile)
 
+        FencedBlockPreprocessor.FENCED_BLOCK_RE = re.compile(r'''
+(?P<fence>^(?:~{3,}|`{3,}))[ ]*         # Opening ``` or ~~~
+# Optional {, lang="lang" or lang
+(\{?\.?(?:lang=")?(?P<lang>[a-zA-Z0-9_+-]*)"?)?[ ]*
+# Optional highlight lines, single- or double-quote-delimited
+(hl_lines=(?P<quot>"|')(?P<hl_lines>.*?)(?P=quot))?[ ]*
+}?[ ]*\n                                # Optional closing }
+(?P<code>.*?)(?<=\n)
+(?P=fence)[ ]*$''', re.MULTILINE | re.DOTALL | re.VERBOSE)
+        fencedcode = FencedCodeExtension()
+        codehilite = CodeHiliteExtension(linenums=False, guess_lang=False)
         md = markdown.Markdown(extensions=[
             'markdown.extensions.meta',
             'markdown.extensions.tables',
-            CodeHiliteExtension(linenums=False, guess_lang=False),
+            fencedcode,
+            codehilite,
             ])
 
         html = md.convert(txt)
