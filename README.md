@@ -740,4 +740,5 @@
 1. 2014-12-17 [使用 git post-receive 钩子部署服务端代码](http://zengrong.net/2221.htm)
 1. 2014-12-19 [rsyslog/Python/LogAnalyzer 记录和查看日志](http://zengrong.net/2222.htm)
 1. 2015-01-11 [lua 协程（coroutine）分析](http://zengrong.net/2225.htm)
+1. 2015-01-14 [基于 OpenResty 的服务器架构设计](http://zengrong.net/2228.htm)
 
