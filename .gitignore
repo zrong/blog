@@ -1,5 +1,5 @@
 *.swp
-*.un~
+*.??~
 *.DS_Store
 __pycache__
 build.conf.py
