@@ -85,6 +85,8 @@ class UpdateAction(Action):
 
     def _get_and_update_article_content(self, afile, istxt=False):
         html, meta, txt, medias = self._get_article_content(afile)
+        if not html:
+            return  None, None, None, None
         attach = 0
         if not meta.attachments:
             attach = 1
@@ -128,7 +130,8 @@ class UpdateAction(Action):
             return
         afile, aname = self.conf.get_draft(postid)
         html, meta, txt, medias = self._get_and_update_article_content(afile)
-
+        if not html:
+            return
         if meta.poststatus == 'draft':
             slog.warning('The post status of draft "%s" is "draft", '
                 'please modify it to "publish".'%postid)
@@ -186,7 +189,6 @@ class UpdateAction(Action):
     def _update_an_article(self, postid):
         afile, aname = self.conf.get_article(postid, self.args.type)
         html, meta, txt, medias = self._get_and_update_article_content(afile)
-
         if not html:
             return
         resultclass = WordPressPost

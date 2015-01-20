@@ -200,7 +200,7 @@ class Conf(DictBase):
             'draft': 'draft',
             'post': 'post',
             'page': 'page',
-            'media': 'image',
+            'media': 'media',
         })
         self.files = DictBase(
         {
