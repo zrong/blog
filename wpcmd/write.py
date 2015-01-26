@@ -24,7 +24,7 @@ class WriteAction(Action):
 
     def _write_a_file(self, adir, name, rf):
         with open(os.path.join(adir, str(name)+'.md'), 'r', encoding='utf-8') as f:
-            fmt = '1. %s [%s](http://zengrong.net/%s.htm)\n'
+            fmt = '1. %s \[**%s**\] [%s](http://zengrong.net/post/%s.htm)\n'
             time = None
             title = None
             for line in f:
@@ -34,7 +34,8 @@ class WriteAction(Action):
                     time = line[6:16]
                     break
             if time and title:
-                rf.write(fmt%(time, title, name))
+                title = title.replace('_', r'\_')
+                rf.write(fmt%(time, name, title, name))
 
 
     def _write_readme(self):
@@ -123,8 +124,8 @@ class WriteAction(Action):
             _write_analytic()
             noAnyArgs = False
 
-        if noAnyArgs and parser:
-            parser.print_help()
+        if noAnyArgs and self.parser:
+            self.parser.print_help()
 
 def build(gconf, gargs, parser=None):
     action = WriteAction(gconf, gargs, parser)
