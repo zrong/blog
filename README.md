@@ -745,4 +745,5 @@
 1. 2015-01-21 \[**2231**\] [Good Bye, Flash!](http://zengrong.net/post/2231.htm)
 1. 2015-01-22 \[**2234**\] [在 IDE 中使用 Vim](http://zengrong.net/post/2234.htm)
 1. 2015-01-25 \[**2235**\] [pure-ftpd 530 Login authentication failed](http://zengrong.net/post/2235.htm)
+1. 2015-02-27 \[**2242**\] [dragonbonesCPP 在 Android 5 上问题的解决](http://zengrong.net/post/2242.htm)
 
