@@ -12,8 +12,9 @@
 1. 2005-10-08 \[**howtoask**\] [提问的智慧](http://zengrong.net/post/howtoask.htm)
 1. 2009-04-30 \[**linux-software**\] [Linux软件](http://zengrong.net/post/linux-software.htm)
 1. 2013-08-22 \[**platform-anes**\] [Platform ANEs](http://zengrong.net/post/platform-anes.htm)
-1. 2011-08-18 \[**sprite_sheet_editor**\] [Sprite Sheet Editor](http://zengrong.net/post/sprite_sheet_editor.htm)
+1. 2015-03-03 \[**read**\] [阅读](http://zengrong.net/post/read.htm)
 1. 2011-04-19 \[**spritesheetpacker**\] [SpriteSheetPacker](http://zengrong.net/post/spritesheetpacker.htm)
+1. 2011-08-18 \[**sprite_sheet_editor**\] [Sprite Sheet Editor](http://zengrong.net/post/sprite_sheet_editor.htm)
 1. 2006-03-07 \[**wordpressfavorite**\] [WordPress大全](http://zengrong.net/post/wordpressfavorite.htm)
 
 # post

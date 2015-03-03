@@ -145,6 +145,10 @@ class UpdateAction(Action):
             post = WordPressPage()
         else:
             post = WordPressPost()
+            post.terms = self.get_terms_from_meta(meta.category, meta.tags)
+            if not post.terms:
+                slog.warning('Please provide some terms.')
+                return
 
         post.content= html
         post.title = meta.title
@@ -153,10 +157,6 @@ class UpdateAction(Action):
         post.user = meta.author
         post.date_modified = meta.modified
         post.post_status = meta.poststatus
-        post.terms = self.get_terms_from_meta(meta.category, meta.tags)
-        if not post.terms:
-            slog.warning('Please provide some terms.')
-            return
         postid = self.wpcall(NewPost(post))
 
         if postid:
@@ -166,7 +166,7 @@ class UpdateAction(Action):
 
         newfile, newname = None, None
         if meta.posttype == 'page':
-            newfile, newname = self.conf.get_article(post.nicename, meta.posttype)
+            newfile, newname = self.conf.get_article(meta.nicename, meta.posttype)
         else:
             newfile, newname = self.conf.get_article(postid, meta.posttype)
 
