@@ -750,4 +750,5 @@
 1. 2015-02-27 \[**2243**\] [移植 quick2.2.3 的项目到 cocos2d-x 3.4 lua](http://zengrong.net/post/2243.htm)
 1. 2015-03-03 \[**2247**\] [cocos2d-x 3.4 lua 触摸 BUG](http://zengrong.net/post/2247.htm)
 1. 2015-03-07 \[**2257**\] [入行5年多的as3程序员，不知道未来怎么样！该转型吗？对未来有些迷茫！](http://zengrong.net/post/2257.htm)
+1. 2015-03-26 \[**2260**\] [WIKI 系统的选择](http://zengrong.net/post/2260.htm)
 
