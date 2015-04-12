@@ -19,6 +19,7 @@ Poststatus: publish
 |4| [浪潮之巅][4] | **在读** | 2015-03-14 |  ||
 |5| [时间之墟][5] | 已读 | 2015-03-15 | 2015-03-21 ||
 |6| [HTML5程序设计（第2版）][6] | 已读 | 2015-03-27 | 2015-04-04 ||
+|7| [Flask Web开发][7] | **在读** | 2015-04-07 | ||
 
 [1]: http://book.douban.com/subject/10746113/
 [2]: http://book.douban.com/subject/10485421/
@@ -26,3 +27,4 @@ Poststatus: publish
 [4]: http://book.douban.com/subject/6709783/
 [5]: http://book.douban.com/subject/24935042/
 [6]: http://book.douban.com/subject/10608238/
+[7]: http://book.douban.com/subject/26274202/
