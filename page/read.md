@@ -20,7 +20,7 @@ Poststatus: publish
 |3| [永恒的终结][3] | 已读 | 2015-03-13 | 2015-03-13 ||
 |4| [浪潮之巅][4] | **在读** | 2015-03-14 |  ||
 |5| [时间之墟][5] | 已读 | 2015-03-15 | 2015-03-21 ||
-|6| [HTML5程序设计（第2版）][6] | 已读 | 2015-03-27 | 2015-04-04 ||
+|6| [HTML5程序设计（第2版）][6] | 已读 | 2015-03-27 | 2015-04-04 | [读书笔记][6m] |
 |7| [Flask Web开发][7] | 已读 | 2015-04-07 | 2015-04-15||
 |8| [告诉你外语学习的真实方法及误区分析][8] <br> [下载电子书(mobi+epub)][8d] | **在读** | 2015-04-22 | ||
 
@@ -30,6 +30,7 @@ Poststatus: publish
 [4]: http://book.douban.com/subject/6709783/
 [5]: http://book.douban.com/subject/24935042/
 [6]: http://book.douban.com/subject/10608238/
+[6m]: http://zengrong.net/post/2274.htm
 [7]: http://book.douban.com/subject/26274202/
 [8]: http://bbs.tianya.cn/post-english-121795-1.shtml
 [8d]: http://zengrong.net/download/121/
