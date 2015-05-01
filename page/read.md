@@ -23,6 +23,7 @@ Poststatus: publish
 |6| [HTML5程序设计（第2版）][6] | 已读 | 2015-03-27 | 2015-04-04 | [读书笔记][6m] |
 |7| [Flask Web开发][7] | 已读 | 2015-04-07 | 2015-04-15||
 |8| [告诉你外语学习的真实方法及误区分析][8] <br> [下载电子书(mobi+epub)][8d] | **在读** | 2015-04-22 | ||
+|9| [Cocos2d-x by Example Beginner's Guide Second Edition][9] | **在读** | 2015-05-01 | ||
 
 [1]: http://book.douban.com/subject/10746113/
 [2]: http://book.douban.com/subject/10485421/
@@ -34,3 +35,4 @@ Poststatus: publish
 [7]: http://book.douban.com/subject/26274202/
 [8]: http://bbs.tianya.cn/post-english-121795-1.shtml
 [8d]: http://zengrong.net/download/121/
+[9]: https://www.packtpub.com/game-development/cocos2d-x-example-beginners-guide-second-edition
