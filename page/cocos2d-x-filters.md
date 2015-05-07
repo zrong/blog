@@ -64,6 +64,7 @@ HueFilter(240)+StaturationFilter(1.5)+BrightnessFilter(-0.4)**
 
 - [在 cocos2d-x 中使用多组shader实现多重滤镜][8]
 - [关于 cocos2d-x 滤镜][9]
+- [cocos2d-x 滤镜对 dragonbones 的支持][10]
 
 # 免责声明
 
@@ -78,6 +79,7 @@ HueFilter(240)+StaturationFilter(1.5)+BrightnessFilter(-0.4)**
 [7]: https://github.com/dualface/v3quick/tree/v3/quick/lib/quick-src/extra/filters
 [8]: http://zengrong.net/post/2052.htm
 [9]: http://zengrong.net/post/2285.htm
+[10]: http://zengrong.net/post/2290.htm
 
 [51]: /wp-content/uploads/2015/05/filters-gamma.png
 [52]: /wp-content/uploads/2015/05/filters-hue.png
