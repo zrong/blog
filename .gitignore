@@ -2,5 +2,5 @@
 *.??~
 *.DS_Store
 __pycache__
-build.conf.py
 *.pyc
+/output
