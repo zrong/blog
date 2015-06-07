@@ -5,7 +5,7 @@ Author: zrong
 Postid: 2278
 Slug: 2278
 Nicename: cocos2d-x-filters
-Attachments: 2280,2281,2282,2283
+Attachments: 2310,2311,2312,2313
 Posttype: page
 Poststatus: publish
 
@@ -81,7 +81,7 @@ HueFilter(240)+StaturationFilter(1.5)+BrightnessFilter(-0.4)**
 [9]: http://zengrong.net/post/2285.htm
 [10]: http://zengrong.net/post/2290.htm
 
-[51]: /wp-content/uploads/2015/05/filters-gamma.png
-[52]: /wp-content/uploads/2015/05/filters-hue.png
-[53]: /wp-content/uploads/2015/05/filters-zoomblur.png
-[54]: /wp-content/uploads/2015/05/filters-hsb.png
+[51]: /wp-content/uploads/2015/05/filters-gamma.jpg
+[52]: /wp-content/uploads/2015/05/filters-hue.jpg
+[53]: /wp-content/uploads/2015/05/filters-zoomblur.jpg
+[54]: /wp-content/uploads/2015/05/filters-hsb.jpg
