@@ -26,7 +26,7 @@ Poststatus: publish
 |9| [Cocos2d-x by Example Beginner's Guide Second Edition][9] | **15%** | 2015-05-01 | ||
 |10| [从0到1][10] | **50%** | 2015-06-08 | ||
 |11| [《三体》中的物理学][11] | **25%** | 2015-06-11 | ||
-|12| [硬派健身][12] | 已读 | 2015-06-12 | 2015-06-14 ||
+|12| [硬派健身][12] | 已读 | 2015-06-12 | 2015-06-14 | [读书笔记][12m] |
 
 [1]: http://book.douban.com/subject/10746113/
 [2]: http://book.douban.com/subject/10485421/
@@ -42,3 +42,4 @@ Poststatus: publish
 [10]: http://book.douban.com/subject/26297606/
 [11]: http://book.douban.com/subject/26352270/
 [12]: http://book.douban.com/subject/26359758/
+[12m]: http://zengrong.net/post/2328.htm
