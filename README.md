@@ -5,19 +5,19 @@
 
 # page
 
-1. 2005-10-08 \[**howtoask**\] [提问的智慧](http://zengrong.net/post/howtoask.htm)
-1. 2005-11-02 \[**flashassistant**\] [Flash＆Flex大全](http://zengrong.net/post/flashassistant.htm)
-1. 2006-03-07 \[**wordpressfavorite**\] [WordPress大全](http://zengrong.net/post/wordpressfavorite.htm)
-1. 2006-05-23 \[**firefox-addons**\] [我的Firefox插件](http://zengrong.net/post/firefox-addons.htm)
-1. 2009-04-30 \[**linux-software**\] [Linux软件](http://zengrong.net/post/linux-software.htm)
-1. 2011-04-19 \[**spritesheetpacker**\] [SpriteSheetPacker](http://zengrong.net/post/spritesheetpacker.htm)
-1. 2011-08-18 \[**sprite_sheet_editor**\] [Sprite Sheet Editor](http://zengrong.net/post/sprite_sheet_editor.htm)
-1. 2012-02-14 \[**21-days**\] [十年学会程序设计](http://zengrong.net/post/21-days.htm)
-1. 2012-06-07 \[**anetoolkit**\] [ANE Toolkit](http://zengrong.net/post/anetoolkit.htm)
-1. 2013-08-22 \[**platform-anes**\] [Platform ANEs](http://zengrong.net/post/platform-anes.htm)
-1. 2015-03-03 \[**read**\] [阅读](http://zengrong.net/post/read.htm)
-1. 2015-05-06 \[**cocos2d-x-filters**\] [cocos2d-x-filters](http://zengrong.net/post/cocos2d-x-filters.htm)
-1. 2015-06-12 \[**wpcmd**\] [WPCMD](http://zengrong.net/post/wpcmd.htm)
+1. 2005-10-08 \[**howtoask**\] [提问的智慧](http://zengrong.net/howtoask)
+1. 2005-11-02 \[**flashassistant**\] [Flash＆Flex大全](http://zengrong.net/flashassistant)
+1. 2006-03-07 \[**wordpressfavorite**\] [WordPress大全](http://zengrong.net/wordpressfavorite)
+1. 2006-05-23 \[**firefox-addons**\] [我的Firefox插件](http://zengrong.net/firefox-addons)
+1. 2009-04-30 \[**linux-software**\] [Linux软件](http://zengrong.net/linux-software)
+1. 2011-04-19 \[**spritesheetpacker**\] [SpriteSheetPacker](http://zengrong.net/spritesheetpacker)
+1. 2011-08-18 \[**sprite_sheet_editor**\] [Sprite Sheet Editor](http://zengrong.net/sprite_sheet_editor)
+1. 2012-02-14 \[**21-days**\] [十年学会程序设计](http://zengrong.net/21-days)
+1. 2012-06-07 \[**anetoolkit**\] [ANE Toolkit](http://zengrong.net/anetoolkit)
+1. 2013-08-22 \[**platform-anes**\] [Platform ANEs](http://zengrong.net/platform-anes)
+1. 2015-03-03 \[**read**\] [阅读](http://zengrong.net/read)
+1. 2015-05-06 \[**cocos2d-x-filters**\] [cocos2d-x-filters](http://zengrong.net/cocos2d-x-filters)
+1. 2015-06-12 \[**wpcmd**\] [WPCMD](http://zengrong.net/wpcmd)
 
 # post
 
