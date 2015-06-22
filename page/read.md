@@ -26,9 +26,11 @@ Poststatus: publish
 |8| [告诉你外语学习的真实方法及误区分析][8] <br> [下载电子书(mobi+epub)][8d] | 已读 | 2015-04-22 | 2015-05-01 ||
 |9| [Cocos2d-x by Example Beginner's Guide Second Edition][9] | **15%** | 2015-05-01 | ||
 |10| [从0到1][10] | 已读 | 2015-06-08 | 2015-06-16 | [读书笔记][10m] |
-|11| [《三体》中的物理学][11] | **30%** | 2015-06-11 | ||
+|11| [《三体》中的物理学][11] | **40%** | 2015-06-11 | ||
 |12| [硬派健身][12] | 已读 | 2015-06-12 | 2015-06-14 | [读书笔记][12m] |
-|13| [清醒思考的艺术][13] | **30%** | 2015-06-17 | | |
+|13| [清醒思考的艺术][13] | **70%** | 2015-06-17 | | |
+|14| [Python Cookbook(第3版)][14] | **10%** | 2015-06-22 | | |
+
 
 [1]: http://book.douban.com/subject/10746113/
 [2]: http://book.douban.com/subject/10485421/
@@ -47,3 +49,4 @@ Poststatus: publish
 [12]: http://book.douban.com/subject/26359758/
 [12m]: http://zengrong.net/post/2328.htm
 [13]: http://book.douban.com/subject/20492550/
+[14]: http://book.douban.com/subject/26381341/
