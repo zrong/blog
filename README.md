@@ -764,3 +764,4 @@
 1. 2015-06-11 \[**2320**\] [Fenced Code Extra for Python-Markdown](http://zengrong.net/post/2320.htm)
 1. 2015-06-14 \[**2328**\] [《硬派健身》和《囚徒健身》读书笔记](http://zengrong.net/post/2328.htm)
 1. 2015-06-20 \[**2329**\] [Python3 对 dict list 进行排序](http://zengrong.net/post/2329.htm)
+1. 2015-06-22 \[**2333**\] [我的创业-读《从0到1》有感](http://zengrong.net/post/2333.htm)
