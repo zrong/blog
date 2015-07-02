@@ -24,12 +24,14 @@ Poststatus: publish
 |6| [HTML5程序设计（第2版）][6] | 已读 | 2015-03-27 | 2015-04-04 | [读书笔记][6m] |
 |7| [Flask Web开发][7] | 已读 | 2015-04-07 | 2015-04-15||
 |8| [告诉你外语学习的真实方法及误区分析][8] <br> [下载电子书(mobi+epub)][8d] | 已读 | 2015-04-22 | 2015-05-01 ||
-|9| [Cocos2d-x by Example Beginner's Guide Second Edition][9] | **40%** | 2015-05-01 | ||
+|9| [Cocos2d-x by Example Beginner's Guide Second Edition][9] | **44%** | 2015-05-01 | ||
 |10| [从0到1][10] | 已读 | 2015-06-08 | 2015-06-16 | [读书笔记][10m] |
 |11| [《三体》中的物理学][11] | **40%** | 2015-06-11 | ||
 |12| [硬派健身][12] | 已读 | 2015-06-12 | 2015-06-14 | [读书笔记][12m] |
 |13| [清醒思考的艺术][13] | 已读 | 2015-06-17 | 2015-06-22 | |
 |14| [Python Cookbook(第3版)][14] | **10%** | 2015-06-22 | | |
+|15| [无懈可击的 Web 设计][15] | 已读 | 2015-06-29 | 2015-06-30| |
+|16| [CSS 禅意花园][16] | **40%** | 2015-07-01 | | |
 
 
 [1]: http://book.douban.com/subject/10746113/
@@ -50,3 +52,5 @@ Poststatus: publish
 [12m]: http://zengrong.net/post/2328.htm
 [13]: http://book.douban.com/subject/20492550/
 [14]: http://book.douban.com/subject/26381341/
+[15]: http://book.douban.com/subject/10733265/
+[16]: http://book.douban.com/subject/2052176/
