@@ -766,3 +766,4 @@
 1. 2015-06-20 \[**2329**\] [Python3 对 dict list 进行排序](http://zengrong.net/post/2329.htm)
 1. 2015-06-22 \[**2333**\] [我的创业-读《从0到1》有感](http://zengrong.net/post/2333.htm)
 1. 2015-07-03 \[**2335**\] [Python 入门建议](http://zengrong.net/post/2335.htm)
+1. 2015-07-04 \[**2344**\] [HHKB Pro2 简单评测](http://zengrong.net/post/2344.htm)
