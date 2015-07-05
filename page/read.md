@@ -31,7 +31,8 @@ Poststatus: publish
 |13| [清醒思考的艺术][13] | 已读 | 2015-06-17 | 2015-06-22 | |
 |14| [Python Cookbook(第3版)][14] | **10%** | 2015-06-22 | | |
 |15| [无懈可击的 Web 设计][15] | 已读 | 2015-06-29 | 2015-06-30| |
-|16| [CSS 禅意花园][16] | **40%** | 2015-07-01 | | |
+|16| [CSS 禅意花园][16] | 已读 | 2015-07-01 | 2015-07-03 | |
+|17| [Android 编程权威指南][17] | **20%** | 2015-07-05 | | |
 
 
 [1]: http://book.douban.com/subject/10746113/
@@ -54,3 +55,4 @@ Poststatus: publish
 [14]: http://book.douban.com/subject/26381341/
 [15]: http://book.douban.com/subject/10733265/
 [16]: http://book.douban.com/subject/2052176/
+[17]: http://book.douban.com/subject/25848404/
