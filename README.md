@@ -767,3 +767,4 @@
 1. 2015-06-22 \[**2333**\] [我的创业-读《从0到1》有感](http://zengrong.net/post/2333.htm)
 1. 2015-07-03 \[**2335**\] [Python 入门建议](http://zengrong.net/post/2335.htm)
 1. 2015-07-04 \[**2344**\] [HHKB Pro2 简单评测](http://zengrong.net/post/2344.htm)
+1. 2015-07-07 \[**2350**\] [Python2/3 在Windows 下的共存](http://zengrong.net/post/2350.htm)
