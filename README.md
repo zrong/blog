@@ -769,3 +769,4 @@
 1. 2015-07-04 \[**2344**\] [HHKB Pro2 简单评测](http://zengrong.net/post/2344.htm)
 1. 2015-07-07 \[**2350**\] [Python2/3 在Windows 下的共存](http://zengrong.net/post/2350.htm)
 1. 2015-07-21 \[**2353**\] [离线安装 compass](http://zengrong.net/post/2353.htm)
+1. 2015-07-29 \[**2355**\] [nodePPT 自定义模版](http://zengrong.net/post/2355.htm)
