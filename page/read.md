@@ -33,6 +33,7 @@ Poststatus: publish
 |15| [无懈可击的 Web 设计][15] | 已读 | 2015-06-29 | 2015-06-30| |
 |16| [CSS 禅意花园][16] | 已读 | 2015-07-01 | 2015-07-03 | |
 |17| [Android 编程权威指南][17] | **60%** | 2015-07-05 | | |
+|18| [TypeScript Handbook][18] [中文][18a]| 已读 | 2015-08-05 | 2015-08-06 | |
 
 
 [1]: http://book.douban.com/subject/10746113/
@@ -56,3 +57,5 @@ Poststatus: publish
 [15]: http://book.douban.com/subject/10733265/
 [16]: http://book.douban.com/subject/2052176/
 [17]: http://book.douban.com/subject/25848404/
+[18]: http://www.typescriptlang.org/Handbook
+[18a]: http://zhongsp.gitbooks.io/typescript-handbook/content/
