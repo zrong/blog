@@ -771,3 +771,4 @@
 1. 2015-07-21 \[**2353**\] [离线安装 compass](http://zengrong.net/post/2353.htm)
 1. 2015-07-29 \[**2355**\] [nodePPT 自定义模版](http://zengrong.net/post/2355.htm)
 1. 2015-08-11 \[**2358**\] [TypeScript 的强制类型转换](http://zengrong.net/post/2358.htm)
+1. 2015-08-03 \[**2360**\] [常用配置文件格式简析](http://zengrong.net/post/2360.htm)
