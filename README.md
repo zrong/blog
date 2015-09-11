@@ -699,7 +699,7 @@
 1. 2014-04-14 \[**2088**\] [在 cocos2d-x 中使用 libcurl 实现上传文件功能（附quick-cocos2d-x封装）](http://zengrong.net/post/2088.htm)
 1. 2014-04-16 \[**2089**\] [从 Actionscript 1.0 迁移到 Actionscript 3.0](http://zengrong.net/post/2089.htm)
 1. 2014-04-19 \[**2092**\] [解决Github访问超慢问题](http://zengrong.net/post/2092.htm)
-1. 2014-04-19 \[**2096**\] [管理带有子模块的git库（DragonBonesCPP）](http://zengrong.net/post/2096.htm)
+1. 2014-04-19 \[**2096**\] [管理带有子模块的git库（以 DragonBonesCPP 为例）](http://zengrong.net/post/2096.htm)
 1. 2014-04-23 \[**2100**\] [如何学习 cocos2d-x ？](http://zengrong.net/post/2100.htm)
 1. 2014-04-23 \[**2104**\] [在 cocos2d-x 中获取纹理的像素值](http://zengrong.net/post/2104.htm)
 1. 2014-04-28 \[**2106**\] [DragonBones 官方C++版本 for cocos2d-x](http://zengrong.net/post/2106.htm)
@@ -773,3 +773,4 @@
 1. 2015-07-29 \[**2355**\] [nodePPT 自定义模版](http://zengrong.net/post/2355.htm)
 1. 2015-08-11 \[**2358**\] [TypeScript 的强制类型转换](http://zengrong.net/post/2358.htm)
 1. 2015-08-03 \[**2360**\] [常用配置文件格式简析](http://zengrong.net/post/2360.htm)
+1. 2015-09-11 \[**2363**\] [Javascript 的 64bit Int 支持](http://zengrong.net/post/2363.htm)
