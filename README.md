@@ -774,3 +774,4 @@
 1. 2015-08-11 \[**2358**\] [TypeScript 的强制类型转换](http://zengrong.net/post/2358.htm)
 1. 2015-08-03 \[**2360**\] [常用配置文件格式简析](http://zengrong.net/post/2360.htm)
 1. 2015-09-11 \[**2363**\] [Javascript 的 64bit Int 支持](http://zengrong.net/post/2363.htm)
+1. 2015-09-13 \[**2366**\] [使用 slimerjs 抓取 DDos 保护的站点](http://zengrong.net/post/2366.htm)
