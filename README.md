@@ -446,7 +446,7 @@
 1. 2011-04-22 \[**1311**\] [编辑SpriteSheet的小工具：spritesheetpacker v0.2](http://zengrong.net/post/1311.htm)
 1. 2011-04-26 \[**1313**\] [SpriteSheet小工具：spritesheetpacker v0.3](http://zengrong.net/post/1313.htm)
 1. 2011-05-03 \[**1317**\] [Ant and FCSH资源合集](http://zengrong.net/post/1317.htm)
-1. 2011-05-03 \[**1318**\] [Flash Builder 4.5正式版下载/插件版安装](http://zengrong.net/post/1318.htm)
+1. 2011-05-03 \[**1318**\] [Flash Builder 4.5 插件版的安装方法](http://zengrong.net/post/1318.htm)
 1. 2011-05-09 \[**1320**\] [Flex Compiler SHell Server配置方法](http://zengrong.net/post/1320.htm)
 1. 2011-05-16 \[**1322**\] [Timer是依赖于帧率的？](http://zengrong.net/post/1322.htm)
 1. 2011-05-18 \[**1327**\] [全局鼠标事件应该怎么加？](http://zengrong.net/post/1327.htm)
@@ -775,3 +775,4 @@
 1. 2015-08-03 \[**2360**\] [常用配置文件格式简析](http://zengrong.net/post/2360.htm)
 1. 2015-09-11 \[**2363**\] [Javascript 的 64bit Int 支持](http://zengrong.net/post/2363.htm)
 1. 2015-09-13 \[**2366**\] [使用 slimerjs 抓取 DDos 保护的站点](http://zengrong.net/post/2366.htm)
+1. 2015-09-22 \[**2367**\] [Int64.ts and Buffer.ts for Egret](http://zengrong.net/post/2367.htm)
