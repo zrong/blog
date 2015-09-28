@@ -34,6 +34,12 @@ Poststatus: publish
 |16| [CSS 禅意花园][16] | 已读 | 2015-07-01 | 2015-07-03 | |
 |17| [Android 编程权威指南][17] | **60%** | 2015-07-05 | | |
 |18| [TypeScript Handbook][18] [中文][18a]| 已读 | 2015-08-05 | 2015-08-06 | |
+|19| [风雨独立路--李光耀回忆录（1923-1965）][19] | 已读 | 2015-08-30 | 2015-09-30 | |
+|20| [海狸的记号][20] | 已读 | 2015-09-26 | 2015-09-27 | |
+|21| [绝佳提问--探询改变商业与生活][21] | **30%** | 2015-09-20 | | |
+|22| [程序员的思维修炼--开发认知潜能的九堂课][22] | **20%** | 2015-09-25 | | |
+
+
 
 
 [1]: http://book.douban.com/subject/10746113/
@@ -59,3 +65,7 @@ Poststatus: publish
 [17]: http://book.douban.com/subject/25848404/
 [18]: http://www.typescriptlang.org/Handbook
 [18a]: http://zhongsp.gitbooks.io/typescript-handbook/content/
+[19]: http://book.douban.com/subject/1082102/
+[20]: http://book.douban.com/subject/4710853/
+[21]: http://book.douban.com/subject/26392294/
+[22]: http://book.douban.com/subject/5372651/
