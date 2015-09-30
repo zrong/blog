@@ -777,3 +777,4 @@
 1. 2015-09-13 \[**2366**\] [使用 slimerjs 抓取 DDos 保护的站点](http://zengrong.net/post/2366.htm)
 1. 2015-09-22 \[**2367**\] [Int64.ts and Buffer.ts for Egret](http://zengrong.net/post/2367.htm)
 1. 2015-09-25 \[**2369**\] [在搜索引擎中搜索特殊字符](http://zengrong.net/post/2369.htm)
+1. 2015-09-30 \[**2370**\] [《海狸的记号》读书笔记](http://zengrong.net/post/2370.htm)
