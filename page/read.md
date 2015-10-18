@@ -40,6 +40,7 @@ Poststatus: publish
 |22| [程序员的思维修炼--开发认知潜能的九堂课][22] | 已读 | 2015-09-25 | 2015-10-13 | |
 |23| [海底两万里][23] | **50%** | 2015-10-10 | | |
 |24| [黄金时代][24] | 已读 | 2015-10-14 | 2015-10-14 | |
+|25| [白银时代][25] | 已读 | 2015-10-15 | 2015-10-16 | |
 
 
 [1]: http://book.douban.com/subject/10746113/
@@ -72,3 +73,4 @@ Poststatus: publish
 [22]: http://book.douban.com/subject/5372651/
 [23]: http://book.douban.com/subject/1703952/
 [24]: http://book.douban.com/subject/3071688/
+[25]: http://book.douban.com/subject/1776683/
