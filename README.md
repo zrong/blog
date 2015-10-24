@@ -1,6 +1,6 @@
 [zrong's blog](http://zengrong.net) 中的所有文章
 ==========
-本博客采用[WPCMD](http://zengrong.net/wpcmd) 维护
+本博客采用 [WPCMD](http://zengrong.net/wpcmd) 维护
 ----------
 
 # page
@@ -538,9 +538,9 @@
 1. 2012-03-31 \[**1574**\] [【译】如何创建游戏的续作](http://zengrong.net/post/1574.htm)
 1. 2012-04-04 \[**1581**\] [【译】Adobe数字出版套件(DPS)中PDF与JPG/PNG图像格式的不同](http://zengrong.net/post/1581.htm)
 1. 2012-04-06 \[**1583**\] [【转】为什么程序员的社会地位不高？](http://zengrong.net/post/1583.htm)
-1. 2012-04-08 \[**1588**\] [测试Flash Player 11.3/AIR 3.3提供的bitmapData.encode方法的性能](http://zengrong.net/post/1588.htm)
+1. 2012-04-08 \[**1588**\] [测试 Flash Player 11.3/AIR 3.3 提供的 bitmapData.encode 方法的性能](http://zengrong.net/post/1588.htm)
 1. 2012-04-13 \[**1591**\] [在Bash中将字符串拆分成数组](http://zengrong.net/post/1591.htm)
-1. 2012-04-16 \[**1594**\] [Gitweb和WebSVN](http://zengrong.net/post/1594.htm)
+1. 2012-04-16 \[**1594**\] [Gitweb 和 WebSVN](http://zengrong.net/post/1594.htm)
 1. 2012-04-18 \[**1595**\] [升级CentOS 5.x中的PHP 5.1到5.3](http://zengrong.net/post/1595.htm)
 1. 2012-04-19 \[**1598**\] [使用svnsync实现已有版本库的镜像](http://zengrong.net/post/1598.htm)
 1. 2012-04-20 \[**1600**\] [AIR对Mobile设备位图取色的问题](http://zengrong.net/post/1600.htm)
