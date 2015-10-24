@@ -1,6 +1,6 @@
 [zrong's blog](http://zengrong.net) 中的所有文章
 ==========
-
+本博客采用[WPCMD](http://zengrong.net/wpcmd) 维护
 ----------
 
 # page
