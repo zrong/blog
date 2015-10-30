@@ -1,0 +1,127 @@
+title: Graphviz 工具教程
+date: 2015-10-29 19:25:34
+modified: 2015-10-29 19:25:34
+author: zrong
+postid: $POSTID
+slug: $SLUG
+nicename: graphviz-tool-guide
+attachments: $ATTACHMENTS
+posttype: post
+poststatus: publish
+tags: graphic
+category: technology
+
+在 [Graphviz 简易教程][1] 中，我介绍了一点 Graphviz 的知识。下面的内容则是我在使用中积累的一些和工具有关的内容。 <!--more-->
+
+# 通用配置
+
+使用下面三个关键字可以指定图片、节点和线段的默认设置。
+
+```
+// 影响图片整张图片的配置
+// 左右方向，图片背景色为红色
+// 也可以用于 subgraph
+graph[rankdir="LR",bgcolor="red"]
+
+// 影响所有节点
+node[shape="box"]
+
+// 影响所有先调和箭头
+edge[style="dashed"]
+```
+
+# 指定多个节点
+
+要想一次制定特定的多个节点的属性，可以这样写：
+
+```
+{ node[fillcolor="red"] node1 node2 node3 }
+```
+
+也可以换行写：
+
+```
+{
+	node[fillcolor="red"] 
+	node1 node2
+	node3 
+}
+```
+
+# 中文乱码问题
+
+若渲染出的图片中出现乱码，检查两项：
+
+1. 文件编码需要使用 utf-8；
+2. 指定字体名称。
+
+在 Mac OS X 上，我没有指定字体名称，中文工作得很好。
+
+但在 Windows 上，我的渲染出现了乱码，于是我在 dot 源码中指定了字体名称：
+
+```
+// 影响图片级别的字体
+graph[fontname="Microsoft YaHei"]
+// 影响 node 中的文字字体
+node[fontname="Microsoft YaHei"]
+// 影响箭头或线条上的文字字体
+edge[fontname="Microsoft YaHei"]
+```
+
+但是在 dot 源码中制定字体会影响其他 OS 下的表现（例如在 OS X 上没有微软雅黑），因此应该在编译的时候通过参数指定字体。
+
+在编译的时候指定字体：
+
+    dot -Tpng -Gfontname=SimSun -Nfontname=SimSun -Efontname=SimSun graph.dot
+
+# Vim 插件
+
+在 [Graphviz 简易教程][4] 中，我建议使用 Eclipse 等 IDE 配合插件来编辑 dot 源码。实际上，我自己是使用 [wmgraphviz.vim][6] 来编辑 dot 的。但默认情况下，wmgraphviz.vim 在 windows 下使用会有问题，主要是由于在它的编译代码中使用了 `tee` 这个 windows 批处理并不包含的命令。
+
+许多 unix 移植工具中都包含 tee 工具，但由于只需要 tee ，我们可以使用 [tee.bat][7] ，把这个命令放在 path 路径中即可。
+
+当然也可以直接修改 wmgraphviz.vim 的源码，修改 `ftplugin/dot.vim` 中的这一行：
+
+    let cmd = '!('.a:tool.' -O -T'.a:output.' '.g:WMGraphviz_shelloptions.' '.shellescape(expand('%:p')).' 2>&1) > _ && type _&&type _>>'.shellescape(expand('%:p:r').'.log')
+
+原理在这里有介绍： [How to display the output text in the dos command line while redirecting][8] 。
+
+对于上面提到的中文问题，可以直接编辑配置文件：
+
+
+```vim
+if has('win32')
+    let g:WMGraphviz_shelloptions="-Gfontname=SimSun -Nfontname=SimSun -Efontname=SimSun"
+endif
+```
+
+# 自动刷新的图像查看软件
+
+用 Vim 配合自动刷新的看图软件即可实现一个 Graphviz 编辑器，把屏幕分成两半，一般是 Vim，一半是看图软件，Vim 这边保存之后使用 wmgraphviz.vim 提供的快捷键输出图像，然后另一半的看图软件自动刷新实现预览。
+
+- Mac 下可以使用 Finder 的预览功能，或者使用 [Xee<sup>3</sup>][10]；
+- Windows 下可使用资源管理器的预览窗格，或者 [IrfanView][11] 的 Shirt+R 快捷键手动刷新，或者 [JPEGView][9] 直接支持自动刷新。
+
+# 标记语言支持
+
+我的 [Fenced Code Extra for Python-Markdown][5] 支持在 Markdown 中嵌入 Graphviz 支持。
+
+[Sphinx][12] 也支持 Graphviz 插件。
+
+# 两篇很完整的教程
+
+- [Graphviz的使用及中文乱码问题][2]
+- [DOT语言][3]
+
+[1]: http://zengrong.net/post/2294.htm
+[2]: http://blog.csdn.net/xiajian2010/article/details/23748557
+[3]: http://lesliezhu.github.io/public/dot-begin.html
+[4]: http://zengrong.net/post/2294.htm#gui
+[5]: http://zengrong.net/post/2320.htm#graphviz
+[6]: https://github.com/wannesm/wmgraphviz.vim
+[7]: http://www.robvanderwoude.com/unixports.php#TEE
+[8]: http://stackoverflow.com/questions/7341929/how-to-display-the-ouput-text-in-the-dos-command-line-while-redirecting-the-outp
+[9]: http://sourceforge.net/projects/jpegview/
+[10]: http://xee.c3.cx/
+[11]: http://www.irfanview.com/
+[12]: http://sphinx-doc.org/ext/graphviz.html
