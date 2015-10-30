@@ -760,7 +760,7 @@
 1. 2015-05-06 \[**2285**\] [关于 cocos2d-x 滤镜](http://zengrong.net/post/2285.htm)
 1. 2015-05-07 \[**2290**\] [cocos2d-x 滤镜对 dragonbones 的支持](http://zengrong.net/post/2290.htm)
 1. 2015-05-26 \[**2292**\] [在 Mac OS X 的网络账户中修改 shell(chsh)](http://zengrong.net/post/2292.htm)
-1. 2015-05-29 \[**2294**\] [GraphViz 简易教程](http://zengrong.net/post/2294.htm)
+1. 2015-05-29 \[**2294**\] [Graphviz 简易教程](http://zengrong.net/post/2294.htm)
 1. 2015-06-11 \[**2320**\] [Fenced Code Extra for Python-Markdown](http://zengrong.net/post/2320.htm)
 1. 2015-06-14 \[**2328**\] [《硬派健身》和《囚徒健身》读书笔记](http://zengrong.net/post/2328.htm)
 1. 2015-06-20 \[**2329**\] [Python3 对 dict list 进行排序](http://zengrong.net/post/2329.htm)
@@ -779,3 +779,4 @@
 1. 2015-09-25 \[**2369**\] [在搜索引擎中搜索特殊字符](http://zengrong.net/post/2369.htm)
 1. 2015-09-30 \[**2370**\] [《海狸的记号》读书笔记](http://zengrong.net/post/2370.htm)
 1. 2015-10-17 \[**2374**\] [常用开源镜像站整理](http://zengrong.net/post/2374.htm)
+1. 2015-10-29 \[**2379**\] [Graphviz 工具教程](http://zengrong.net/post/2379.htm)
