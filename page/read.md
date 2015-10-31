@@ -41,6 +41,9 @@ Poststatus: publish
 |23| [海底两万里][23] | **50%** | 2015-10-10 | | |
 |24| [黄金时代][24] | 已读 | 2015-10-14 | 2015-10-14 | |
 |25| [白银时代][25] | 已读 | 2015-10-15 | 2015-10-16 | |
+|26| [沉默的大多数][26] | **30%** | 2015-10-17 | | |
+|27| [刘慈欣中短篇小说集][27] | **30%** | 2015-10-20 | | |
+|28| [超新星纪元][28] | **50%** | 2015-10-27 | | |
 
 
 [1]: http://book.douban.com/subject/10746113/
@@ -73,4 +76,7 @@ Poststatus: publish
 [22]: http://book.douban.com/subject/5372651/
 [23]: http://book.douban.com/subject/1703952/
 [24]: http://book.douban.com/subject/3071688/
-[25]: http://book.douban.com/subject/1776683/
+[25]: http://book.douban.com/subject/1132956/
+[26]: http://book.douban.com/subject/1776683/
+[27]: http://book.douban.com/subject/10767124/
+[28]: http://book.douban.com/subject/3636385/
