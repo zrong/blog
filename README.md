@@ -18,6 +18,8 @@
 1. 2015-03-03 \[**read**\] [阅读](http://zengrong.net/read)
 1. 2015-05-06 \[**cocos2d-x-filters**\] [cocos2d-x-filters](http://zengrong.net/cocos2d-x-filters)
 1. 2015-06-12 \[**wpcmd**\] [WPCMD](http://zengrong.net/wpcmd)
+1. 2015-11-15 \[**keyarticle**\] [重点文章](http://zengrong.net/keyarticle)
+1. 2015-11-15 \[**project**\] [我的项目](http://zengrong.net/project)
 
 # post
 
@@ -227,8 +229,8 @@
 1. 2007-03-07 \[**330**\] [【转】ADOBE FLEX 2 全套下载!](http://zengrong.net/post/330.htm)
 1. 2007-03-25 \[**331**\] [利用Flash上传大文件：swfupload修改以及详细说明](http://zengrong.net/post/331.htm)
 1. 2007-03-26 \[**333**\] [在Flex2中使用NetConnection的一些注意事项](http://zengrong.net/post/333.htm)
-1. 2007-05-13 \[**334**\] [【转】[从AS2到AS3之一]常量&操作符&参数](http://zengrong.net/post/334.htm)
-1. 2007-05-13 \[**335**\] [【转】[从AS2到AS3之二]访问控制以及命名空间](http://zengrong.net/post/335.htm)
+1. 2007-05-13 \[**334**\] [【转】从 AS2 到 AS3 之一——常量&操作符&参数](http://zengrong.net/post/334.htm)
+1. 2007-05-13 \[**335**\] [【转】从AS2到AS3之二 ——访问控制以及命名空间](http://zengrong.net/post/335.htm)
 1. 2007-05-22 \[**336**\] [基于Flash的教学辅助软件制作技术培训班日程](http://zengrong.net/post/336.htm)
 1. 2007-05-29 \[**337**\] [张学友2007好久不见演唱会武汉站全程录音](http://zengrong.net/post/337.htm)
 1. 2007-06-01 \[**338**\] [NetStream information objects](http://zengrong.net/post/338.htm)
@@ -515,7 +517,7 @@
 1. 2012-02-11 \[**1520**\] [Vim Cheat Sheet两套](http://zengrong.net/post/1520.htm)
 1. 2012-02-14 \[**1524**\] [在bash中使用DNSPod的API接口实现DDNS客户端](http://zengrong.net/post/1524.htm)
 1. 2012-02-19 \[**1528**\] [为什么那么多人喜欢折腾ubuntu？](http://zengrong.net/post/1528.htm)
-1. 2012-02-21 \[**1529**\] [程序员水平分级，你属于哪一级？](http://zengrong.net/post/1529.htm)
+1. 2012-02-21 \[**1529**\] [【转】程序员水平分级，你属于哪一级？](http://zengrong.net/post/1529.htm)
 1. 2012-02-21 \[**1530**\] [”移动开发中HTML5能否替代本地程序“之吐槽文](http://zengrong.net/post/1530.htm)
 1. 2012-02-23 \[**1533**\] [【转】Adobe对于Flex的看法以及对未来Flex的承诺](http://zengrong.net/post/1533.htm)
 1. 2012-02-23 \[**1535**\] [【转】Adobe Flash runtimes路线图](http://zengrong.net/post/1535.htm)
@@ -780,3 +782,4 @@
 1. 2015-09-30 \[**2370**\] [《海狸的记号》读书笔记](http://zengrong.net/post/2370.htm)
 1. 2015-10-17 \[**2374**\] [常用开源镜像站整理](http://zengrong.net/post/2374.htm)
 1. 2015-10-29 \[**2379**\] [Graphviz 工具教程](http://zengrong.net/post/2379.htm)
+1. 2015-11-13 \[**2383**\] [客户端技能树](http://zengrong.net/post/2383.htm)
