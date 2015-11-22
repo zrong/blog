@@ -13,27 +13,33 @@ poststatus: publish
 
 2014 年的时候我考虑过 [博客静态化][5]，但现有的博客静态化工具不太符合我的要求，因此我准备自己造个轮子。造轮子的工程未免复杂，为了满足在轮子诞生之前的更新欲望，[WPCMD][1] 诞生了。
 
+WPCMD 的源码托管在 [Github][1] 上。
+
 # 1. WPCMD 是什么
 
-[WPCMD(Wordpress command)][1]  是一个通过 WordPress XML-RPC 接口在本地创建、更新 Wordpress 博客的命令行工具。 [zengrong.net][2] 就是使用该工具进行管理。
+[WPCMD(WordPress command)][1]  是一个通过 WordPress XML-RPC 接口在本地创建、更新 WordPress 博客的命令行工具。 [zengrong.net][2] 就是使用该工具进行管理。
+
+简单的说，WPCMD 就是一个用于 WordPress 的命令行工具。而且，由于没有 GUI 界面，这个工具是主要面向技术类博主的。
 
 这是一些优点：
 
 - 使用 MarkDown 语法写博客；
-- 随意选择自己最喜欢的版本管理来保存博客文章；
-- 随意选择自己最喜欢的编辑器编写博客；
-- 生成所有文章的列表；
+- 随意选择自己最喜欢的版本管理来保存博客文章（例如我用 [Github][4] ）；
+- 随意选择自己最喜欢的编辑器编写博客（例如我一直用 [Vim][8] ）；
+- 生成 [所有文章的列表][9] ；
 - 生成文章的 HTML 文件；
 - 不用打开 WordPress 后台就能完成：
-    1. 文章创建和更新；
-    2. 分类和标签的创建和更新；
-    3. 查看博客文章/页面/分类/标签/媒体等信息。
+    1. 文章和页面的创建和更新；
+    2. 文章内媒体文件的自动上传；
+    3. 分类和标签的创建和更新；
+    4. 查看博客文章/页面/分类/标签/媒体等信息。
 - 使用 [Fenced Code Extra ][6] 支持：
     1. [graphviz][7] ；
     2. 语法高亮；
     3. 代码注释。
 - 同时管理多个 WordPress 博客。
 
+<a name="hellowpcmd"><a>
 # 2. Hello WPCMD
 
 快速看一下基本用法：
@@ -119,24 +125,28 @@ wpcmd update -t page -q wpcmd
 - python-wordpress-xmlrpc>=2.3
 - rookout>=0.4.5
 
-# 3.2 安装
+## 3.2 安装
 
 `pip3 install wpcmd`
 
-因为包比较多，想快点也可以使用豆瓣的镜像站来安装（详情可参考 [常用镜像站整理][2]）：
+因为包比较多，想快点也可以使用国内的镜像站来安装，下面使用的是中国科学技术大学的镜像源：（详情可参考 [常用镜像站整理][2]）：
 
 `pip3 install -i https://mirrors.ustc.edu.cn/pypi/web/simple wpcmd`
 
-# 3.3 配置
+## 3.3 配置
 
 输入 `wpcmd -h` ，第一次运行会生成一个默认的配置文件，必须修改这个配置文件进行设置。这个配置文件位于 `~/.wpcmd.ini`（OS X 和 Linux) 和 `%HOME%\_wpcmd.ini` （Windows） 。
 
 
 配置文件默认的内容如下：
+
 ```
 [default]
 
-conffile = /Users/rzeng/.wpcmd.ini
+# Mac or Linux
+conffile = /Users/zrong/.wpcmd.ini
+# Windows
+# conffile = C:\Users\zrong\_wpcmd.ini
 
 [site]
 
@@ -144,7 +154,10 @@ name        = my blog
 url         = http://my blog/xmlrpc.php
 user        = myname
 password    = password123456
-cachefile   = /Users/rzeng/.wpcmd.cache.py
+# Mac or Linux
+cachefile   = /Users/zrong/.wpcmd.cache.py
+# Windows
+# cachefile = C:\Users\zrong\_wpcmd.cache.py
 
 # file
 
@@ -153,7 +166,10 @@ draftfmt    = draft_%s
 
 # directory
 
-work        = /Users/rzeng/blog
+# Mac or Linux
+work        = /Users/zrong/blog
+# Windows
+# cachefile = C:\Users\zrong\blog
 draft       = draft
 page        = page
 post        = post
@@ -173,7 +189,7 @@ work 代表 blog 源码所在的文件夹（绝对路径），其下的几个设
 
 要了解这些文件夹的具体内容，可参考 [本博客源码][4] 。
 
-# 3.4 多博客配置
+## 3.4 多博客配置
 
 WPCMD 可以很容易管理多个 WordPress 博客。毕竟多个博客就是多个配置而已。
 
@@ -187,7 +203,126 @@ wpcmd show --site site1 -t option
 
 这样，通过为 `--site` 参数指定不同的 section 名称，就能管理你的多个博客了。
 
+## 3.5 代码高亮配置
+
+WPCMD 使用 [Pygments][10] 来实现代码高亮，因此，我们需要生成一个 css 文件加入到 WordPress 的模版中，代码高亮才能生效。
+
+安装了 WPCMD 后，就可以使用 `pygmentize` 命令来生成这个 css 文件。
+
+查看所有支持的 style：
+
+```
+-> % pygmentize -L styles
+Pygments version 2.0.2, (c) 2006-2014 by Georg Brandl.
+
+Styles:
+~~~~~~~
+* paraiso-dark:
+
+* default:
+    The default style (inspired by Emacs 22).
+* emacs:
+    The default style (inspired by Emacs 22).
+* murphy:
+    Murphy's style from CodeRay.
+* igor:
+    Pygments version of the official colors for Igor Pro procedures.
+* perldoc:
+    Style similar to the style used in the perldoc code blocks.
+* xcode:
+    Style similar to the Xcode default colouring theme.
+* monokai:
+    This style mimics the Monokai color scheme.
+* colorful:
+* manni:
+* pastie:
+* rrt:
+* bw:
+
+* paraiso-light:
+
+* trac:
+* tango:
+* native:
+* autumn:
+* friendly:
+* vs:
+* vim:
+* borland:
+* fruity:
+```
+
+然后选择一个自己喜欢的格式生成 css 文件。在下面的代码中，我使用 `-S` 参数指定生成类似于 vim 7.0 的代码高亮效果，并指定了一个文件名。
+
+```
+-> % pygmentize -S vim -f html > codehilite.css
+```
+
+接着，把这个生成的 css 文件上传到 WordPress 文件夹，并在 WordPress 模版的 style.css 文件中加入这一行（注意修改路径，我使用的是子模板）：
+
+``` css
+@import url("/wp-content/themes/twentyfifteen_child/codehilite.css");
+```
+
 # 4. 使用
+
+WPCMD 有4个子命令，主要作用如下：
+
+- new  
+创建新的文章、页面、分类或标签；
+- update  
+更新已有的文章、页面、分类或标签。这是使用最频繁的命令；
+- show  
+显示指定 WordPress 站点的文章、页面、分类、标签、选项和媒体文件信息；
+- util  
+一些工具，最有用的就是生成文章列表页面。
+
+要查看这些子命令的详细帮助，可以使用 `wpcmd {subcommand} -h` 。例如 `wpcmd update -h` 就查看 update 命令的详细用法。
+
+## 4.1 new
+
+使用 new 命令可以创建4种类型的内容：
+
+- post 对应 WordPress 中的文章；
+- page 对应 WordPress 中的页面；
+- tag 对应 WordPress 中的标签；
+- category 对应 WordPress 中的分类目录。
+
+### 4.1.1 创建分类目录
+
+下面的命令创建一个名为 `PHP` ，别名为 `php` ，描述为 『世界上最好的语言』的分类目录。
+
+```shell
+-> % wpcmd new -t category -q php "PHP" "世界上最好的语言"
+Save '/Users/zrong/.wpcmd.cache2.py' done.
+Get term from WordPress, query: ['category', 'php'], result: None
+The term PHP(21) has created.
+Save '/Users/zrong/.wpcmd.cache2.py' done.
+The term PHP has saved.
+```
+
+也可以简化一下，只为 `-q` 提供一个参数。这样就会创建一个别名和名称都是 `php` 的标签，但这样一来，PHP 就不是世界上最好的语言了：
+
+```shell
+-> % wpcmd new -t category -q php
+```
+
+### 4.1.2 创建标签
+
+在 WordPress 的数据库中，无论是标签还是分类目录，都是放在 `wp_terms` 表中，它们的区别仅仅是 `taxonomy` 不同。一个是 `category` ，一个是 `post_tag` 。 
+
+所以，创建一个标签，只需要为 `-t` 参数传递 `post_tag` 即可。我在处理标签的时候做了简化，使用 `tag` 和 `post_tag` 都是可以的。
+
+```shell
+-> % wpcmd new -t tag -q python Python "Python 语言相关"
+Save '/Users/zrong/.wpcmd.cache2.py' done.
+Get term from WordPress, query: ['post_tag', 'python'], result: None
+The term Python(20) has created.
+Save '/Users/zrong/.wpcmd.cache2.py' done.
+The term Python has saved.
+```
+
+### 4.1.3 创建文章
 
 （未完待续）
 
@@ -198,4 +333,6 @@ wpcmd show --site site1 -t option
 [5]: http://zengrong.net/post/2187.htm
 [6]: http://zengrong.net/post/2320.htm
 [7]: http://zengrong.net/post/2294.htm
-
+[8]: http://zengrong.net/post/tag/vim
+[9]: https://github.com/zrong/blog/blob/master/README.md
+[10]: http://pygments.org
