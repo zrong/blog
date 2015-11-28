@@ -9,6 +9,8 @@ attachments: $ATTACHMENTS
 posttype: page
 poststatus: publish
 
+[TOC]
+
 我 2003 年开始写博客，现在的博客 [zengrong.net][2] 从2005 年起开始更新，一直没有中断。虽然 WordPress 的编辑功能越来越强大，而且也有大量的博客写作工具，但我都用不习惯。我总希望用一种更方便更简单的（更适合程序员）的方式来管理博客。
 
 2014 年的时候我考虑过 [博客静态化][5]，但现有的博客静态化工具不太符合我的要求，因此我准备自己造个轮子。造轮子的工程未免复杂，为了满足在轮子诞生之前的更新欲望，[WPCMD][1] 诞生了。
@@ -141,13 +143,6 @@ wpcmd update -t page -q wpcmd
 配置文件默认的内容如下：
 
 ```
-[default]
-
-# Mac or Linux
-conffile = /Users/zrong/.wpcmd.ini
-# Windows
-# conffile = C:\Users\zrong\_wpcmd.ini
-
 [site]
 
 name        = my blog
@@ -283,10 +278,10 @@ WPCMD 有4个子命令，主要作用如下：
 
 使用 new 命令可以创建4种类型的内容：
 
+- category 对应 WordPress 中的分类目录。
+- tag 对应 WordPress 中的标签；
 - post 对应 WordPress 中的文章；
 - page 对应 WordPress 中的页面；
-- tag 对应 WordPress 中的标签；
-- category 对应 WordPress 中的分类目录。
 
 ### 4.1.1 创建分类目录
 
@@ -324,6 +319,125 @@ The term Python has saved.
 
 ### 4.1.3 创建文章
 
+创建的文章处于 `draft` 文件夹中。下面的代码将创建 `draft/draft_wpcmd.md` 这篇文章：
+
+```shell
+-> % wpcmd new -t post -q wpcmd
+The draft file "/Users/zrong/blog/draft/draft_wpcmd.md" has created.
+```
+
+也可以提供 `-q` 参数，这样会自动用数字作为文件名：
+
+```shell
+-> % wpcmd new -t post
+The draft file "/Users/zrong/blog/draft/draft_1.md" has created.
+```
+
+创建出来的文章的默认内容如下：
+
+```
+title: 
+date: 2015-11-28 21:44:38
+modified: 2015-11-28 21:44:38
+author: zrong
+postid: $POSTID
+slug: $SLUG
+nicename: 
+attachments: $ATTACHMENTS
+posttype: post
+poststatus: draft
+tags: 
+category: technology
+```
+
+这里的 Metadata 是使用 [Python-Markdown][11] 的 [Metadata 插件修改版][12] 来解析的的。默认的插件认为 Metadata 是无序的，而 WPCMD 需要它们是有序的。
+
+我们需要对这些 Metadata 填充内容。下面是个具体填写说明：
+
+```
+title: 这里填写标题
+date: 创建日期
+modified: 修改日期
+author: 作者
+postid: 不必修改，这个值会在提交到 WordPress 之后自动替换成 PostID 的值
+slug: 不必修改，将被自动替换，一般情况下值与 nicename 相同
+nicename: 填写 URL 友好的名称，若不填写则会自动使用 title 的 BASE64 编码
+attachments: 不必修改，文中若包含图片等上传的内容，则该值被替换成这些上传内容的 PostID
+posttype: 值为 post 或者 page
+poststatus: 值为 draft（不可发布）或者 publish（允许发布到 WordPress）
+tags: 标签，允许为空，使用英文半角逗号分隔，标签必须在 WordPress 中存在
+category: 分类目录，必填，必须在 WordPress 中存在
+```
+
+接下来，就可以使 Markdown 语法进行博客的撰写了。支持下面的插件：
+
+- [Fenced Code Extra ][6] 
+- [Tables][13]
+- [CodeHilite][14]
+- [Table of Contents][16]
+
+这里有 [大量的源码][15] 可以参考。
+
+### 4.1.4 创建页面
+
+创建页面和创建文章的方法类似，只是需要为 `-t` 参数传递 `page` 。
+
+```
+-> % wpcmd new -t page
+The draft file "/Users/zrong/blog/draft/draft_2.md" has created.
+```
+
+生成的文档也类似，不过 Metadata 会不包含 tag 和 category ：
+
+```
+title: 
+date: 2015-11-28 22:23:00
+modified: 2015-11-28 22:23:00
+author: zrong
+postid: $POSTID
+slug: $SLUG
+nicename: 
+attachments: $ATTACHMENTS
+posttype: page
+poststatus: draft
+```
+
+## 4.2 update
+
+使用 update 命令可以更新6种类型的内容：
+
+- category 对应 WordPress 中的分类目录。
+- tag 对应 WordPress 中的标签；
+- post 对应 WordPress 中的文章；
+- page 对应 WordPress 中的页面；
+- option 对应 WordPress 中的设置选项；
+- draft 对应在 WordPress 中尚不存在（但存在于 draft 文件夹）中的草稿。
+
+### 4.2.1 更新 tag 和 category
+
+更新这两者的语法和 new 完全相同，只是需要将 new 换成 update：
+
+```
+-> % wpcmd update -t category -q php "PHP" "世界上最糟的语言"
+```
+
+### 4.2.2 更新文章和页面
+
+对于在 WordPress 中还不存在的新文章来说，需要使用 `-t draft` 类型来进行更新。下面的命令把 `draft/draft_1.md` 这篇文章更新到 WordPress 上：
+
+```
+-> % wpcmd update -t draft -q 1
+```
+
+对于已存在于 WordPress 的文章或者页面，就需要使用 `-t post` 或者 `-t page` 类型了：
+
+```
+-> % wpcmd update -t page -q wpcmd
+Old article:
+id=2321, date=2015-06-12 01:40:22, date_modified=2015-11-22 14:04:15, slug=wpcmd, title=WPCMD, post_status=publish, post_type=page
+Update 2321 successfully! 
+```
+
 （未完待续）
 
 [1]: https://github.com/zrong/wpcmd
@@ -336,3 +450,9 @@ The term Python has saved.
 [8]: http://zengrong.net/post/tag/vim
 [9]: https://github.com/zrong/blog/blob/master/README.md
 [10]: http://pygments.org
+[11]: http://pythonhosted.org/Markdown/
+[12]: https://github.com/zrong/wpcmd/blob/master/wpcmd/mde/metadata.py
+[13]: http://pythonhosted.org/Markdown/extensions/tables.html
+[14]: http://pythonhosted.org/Markdown/extensions/code_hilite.html
+[15]: https://github.com/zrong/blog/tree/master/post
+[16]: http://pythonhosted.org/Markdown/extensions/toc.html
