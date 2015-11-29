@@ -359,10 +359,10 @@ title: 这里填写标题
 date: 创建日期
 modified: 修改日期
 author: 作者
-postid: 不必修改，这个值会在提交到 WordPress 之后自动替换成 PostID 的值
+postid: 不必修改，这个值会在提交到 WordPress 之后自动替换成 Post ID 的值
 slug: 不必修改，将被自动替换，一般情况下值与 nicename 相同
 nicename: 填写 URL 友好的名称，若不填写则会自动使用 title 的 BASE64 编码
-attachments: 不必修改，文中若包含图片等上传的内容，则该值被替换成这些上传内容的 PostID
+attachments: 不必修改，文中若包含图片等上传的内容，则该值被替换成这些上传内容的 Post ID
 posttype: 值为 post 或者 page
 poststatus: 值为 draft（不可发布）或者 publish（允许发布到 WordPress）
 tags: 标签，允许为空，使用英文半角逗号分隔，标签必须在 WordPress 中存在
@@ -413,7 +413,7 @@ poststatus: draft
 - option 对应 WordPress 中的设置选项；
 - draft 对应在 WordPress 中尚不存在（但存在于 draft 文件夹）中的草稿。
 
-### 4.2.1 更新 tag 和 category
+### 4.2.1 更新分类目录和标签
 
 更新这两者的语法和 new 完全相同，只是需要将 new 换成 update：
 
@@ -423,13 +423,23 @@ poststatus: draft
 
 ### 4.2.2 更新文章和页面
 
-对于在 WordPress 中还不存在的新文章来说，需要使用 `-t draft` 类型来进行更新。下面的命令把 `draft/draft_1.md` 这篇文章更新到 WordPress 上：
+这分为两种情况：在 WordPress 中还不存在的文章，以及已经存在于 WordPress 中的文章。
+
+对于在 WordPress 中 **还不存在** 的新文章来说，需要使用 `-t draft` 类型来进行更新。下面的命令把 `draft/draft_1.md` 这篇文章更新到 WordPress 上（ `-q` 参数不必添加 `draft_` 前缀）：
 
 ```
 -> % wpcmd update -t draft -q 1
 ```
 
-对于已存在于 WordPress 的文章或者页面，就需要使用 `-t post` 或者 `-t page` 类型了：
+在这种更新过程中，WPCMD 将会做下面的事：
+
+1. 将 Markdown 格式转换成 HTML 格式；
+2. 将 HTML 格式发布到 WordPress 上；
+3. 获取新文章的 Post ID，用它替换 Markdown 源文件的 Metadata 中的 `$POSTID`  ;
+4. 更新 `$SLUG` 的值；
+5. 将 `draft/draft_1.md` 文件移动并改名为 `post/{postid}.md` ，`postid` 就是刚才得到的值。
+
+对于 **已存在** 于 WordPress 的文章或者页面，就需要使用 `-t post` 或者 `-t page` 类型了：
 
 ```
 -> % wpcmd update -t page -q wpcmd
@@ -437,6 +447,57 @@ Old article:
 id=2321, date=2015-06-12 01:40:22, date_modified=2015-11-22 14:04:15, slug=wpcmd, title=WPCMD, post_status=publish, post_type=page
 Update 2321 successfully! 
 ```
+
+在这种更新过程中，WPCMD 会做上面的1、2两步，后面的步骤都不会发生。
+
+注意，由于更新文章是最常见的操作，因此 `-t` 参数的默认值就是 `post` 。更新文章时，可以仅仅提供 `-q` 参数。
+
+### 4.2.3 在文章和页面中包含图像
+
+WPCMD 会自动检测文章中的图像文件，将其上传到 WordPress 中。但这需要遵循一些特殊的规则：
+
+1. 要上传的图像必须放在 media&#47;draft&#47; 文件夹中；
+2. 必须使用 media&#47;draft&#47;imagefile 的形式提供图像文件的 URL。下面是个范例：
+
+
+`![myimage](media`&#47;`draft`&#47;`myimage.jpg)`
+
+当然你也可以采用另一种语法：
+
+`Some text ....`
+
+`![myimage][img1]`
+
+`Another text ....`
+
+`[img1]: media`&#47;`draft`&#47;`myimage.jpg`
+
+使用这种规则，在更新文章和页面的时候，WPCMD 会做下面的事：
+
+1. 自动扫描复合规则的图像，将其上传到 WordPress 中；
+2. 获得已上传文件的 Post ID ，用它替换 Markdown 源文件的 Metadata 中的 `$ATTACHMENTS` ；
+3. 获取已上传文件的 URL 地址，用它替换 media&#47;draft&#47;myimage.jpg ；
+4. 在 `media` 文件夹下建立对应的年、月文件夹，讲这张已经上任的图像文件移动到对应的文件夹中。
+
+在完成上述操作后，上面的 Markdown 源码会变成如下所示（以 zengrong.net 为例）：
+
+```
+![myimage](http://zengrong.net/wp-content/upload/2015/11/myimage.jpg)
+```
+
+同时 media&#47;draft&#47;myimage.jpg 将移动到 media&#47;2015&#47;11&#47;myimage.jpg 。
+
+### 4.2.4 输出 HTML 格式源码
+
+为了提前查看效果，我们也可以不将内容发布到 WordPress ，而是先行输出一个 HTML 文件查看效果。使用 update 命令的 `-o` 参数指定输出文件名即可完成：
+
+```
+-> % wpcmd update -t page -q wpcmd -o wpcmd.html
+```
+
+上面的命令会生成文件 `output/wpcmd.html` 。
+
+注意这里生成的文件是一个不完整的 HTML 文件，仅包含正文的 HTML 信息，没有 `<html> <head> <body>` 等标签。因此若包含中文，直接用浏览器打开会显示乱码。此时手动指定一下页面编码为 `UTF-8` 即可。
 
 （未完待续）
 
