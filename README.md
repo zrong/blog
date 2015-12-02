@@ -783,5 +783,6 @@
 1. 2015-10-17 \[**2374**\] [常用开源镜像站整理](http://zengrong.net/post/2374.htm)
 1. 2015-10-29 \[**2379**\] [Graphviz 工具教程](http://zengrong.net/post/2379.htm)
 1. 2015-11-13 \[**2383**\] [客户端技能树](http://zengrong.net/post/2383.htm)
-1. 2015-11-27 \[**2396**\] [手机游戏开发框架设计（前言）](http://zengrong.net/post/2396.htm)
+1. 2015-11-27 \[**2396**\] [手机游戏开发框架设计（前言+目录）](http://zengrong.net/post/2396.htm)
 1. 2015-11-27 \[**2399**\] [手机游戏开发框架设计（一）：配置管理-包管理中心](http://zengrong.net/post/2399.htm)
+1. 2015-12-02 \[**2405**\] [我的推荐书单（一）](http://zengrong.net/post/2405.htm)
