@@ -45,7 +45,9 @@ Poststatus: publish
 |27| [刘慈欣中短篇小说集][27] | 已读 | 2015-10-20 | | |
 |28| [超新星纪元][28] | 已读 | 2015-10-27 | 2015-11-04 | |
 |29| [乌合之众——大众心理研究][29] | 已读 | 2015-11-22 | 2015-12-08 | [读书笔记][29m] |
-|30| [讲故事的人：斯皮尔伯格传][30] | **10%** | 2015-12-01 | | |
+|30| [讲故事的人：斯皮尔伯格传][30] | **80%** | 2015-12-01 | | |
+|31| [中国2185][31] | 已读 | 2015-12-15 | 2015-12-18 ||
+|32| [项目管理十步法][32] [在线阅读][32a] | **10%** | 2015-12-23 |  ||
 
 
 
@@ -86,3 +88,6 @@ Poststatus: publish
 [29]: http://book.douban.com/subject/1012611/
 [29m]: http://zengrong.net/post/2407.htm
 [30]: http://book.douban.com/subject/26318807/
+[31]: http://book.douban.com/subject/24253393/
+[32]: http://book.douban.com/subject/1291070/
+[32a]: https://books.google.com/books?id=XuXp0UjwjKEC&printsec=frontcover&hl=zh-CN#v=onepage&q&f=false
