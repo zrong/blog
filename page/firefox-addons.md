@@ -14,7 +14,7 @@ Nicename: firefox-addons
 -   [Tab Mix Plus](http://tmp.garyr.net/)  
     最强悍的标签管理插件
 -   [FoxyProxy](http://foxyproxy.mozdev.org/)  
-    如果经常使用代理服务器上网并且有多个代理服务器地址，该怎么办？就用它了。
+    如果经常使用DAILI服务器上网并且有多个DAILI服务器地址，该怎么办？就用它了。
 -   [webdeveloper](http://chrispederick.com/work/webdeveloper/)  
     web开发者必装。
 -   [Venkman](http://www.mozilla.org/projects/venkman/)  
@@ -117,5 +117,5 @@ Nicename: firefox-addons
 -   Super Tab Mode
 -   UnMHT
 -   AutoProxy  
-    这是一个国人开发的Firefox代理服务器扩展，通过一份无法访问的域名列表目录，实现自动在代理和非代理之间切换，该域名列表目录由志愿者手动维护。AutoProxy还可实现自定义您自己的代理规则；订阅规则列表；自定义代理服务器等功能。
+    这是一个国人开发的Firefox DAILI服务器扩展，通过一份无法访问的域名列表目录，实现自动在DAILI和非DAILI之间切换，该域名列表目录由志愿者手动维护。AutoProxy还可实现自定义您自己的DAILI规则；订阅规则列表；自定义DAILI服务器等功能。
 
