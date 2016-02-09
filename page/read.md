@@ -20,12 +20,19 @@ Poststatus: publish
 |1602| [在难搞的日子笑出声来][1602] | 2016-01-09 | 2016-01-18 | |
 |1603| [且将生活一饮而尽][1603] | 2016-01-10 | | **30%** |
 |1604| [用户力][1604] | 2016-01-17 | 2016-01-17 | |
+|1605| [火星救援][1605] | 2016-02-01 | 2016-02-06 | |
+|1606| [解忧杂货店][1606] | 2016-02-01 |  | **30%** |
+|1607| [Blender大师：建模、雕刻、材质、渲染][1607] | 2016-02-09 |  | **20%** |
+
 
 [1601]: http://book.douban.com/subject/11524362/
 [1601m]: http://zengrong.net/post/2411.htm
 [1602]: http://book.douban.com/subject/25777982/
 [1603]: http://book.douban.com/subject/26648238/
 [1604]: http://book.douban.com/subject/26685458/
+[1605]: http://book.douban.com/subject/26586492/
+[1606]: http://book.douban.com/subject/25862578/
+[1607]: http://book.douban.com/subject/25866329/
 
 <a name="2015"></a>
 # 2015
