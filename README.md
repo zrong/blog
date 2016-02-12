@@ -791,3 +791,5 @@
 1. 2015-12-23 \[**2408**\] [游戏部门推荐书单汇总](http://zengrong.net/post/2408.htm)
 1. 2016-01-09 \[**2411**\] [《注意！有人在盯着你》读书笔记](http://zengrong.net/post/2411.htm)
 1. 2016-01-25 \[**2433**\] [怎么做好互联网公司的技术负责人？](http://zengrong.net/post/2433.htm)
+1. 2016-01-29 \[**2434**\] [在技术和管理中选择](http://zengrong.net/post/2434.htm)
+1. 2016-02-12 \[**2441**\] [Pebble Classic 的售后和花屏维修](http://zengrong.net/post/2441.htm)
