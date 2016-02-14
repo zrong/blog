@@ -174,6 +174,7 @@ media       = media
 
 其中，name 为博客的名称，url 为博客的 xmlrpc.php 地址，user 和 password 为博客的管理密码，这些都是必须填写的。
 
+<a name="dir">
 work 代表 blog 源码所在的文件夹（绝对路径），其下的几个设置为相当于 work 的文件夹：
 
 - draft 还没发布的文章源码；
@@ -499,7 +500,94 @@ WPCMD 会自动检测文章中的图像文件，将其上传到 WordPress 中。
 
 注意这里生成的文件是一个不完整的 HTML 文件，仅包含正文的 HTML 信息，没有 `<html> <head> <body>` 等标签。因此若包含中文，直接用浏览器打开会显示乱码。此时手动指定一下页面编码为 `UTF-8` 即可。
 
-（未完待续）
+## 4.3 show
+
+show 命令显示博客的信息，使用 `-t` 或 `--type` 参数指定信息的类型，目前有这样几种类型可以显示：
+
+- option 从 Wordpress 中查询博客的基础信息并显示
+- post（远程列表） 从 Wordpress 中查询博客文章列表并显示
+- page（远程列表） 从 Wordpress 中查询博客页面列表并显示
+- draft（本地列表） 显示位于 [draft](#dir) 文件夹中的的所有草稿 markdown 源文件路径
+- tax（远程列表） 从 Wordpress 中查询所有可用的分类类型
+- term 使用 tax 类型查到的分类类型，显示这些分类关键词列表
+- category（本地列表） 从本地缓存中查询博客中的文章分类并显示
+- tag（本地列表） 从本地缓存查询博客中的 tag 并显示
+- medialib（远程列表） 从 Wordpress 中查询博客中已经上传的媒体文件信息
+- mediaitem（远程列表） 从 Wordpress 中查询博客中已经上传的某个媒体文件信息，需要指定一个媒体文件 ID
+
+### 4.3.1 post 和 page
+
+对于 post 和 page 这两种类型，可以使用 `-n` 或者 `--number` 来指定显示几条信息。在我的博客上执行下面的命令，会显示最新的两篇文章的基本信息：
+
+
+```
+-> % wpcmd show -t post -n 2
+id=2441, date=2016-02-12 12:30:54, date_modified=2016-02-12 13:50:44, slug=pebble-classic, title=Pebble Classic 的售后和花屏维修, post_status=publish, post_type=post
+id=2434, date=2016-01-29 09:30:17, date_modified=2016-01-30 15:35:11, slug=how-to-choose-in-management-and-technology, title=在技术和管理中选择, post_status=publish, post_type=post
+```
+
+使用 `-d` 或者 `--order` 可以实现列表排序，默认是按时间倒序 `DESC` ，如果设置为 `ASC` 则显示最老的两篇文章:
+
+```
+-> % wpcmd show -t post -n 2 -d ASC
+id=23, date=2005-04-25 05:21:48, date_modified=2005-10-10 05:28:52, slug=creative-commons, title=创作共用（Creative Commons） , post_status=publish, post_type=post
+id=19, date=2005-04-27 15:14:22, date_modified=2007-12-30 15:03:11, slug=display_errors, title=终于解决了Mambo出错的问题, post_status=publish, post_type=post
+```
+
+使用 `-o` 或者 `--orderby` 参数可以指定是按 `post_modified` 排序还是按 `post_id` 排序。
+
+### 4.3.2 medialib 和 mediaitem
+
+下面的命令显示最新上传的两个媒体文件信息：
+
+```
+-> % wpcmd show -t medialib -n 2
+field:{'number': 2}
+id=2442, parent=2441, title=watch3, description=, caption=, date_created=2016-02-12 13:32:20, link=http://zengrong.net/wp-content/uploads/2016/02/watch3.jpg, thumbnail=http://zengrong.net/wp-content/uploads/2016/02/watch3-150x150.jpg, metadata={'width': 721, 'file': '2016/02/watch3.jpg', 'height': 1280, 'sizes': {'medium': {'width': 169, 'mime-type': 'image/jpeg', 'file': 'watch3-169x300.jpg', 'height': 300}, 'post-thumbnail': {'width': 721, 'mime-type': 'image/jpeg', 'file': 'watch3-721x510.jpg', 'height': 510}, 'thumbnail': {'width': 150, 'mime-type': 'image/jpeg', 'file': 'watch3-150x150.jpg', 'height': 150}, 'large': {'width': 577, 'mime-type': 'image/jpeg', 'file': 'watch3-577x1024.jpg', 'height': 1024}}, 'image_meta': {'iso': '0', 'orientation': '0', 'caption': '', 'credit': '', 'focal_length': '0', 'camera': '', 'title': '', 'created_timestamp': '0', 'copyright': '', 'shutter_speed': '0', 'keywords': [], 'aperture': '0'}}
+id=2440, parent=2441, title=watch4.jpg, description=, caption=, date_created=2016-02-12 13:27:29, link=http://zengrong.net/wp-content/uploads/2016/02/watch4.jpg, thumbnail=http://zengrong.net/wp-content/uploads/2016/02/watch4-150x150.jpg, metadata={'width': 721, 'file': '2016/02/watch4.jpg', 'height': 1280, 'sizes': {'medium': {'width': 169, 'mime-type': 'image/jpeg', 'file': 'watch4-169x300.jpg', 'height': 300}, 'post-thumbnail': {'width': 721, 'mime-type': 'image/jpeg', 'file': 'watch4-721x510.jpg', 'height': 510}, 'thumbnail': {'width': 150, 'mime-type': 'image/jpeg', 'file': 'watch4-150x150.jpg', 'height': 150}, 'large': {'width': 577, 'mime-type': 'image/jpeg', 'file': 'watch4-577x1024.jpg', 'height': 1024}}, 'image_meta': {'iso': '0', 'orientation': '0', 'caption': '', 'credit': '', 'focal_length': '0', 'camera': '', 'title': '', 'created_timestamp': '0', 'copyright': '', 'shutter_speed': '0', 'keywords': [], 'aperture': '0'}} 
+```
+
+从上面的信息中，我们可以知道 id 为 2442 的媒体文件是一张图片，也知道了它的尺寸、URL 路径以及所属的文章 ID 为 2441 。
+
+
+如果希望只看特定的媒体文件信息，可以指定媒体文件的 id：
+
+```
+-> % wpcmd show -t mediaitem -q 2442
+```
+
+### 4.3.3 category/tag 和 term/tax
+
+category 和 tag 直接显示本地缓存的文章分类和标签信息。在 Wordpress 中， `tag` 原名为 `post_tag` ，它和 `category` 一样都是 `term` 。
+
+因此，下面两条命令是同义语：
+
+```
+-> % wpcmd show -t tag
+-> % wpcmd show -t term -q post_tag
+```
+
+同样的，下面两条命令也是同义语：
+
+```
+-> % wpcmd show -t category
+-> % wpcmd show -t term -q category
+```
+
+使用 tax 可以查到 Wordpress 支持哪些 term ：
+
+```
+-> % wpcmd show -t tax
+category
+post_tag
+post_format
+```
+
+## 4.4 util
+
+util 是一些批量处理博客的小工具，目前仅有 `-r , --readme` 这条命令有意义。它会生成一个 README.md 文件，效果请查看 [README.md][9] 。
+
+（全文完）
 
 [1]: https://github.com/zrong/wpcmd
 [2]: http://zengrong.net
