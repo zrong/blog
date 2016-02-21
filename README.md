@@ -793,3 +793,5 @@
 1. 2016-01-25 \[**2433**\] [怎么做好互联网公司的技术负责人？](http://zengrong.net/post/2433.htm)
 1. 2016-01-29 \[**2434**\] [在技术和管理中选择](http://zengrong.net/post/2434.htm)
 1. 2016-02-12 \[**2441**\] [Pebble Classic 的售后和花屏维修](http://zengrong.net/post/2441.htm)
+1. 2016-02-17 \[**2445**\] [过了个年，iPhone Certificates 全部失效](http://zengrong.net/post/2445.htm)
+1. 2016-02-21 \[**2450**\] [八一八 Apple Pay 、NFC 和“云闪付”](http://zengrong.net/post/2450.htm)
