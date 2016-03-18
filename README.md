@@ -796,3 +796,5 @@
 1. 2016-02-17 \[**2445**\] [过了个年，iPhone Certificates 全部失效](http://zengrong.net/post/2445.htm)
 1. 2016-02-21 \[**2450**\] [八一八 Apple Pay 、NFC 和“云闪付”](http://zengrong.net/post/2450.htm)
 1. 2016-02-23 \[**2451**\] [error: 'to\_string' is not a member of 'std'](http://zengrong.net/post/2451.htm)
+1. 2016-03-06 \[**2452**\] [VR 时代，我们应该如何编程？](http://zengrong.net/post/2452.htm)
+1. 2016-03-16 \[**2453**\] [工作选择与职业规划](http://zengrong.net/post/2453.htm)
