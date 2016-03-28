@@ -1,5 +1,6 @@
 Title: Sprite Sheet Editor
 Date: 2011-08-18 12:29:04
+modified: 2015-01-21 14:45:51
 Author: zrong
 Postid: 1403
 Slug: sprite_sheet_editor
@@ -7,6 +8,10 @@ Nicename: sprite_sheet_editor
 Attachments: 1407, 1408, 1409, 1410, 1411, 1412
 
 [Sprite Sheet Editor](http://zengrong.net/sprite_sheet_editor)
+
+## Sprite Sheet Editor 不再更新
+
+我已经放弃 Flash 平台，本工具不再更新。详见： [Goodbye Flash!][4]
 
 ## 关于开源
 
@@ -104,3 +109,4 @@ Sprite sheet Editor有许多缺点，因此我必须推荐两个优秀的软件�
 [1]: https://github.com/zrong/sprite_sheet_editor
 [2]: http://zengrong.net/anetoolkit
 [3]: http://zengrong.net/platform-anes
+[4]: http://zengrong.net/post/2231.htm
