@@ -8,14 +8,35 @@ Nicename: flashassistant
 
 [Flash＆Flex大全](http://zengrong.net/flashassistant)
 
+本文不再更新，详见： [Goodbye, Flash!](http://zengrong.net/post/2231.htm)
+
+**目录**
+
+[TOC]
+
+----
+
+<a name="history"></a>
+## 更新历史
+
+* <span style="color: #ff0000;">2010年11月29日更新：</span>修改[服务器软件](#server)部分，加入SmartFoxServer、QuickServer、Cindy、MINA的介绍。
+* <span style="color: #ff0000;">2010年11月24日更新：</span>修改[服务器软件](#server)部分，加入Wowza、ErlyVideo的介绍，修改Red5的介绍。
+* <span style="color: #ff0000;">2010年9月25日更新：</span>修改[编译与反编译器](#compiler)、[加密与混淆器](#encrypt)部分。
+* <span style="color: #ff0000;">2010年9月18日更新：</span>加入[调试器](#debugger)。
+* <span style="color: #ff0000;">2010年9月4日更新：</span>删除数个无效的[explorer](#explorer)。
+* <span style="color: #ff0000;">2010年8月27日更新：</span>加入数个Flash游戏、物理、3D引擎和UI组件，加入1个Flash开发框架。
+* <span style="color: #ff0000;">2010年8月25日更新：</span>继续删除和修正链接，合并类别，加入了Flash游戏引擎，增加官方在线中文帮助。
+* <span style="color: #ff0000;">2010年8月24日更新：</span>删除和修正了许多链接，修改了介绍，合并了类别，加入了Flash物理引擎类别。
+* <span style="color: #ff0000;">2011年5月15日更新：</span>在[UI组件](#UI)部分，加入几个轻量级纯AS组件的介绍。
+* <span style="color: #ff0000;">2011年5月13日更新：</span>在[游戏引擎](#game)部分，修过多个引擎的介绍。
+* <span style="color: #ff0000;">2011年4月6日更新：</span>在[游戏引擎](#game)部分，加入Flixel Power Tools等几个引擎的介绍。
+* <span style="color: #ff0000;">2011年3月3日更新：</span>在[服务器](#server)部分，加入Openfire的介绍。
+* <span style="color: #ff0000;">2011年1月30日更新：</span>在[混淆器](#encrypt)部分，加入C Preprocessor for ActionScript的介绍。
+* <span style="color: #ff0000;">2011年1月7日更新：</span>修改[调试器](#debugger)部分，加入Kap Inspect的介绍。
 * <span style="color: #ff0000;">2012年2月25日更新：</span>加入As3-Bloom的介绍。
 * <span style="color: #ff0000;">2012年3月12日更新：</span>在[服务器](#server)部分，加入CRTMPServer和Mammoth Server的介绍。
 * <span style="color: #ff0000;">2013年9月10日更新：</span>文章采用markdown重新排版，便于编辑；删除部分无效内容；从[游戏引擎](#game)中拆分出[2.5D引擎](#isometric)；在[UI组件](#UI)部分加入flexlite和morn UI。
 * <span style="color: #ff0000;">2013年11月28日更新：</span>加入Nape引擎。
-
-[旧的更新移至文章底部](#oldUpdate)
-
-* * *
 
 <a name="help"></a>
 ## 官方在线帮助（没标英文的都是中文）
@@ -488,17 +509,3 @@ Download all prototype functions in?[PDF format](http://www.sephiroth.it/pdf/pdf
 
 * * *
 
-* <a name="oldUpdate"></a><span style="color: #ff0000;">2010年11月29日更新：</span>修改[服务器软件](#server)部分，加入SmartFoxServer、QuickServer、Cindy、MINA的介绍。
-* <span style="color: #ff0000;">2010年11月24日更新：</span>修改[服务器软件](#server)部分，加入Wowza、ErlyVideo的介绍，修改Red5的介绍。
-* <span style="color: #ff0000;">2010年9月25日更新：</span>修改[编译与反编译器](#compiler)、[加密与混淆器](#encrypt)部分。
-* <span style="color: #ff0000;">2010年9月18日更新：</span>加入[调试器](#debugger)。
-* <span style="color: #ff0000;">2010年9月4日更新：</span>删除数个无效的[explorer](#explorer)。
-* <span style="color: #ff0000;">2010年8月27日更新：</span>加入数个Flash游戏、物理、3D引擎和UI组件，加入1个Flash开发框架。
-* <span style="color: #ff0000;">2010年8月25日更新：</span>继续删除和修正链接，合并类别，加入了Flash游戏引擎，增加官方在线中文帮助。
-* <span style="color: #ff0000;">2010年8月24日更新：</span>删除和修正了许多链接，修改了介绍，合并了类别，加入了Flash物理引擎类别。
-* <span style="color: #ff0000;">2011年5月15日更新：</span>在[UI组件](#UI)部分，加入几个轻量级纯AS组件的介绍。
-* <span style="color: #ff0000;">2011年5月13日更新：</span>在[游戏引擎](#game)部分，修过多个引擎的介绍。
-* <span style="color: #ff0000;">2011年4月6日更新：</span>在[游戏引擎](#game)部分，加入Flixel Power Tools等几个引擎的介绍。
-* <span style="color: #ff0000;">2011年3月3日更新：</span>在[服务器](#server)部分，加入Openfire的介绍。
-* <span style="color: #ff0000;">2011年1月30日更新：</span>在[混淆器](#encrypt)部分，加入C Preprocessor for ActionScript的介绍。
-* <span style="color: #ff0000;">2011年1月7日更新：</span>修改[调试器](#debugger)部分，加入Kap Inspect的介绍。
