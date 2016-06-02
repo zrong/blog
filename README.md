@@ -812,3 +812,5 @@
 1. 2016-04-27 \[**2540**\] [QCon2016视频和PPT资料下载](http://zengrong.net/post/2540.htm)
 1. 2016-04-28 \[**2545**\] [MacBook Pro Retina 睡眠耗电现象深究](http://zengrong.net/post/2545.htm)
 1. 2016-05-02 \[**2549**\] [一定要开的会](http://zengrong.net/post/2549.htm)
+1. 2016-05-30 \[**2551**\] [OS X 中使用命令行来管理网络](http://zengrong.net/post/2551.htm)
+1. 2016-06-02 \[**2553**\] [Homebrew 安装的 MySQL 在 EI Capitan 上无法启动](http://zengrong.net/post/2553.htm)
