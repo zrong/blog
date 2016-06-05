@@ -814,3 +814,4 @@
 1. 2016-05-02 \[**2549**\] [一定要开的会](http://zengrong.net/post/2549.htm)
 1. 2016-05-30 \[**2551**\] [OS X 中使用命令行来管理网络](http://zengrong.net/post/2551.htm)
 1. 2016-06-02 \[**2553**\] [Homebrew 安装的 MySQL 在 EI Capitan 上无法启动](http://zengrong.net/post/2553.htm)
+1. 2016-06-05 \[**2555**\] [「读书笔记」聘谁](http://zengrong.net/post/2555.htm)
