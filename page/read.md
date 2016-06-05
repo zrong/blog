@@ -35,7 +35,7 @@ Poststatus: publish
 |1617| [绝望锻炼了我][1617] |  |  |  |
 |1618| [硅谷钢铁侠：埃隆·马斯克的冒险人生][1618] |  |  |  |
 |1619| [SQL必知必会][1619] | 2016-05-31 | 2016-06-04 |  |
-|1620| [聘谁][1620] | 2016-05-25 | 2016-06-04 |  |
+|1620| [聘谁][1620] | 2016-05-25 | 2016-06-04 | [读书笔记][1620m] |
 |1621| [MySQL必知必会][1621] | 2016-06-04 | |  |
 
 
@@ -60,6 +60,7 @@ Poststatus: publish
 [1618]: https://book.douban.com/subject/26759508/
 [1619]: https://book.douban.com/subject/24250054/
 [1620]: https://book.douban.com/subject/3878077/
+[1620m]: https://zengrong.net/post/2555.htm
 [1621]: https://book.douban.com/subject/3354490/
 
 
