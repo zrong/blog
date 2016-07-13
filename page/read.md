@@ -1,6 +1,6 @@
 Title: 阅读
 Date: 2015-03-03 22:13:53
-Modified: 2016-02-21 13:20:09
+Modified: 2016-07-13 22:15:11
 Author: zrong
 Postid: 2250
 Slug: read
@@ -40,7 +40,10 @@ Poststatus: publish
 |1622| [革命时期的爱情][1622] | 2016-06-04 | 2016-06-12 |  |
 |1623| [红拂夜奔][1623] | 2016-06-10 | 2016-06-22 |  |
 |1624| [三十而立][1624] | 2016-06-22 | 2016-06-25 |  |
-|1625| [Flask Web开发][7] | 2016-06-01 | 2015-06-26| 第二遍 |
+|1625| [Flask Web开发][7] | 2016-06-01 | 2016-06-26| 第二遍 |
+|1626| [似水柔情][1626] | 2016-06-30 | 2016-07-04|  |
+|1627| [他们的世界：中国男同性恋群落透视][1626] | 2016-07-04 | 2016-07-12| |
+
 
 
 [1601]: http://book.douban.com/subject/11524362/
@@ -69,6 +72,8 @@ Poststatus: publish
 [1622]: https://book.douban.com/subject/3176760/
 [1623]: https://book.douban.com/subject/1418686/
 [1624]: https://book.douban.com/subject/3264665/
+[1626]: https://book.douban.com/subject/1273895/
+[1627]: https://book.douban.com/subject/1479194/
 
 
 <a name="2015"></a>
