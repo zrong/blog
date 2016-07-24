@@ -816,3 +816,4 @@
 1. 2016-06-02 \[**2553**\] [Homebrew 安装的 MySQL 在 EI Capitan 上无法启动](http://zengrong.net/post/2553.htm)
 1. 2016-06-05 \[**2555**\] [【读书笔记】聘谁](http://zengrong.net/post/2555.htm)
 1. 2016-07-23 \[**2568**\] [部署Flask + uWSGI + nginx](http://zengrong.net/post/2568.htm)
+1. 2016-07-24 \[**2570**\] [和停车场守门大爷聊天](http://zengrong.net/post/2570.htm)
