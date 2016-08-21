@@ -818,3 +818,4 @@
 1. 2016-07-23 \[**2568**\] [部署Flask + uWSGI + Nginx](http://zengrong.net/post/2568.htm)
 1. 2016-07-24 \[**2570**\] [和停车场守门大爷聊天](http://zengrong.net/post/2570.htm)
 1. 2016-07-29 \[**2571**\] [像要求别人那样要求自己](http://zengrong.net/post/2571.htm)
+1. 2016-08-19 \[**2574**\] [王妃紫罗兰](http://zengrong.net/post/2574.htm)
