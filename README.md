@@ -821,3 +821,4 @@
 1. 2016-08-19 \[**2574**\] [王妃紫罗兰](http://zengrong.net/post/2574.htm)
 1. 2016-08-28 \[**2577**\] [【读书笔记】当我们阅读时，我们看到了什么](http://zengrong.net/post/2577.htm)
 1. 2016-09-15 \[**2579**\] [桌面软件GUI开发框架: Electron 和 NW.js](http://zengrong.net/post/2579.htm)
+1. 2016-09-24 \[**2580**\] [Karabiner 在 macOS Sierra 下的解决方案](http://zengrong.net/post/2580.htm)
