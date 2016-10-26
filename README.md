@@ -805,7 +805,7 @@
 1. 2016-04-01 \[**2486**\] [自动化发布iOS包](http://zengrong.net/post/2486.htm)
 1. 2016-04-03 \[**2488**\] [零和博弈与囚徒困境](http://zengrong.net/post/2488.htm)
 1. 2016-04-10 \[**2505**\] [从汉马赞助商想开去](http://zengrong.net/post/2505.htm)
-1. 2016-04-16 \[**2514**\] [OS X 技巧与软件选择](http://zengrong.net/post/2514.htm)
+1. 2016-04-16 \[**2514**\] [macOS 技巧与软件选择](http://zengrong.net/post/2514.htm)
 1. 2016-04-23 \[**2521**\] [QCon2016全球软件开发大会随笔（一）](http://zengrong.net/post/2521.htm)
 1. 2016-04-23 \[**2528**\] [QCon2016全球软件开发大会随笔（二）](http://zengrong.net/post/2528.htm)
 1. 2016-04-23 \[**2537**\] [QCon2016全球软件开发大会随笔（三）](http://zengrong.net/post/2537.htm)
@@ -822,3 +822,4 @@
 1. 2016-08-28 \[**2577**\] [【读书笔记】当我们阅读时，我们看到了什么](http://zengrong.net/post/2577.htm)
 1. 2016-09-15 \[**2579**\] [桌面软件GUI开发框架: Electron 和 NW.js](http://zengrong.net/post/2579.htm)
 1. 2016-09-24 \[**2580**\] [Karabiner 在 macOS Sierra 下的解决方案](http://zengrong.net/post/2580.htm)
+1. 2016-10-07 \[**2584**\] [在 Python 中得到类属性的列表](http://zengrong.net/post/2584.htm)
