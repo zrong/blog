@@ -823,3 +823,4 @@
 1. 2016-09-15 \[**2579**\] [桌面软件GUI开发框架: Electron 和 NW.js](http://zengrong.net/post/2579.htm)
 1. 2016-09-24 \[**2580**\] [Karabiner 在 macOS Sierra 下的解决方案](http://zengrong.net/post/2580.htm)
 1. 2016-10-07 \[**2584**\] [在 Python 中得到类属性的列表](http://zengrong.net/post/2584.htm)
+1. 2016-10-29 \[**2587**\] [Chrome/Safari 无法访问淘宝 NET::ERR\_CERT\_REVOKED](http://zengrong.net/post/2587.htm)
