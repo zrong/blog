@@ -824,3 +824,5 @@
 1. 2016-09-24 \[**2580**\] [Karabiner 在 macOS Sierra 下的解决方案](http://zengrong.net/post/2580.htm)
 1. 2016-10-07 \[**2584**\] [在 Python 中得到类属性的列表](http://zengrong.net/post/2584.htm)
 1. 2016-10-29 \[**2587**\] [Chrome/Safari 无法访问淘宝 NET::ERR\_CERT\_REVOKED](http://zengrong.net/post/2587.htm)
+1. 2016-11-01 \[**2588**\] [开发一个 Flask 网站：基础知识](http://zengrong.net/post/2588.htm)
+1. 2016-11-06 \[**2592**\] [一只青蛙怎么收邮件？](http://zengrong.net/post/2592.htm)
