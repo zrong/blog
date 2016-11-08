@@ -826,3 +826,5 @@
 1. 2016-10-29 \[**2587**\] [Chrome/Safari 无法访问淘宝 NET::ERR\_CERT\_REVOKED](http://zengrong.net/post/2587.htm)
 1. 2016-11-01 \[**2588**\] [开发一个 Flask 网站：基础知识](http://zengrong.net/post/2588.htm)
 1. 2016-11-06 \[**2592**\] [一只青蛙怎么收邮件？](http://zengrong.net/post/2592.htm)
+1. 2016-11-01 \[**2593**\] [实现 LDAP 验证登录](http://zengrong.net/post/2593.htm)
+1. 2016-11-08 \[**2595**\] [小团队和大团队](http://zengrong.net/post/2595.htm)

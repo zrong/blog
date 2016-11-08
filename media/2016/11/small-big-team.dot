@@ -1,0 +1,84 @@
+digraph team {
+	graph[fontsize=30;rankdir="TB",label="小团队和大团队"]
+    //ranksep=.75; 
+    node[shape=rect]
+
+
+    subgraph cluster1 {
+        label = "小团队"; fontsize = 20;
+        style = "filled"; fillcolor=aliceblue;color=azure3;
+        node[shape=Mrecord,style="filled",fillcolor="white",color=azure3];
+        edge[arrowhead=none, color=transparent]
+
+        c1s1[label=" 喊 | 大声喊 "]
+        c1s2[label=" 继续喊 | 人肉 "]
+        c1s3[label=" 没有/口头 | 脑补 | 半年/一年 "]
+        c1s4[label=" 没有/项目内成长 | 个人影响 "]
+        c1s5[label=" 一人搞定 "]
+
+        c1s1 -> c1s2 -> c1s3 -> c1s4 -> c1s5
+    }
+    subgraph cluster2 {
+        style = "invis";
+        node[shape=none, fontsize=20];
+        edge[arrowhead=none];
+
+        c2s1[label="沟通方式"]
+        c2s2[label="过程流转"]
+        c2s3[label="绩效管理"]
+        c2s4[label="个人成长"]
+        c2s5[label="产品研发"]
+
+        c2s1 -> c2s2 -> c2s3 -> c2s4 -> c2s5
+    }
+
+    subgraph cluster3 {
+        label = "大团队"; fontsize = 20;
+        style = "filled"; fillcolor=aliceblue; color=azure3;
+        node[shape=Mrecord,style="filled",fillcolor="white",color=azure3];
+        edge[arrowhead=none, color=transparent]
+
+        c3s1[label=" 邮件 | 电话 "]
+        c3s2[label=" 邮件 | 会议 "]
+        c3s3[label=" 书面成体系 | 跨部门 | 每月/每季 "]
+        c3s4[label=" 阶梯/成体系 | 跨部门/跨业务 "]
+        c3s5[label=" 多人合作 "]
+
+        c3s1 -> c3s2 -> c3s3 -> c3s4 -> c3s5
+    }
+
+    subgraph cluster4 {
+        label = "成本"; fontsize = 20;
+        style = "filled, dashed"; fillcolor=gold1; color=goldenrod3;
+        node[shape=hexagon, style="filled, dashed", fillcolor=white,color=goldenrod3];
+        waiting[label="等待成本"];
+        talking[label="沟通成本"];
+    }
+
+    {
+        c3s1 -> talking;
+        c3s2 -> talking;
+        c3s5 -> talking;
+
+        c3s2 -> waiting;
+        c3s3 -> waiting;
+        c3s4 -> waiting;
+        c3s5 -> waiting;
+    }
+
+    {
+        edge[style=dashed]
+        c2s1 -> c1s1
+        c2s2 -> c1s2
+        c2s3 -> c1s3
+        c2s4 -> c1s4
+        c2s5 -> c1s5
+
+        c2s1 -> c3s1
+        c2s2 -> c3s2
+        c2s3 -> c3s3
+        c2s4 -> c3s4
+        c2s5 -> c3s5
+    }
+
+}
