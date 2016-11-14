@@ -1,0 +1,27 @@
+digraph https_transport {
+	graph[fontsize=30;rankdir="LR",label="HTTP(S)传输"];
+    node[shape=box];
+    { node[shape=cds]; middle1; middle2; middle3; middle4 }
+    { node[shape=doubleoctagon]; server1; server2 }
+
+    client1[label="客户端"];
+    client2[label="客户端"];
+    middle1[label="中间设备"]
+    middle2[label="中间设备"]
+    middle3[label="中间设备"]
+    middle4[label="中间设备"]
+    server1[label="服务端"];
+    server2[label="服务端"];
+
+    subgraph cluster_https{
+        label="HTTPS";
+        edge[headlabel="密文"];
+        client1 -> middle1 -> middle2 -> server1;
+    }
+
+    subgraph cluster_http{
+        label="HTTP";
+        edge[headlabel="明文"];
+        client2 -> middle3 -> middle4 -> server2
+    }
+}
