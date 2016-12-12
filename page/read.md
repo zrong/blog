@@ -1,6 +1,6 @@
 Title: 阅读
 Date: 2015-03-03 22:13:53
-Modified: 2016-09-12 23:02:30
+Modified: 2016-11-18 09:24:51
 Author: zrong
 Postid: 2250
 Slug: read
@@ -55,6 +55,10 @@ Poststatus: publish
 |1637| [寻找无双][1637] | 2016-08-25 | 2016-09-10 | |
 |1638| [重新定义团队：谷歌如何工作][1638] | 2016-08-20 | 2016-09-01 | |
 |1639| [上帝掷骰子吗：量子物理史话][1639] | 2016-09-01 | 2016-10-01 | |
+|1640| [简单的逻辑学][1640] | 2016-11-01 | 2016-11-05 | |
+|1641| [Javascript 权威指南（第六版）][1641] | 2016-11-06 | 2016-11-18 | |
+|1642| [深入浅出Node.js][1642] | 2016-11-20 | | |
+|1643| [自由软件，自由社会][1643] | 2016-12-01 | | |
 
 
 [1601]: http://book.douban.com/subject/11524362/
@@ -98,6 +102,10 @@ Poststatus: publish
 [1637]: https://book.douban.com/subject/3176755/
 [1638]: https://book.douban.com/subject/26608585/
 [1639]: https://book.douban.com/subject/1467022/
+[1640]: https://book.douban.com/subject/2986872/
+[1641]: https://book.douban.com/subject/10549733/
+[1642]: https://book.douban.com/subject/25768396/
+[1643]: https://book.douban.com/subject/26921083/
 
 <a name="2015"></a>
 # 2015
