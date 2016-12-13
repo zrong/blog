@@ -831,3 +831,4 @@
 1. 2016-11-12 \[**2598**\] [HTTPS 小白知识（一）](http://zengrong.net/post/2598.htm)
 1. 2016-11-16 \[**2605**\] [flaskbb 配置与 AD 登录](http://zengrong.net/post/2605.htm)
 1. 2016-12-12 \[**2606**\] [在 Redmine 中整合 Git 版本库](http://zengrong.net/post/2606.htm)
+1. 2016-12-13 \[**2610**\] [SaltStack/Ansible/Fabric 的选择](http://zengrong.net/post/2610.htm)
