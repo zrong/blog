@@ -1,0 +1,42 @@
+title: saltstack 简单上手
+date: 2017-01-05 09:37:46
+modified: 2017-01-05 09:37:46
+author: zrong
+postid: $POSTID
+slug: $SLUG
+nicename: 
+attachments: $ATTACHMENTS
+posttype: post
+poststatus: draft
+tags: 
+category: technology
+
+上个月，我写过一篇 [SaltStack/Ansible/Fabric 的选择][1] 。这段时间里，我在大约 4 台服务器上启用了 SaltStack + Fabric 。下面说说我的上手方法。
+
+<!--more-->>
+
+SaltStack 的文档质量的确很高，我建议直接从 [SaltStack Get Started][2] 看起即可，不超过1个小时，你就能对 SaltStack 的主要功能有个大概的了解，并会爱上这个工具。
+
+Get Started 系列文档有8个主题，文档中很贴心地用主题的大小来标明了文档的重要性。我建议的阅读顺序为：
+
+1. 首先阅读 [SaltStack Fundamentals][5] 和 [Configuration Management][6] ,这样就能立刻开始使用 SaltStack。
+2. 接着阅读 [Agentless SaltStack][4] ，了解使用 SSH 的方式来使用 SaltStack。SaltStack 是完全支持不安装 Agent 直接部署的。
+3. 随后阅读 [Understanding SaltStack][3] ，了解 SaltStack 的相关知识点，这些知识点对理解 SaltStack 的工作方式至关重要。
+4. 最后阅读 [Event-Driven Infrastructure][7] ，了解 SaltStack 事件驱动基础，整个 SaltStack 的通信都构建在该基础之上。
+5. 剩下的几篇就慢慢读啦 :-)
+
+![SaltStack Get Started][51]
+
+SaltStack 的入门文档中，每一篇都贴心的提供了阅读速度。例如安装这篇需要大约 10 分钟。如果熟悉运维工作，那么这篇其实只要 1 分钟就好了。
+
+![SaltStack Get Started][52]
+
+[1]: http://zengrong.net/post/2610.htm
+[2]: https://docs.saltstack.com/en/getstarted/
+[3]: https://docs.saltstack.com/en/getstarted/system/index.html
+[4]: https://docs.saltstack.com/en/getstarted/ssh/index.html
+[5]: https://docs.saltstack.com/en/getstarted/fundamentals/index.html
+[6]: https://docs.saltstack.com/en/getstarted/config/index.html
+[7]: https://docs.saltstack.com/en/getstarted/event/index.html
+[51]: media/draft/saltstackgetstarted.png
+[52]: media/draft/saltstackinstall.png
