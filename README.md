@@ -840,3 +840,4 @@
 1. 2017-02-27 \[**2628**\] [SQLAlchemy and MySQL TIMESTAMP](http://zengrong.net/post/2628.htm)
 1. 2017-03-23 \[**2629**\] [uWSGI 的编码问题解决](http://zengrong.net/post/2629.htm)
 1. 2017-04-12 \[**2630**\] [uWSGI + Nginx 的 HTTPS 支持](http://zengrong.net/post/2630.htm)
+1. 2017-04-13 \[**2631**\] [uWSGI+rsyslog 实现 rotating logging](http://zengrong.net/post/2631.htm)
