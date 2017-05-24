@@ -29,6 +29,11 @@ Poststatus: publish
 |1711| [一万小时天才理论][1711] | 2017-03-18 | 2017-03-26 | |
 |1712| [嫌疑人X的献身][1712] | 2017-03-28 | 2017-03-31 | |
 |1713| [施瓦辛格健身全书][1713] | 2017-03-30| | |
+|1714| [白夜行][1714] | 2017-05-17| 2017-05-23 | |
+|1715| [深入浅出 ES6][1715] | 2017-05-22| | |
+|1716| [计算机网络（第6版）自顶向下的方法][1716] | 2017-05-10| | |
+|1717| [如何高效学习][1717] | 2017-05-10| 2017-05-15 | |
+|1718| [万物简史][1718] | 2017-05-24| | |
 
 [1701]: https://book.douban.com/subject/1082178/
 [1702]: https://book.douban.com/subject/26648290/
@@ -43,6 +48,11 @@ Poststatus: publish
 [1711]: https://book.douban.com/subject/4726323/
 [1712]: https://book.douban.com/subject/3211779/
 [1713]: https://book.douban.com/subject/7067916/
+[1714]: https://book.douban.com/subject/3259440/
+[1715]: http://www.infoq.com/cn/minibooks/ES6-in-Depth
+[1716]: https://book.douban.com/subject/26176870/
+[1717]: https://book.douban.com/subject/25783654/
+[1718]: https://book.douban.com/subject/1225983/
 
 <a name="2016"></a>
 # 2016

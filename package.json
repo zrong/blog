@@ -1,0 +1,31 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "[zrong's blog](http://zengrong.net) 中的所有文章 ========== 本博客采用 [WPCMD](http://zengrong.net/wpcmd) 维护 ----------",
+  "main": "index.js",
+  "dependencies": {
+    "js-yaml": "^3.8.4",
+    "lodash": "^4.17.4",
+    "standard": "^10.0.2"
+  },
+  "devDependencies": {
+    "fs-extra": "^3.0.1",
+    "klaw": "^1.3.1",
+    "klaw-sync": "^2.1.0",
+    "standard": "^10.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zrong/blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zrong/blog/issues"
+  },
+  "homepage": "https://github.com/zrong/blog#readme"
+}
