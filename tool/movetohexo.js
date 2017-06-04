@@ -188,12 +188,23 @@ function updateMDFile (file) {
   fs.writeFileSync(targetFile, lines.join(os.EOL))
 }
 
-var paths = getMDFiles(path.join(sourceDir, 'post'))
-paths.sort((a, b) => parseInt(path.basename(a.path, '.md')) > parseInt(path.basename(b.path, '.md')) ? 1 : -1)
-for (var file of paths) {
-  var index = parseInt(path.basename(file.path, '.md'))
-  if (index < 76 || index > 76) continue
-  updateMDFile(file)
+function go (start, end) {
+  var paths = getMDFiles(path.join(sourceDir, 'post'))
+  console.log('start: %s, end: %s', start, end)
+  // 处理所有的文件
+  if (start === -1 && end === -1) {
+    paths.forEach(updateMDFile)
+    return
+  }
+  paths.sort((a, b) => parseInt(path.basename(a.path, '.md')) > parseInt(path.basename(b.path, '.md')) ? 1 : -1)
+  for (var file of paths) {
+    var index = parseInt(path.basename(file.path, '.md'))
+    if (index < start || index > end) continue
+    updateMDFile(file)
+  }
+  logger.log('flashNum: %s, dlNum: %s', flashNum, dlNum)
 }
-// paths.forEach(updateMDFile)
-logger.log('flashNum: %s, dlNum: %s', flashNum, dlNum)
+
+var start = parseInt(process.argv[2]) || -1
+var end = parseInt(process.argv[3]) || (start > -1 ? start : -1)
+go(start, end)
