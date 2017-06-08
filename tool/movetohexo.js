@@ -76,7 +76,7 @@ function updateFrontMatter (lines, filename) {
   var lastFrontMatterLine = 0
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i]
-        // 第一个空行
+    // 第一个空行
     if (!line) {
       frontMatterList = lines.slice(0, i)
       lastFrontMatterLine = i
