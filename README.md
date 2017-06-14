@@ -844,3 +844,5 @@
 1. 2017-04-21 \[**2632**\] [Flask 在 Debug 模式下初始化2次](http://zengrong.net/post/2632.htm)
 1. 2017-05-24 \[**2635**\] [WordPress to Hexo(1)](http://zengrong.net/post/2635.htm)
 1. 2017-05-28 \[**2636**\] [系统化健身三个月感受](http://zengrong.net/post/2636.htm)
+1. 2017-06-08 \[**2643**\] [ofo 智能锁的小思考](http://zengrong.net/post/2643.htm)
+1. 2017-06-14 \[**2645**\] [解包 APK](http://zengrong.net/post/2645.htm)

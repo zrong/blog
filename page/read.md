@@ -33,7 +33,8 @@ Poststatus: publish
 |1715| [深入浅出 ES6][1715] | 2017-05-22| | |
 |1716| [计算机网络（第6版）自顶向下的方法][1716] | 2017-05-10| | |
 |1717| [如何高效学习][1717] | 2017-05-10| 2017-05-15 | |
-|1718| [万物简史][1718] | 2017-05-24| | |
+|1718| [万物简史][1718] | 2017-05-24| 2017-06-02 | |
+|1719| [异类][1719] | 2017-06-02| 2017-06-13 | |
 
 [1701]: https://book.douban.com/subject/1082178/
 [1702]: https://book.douban.com/subject/26648290/
@@ -53,6 +54,7 @@ Poststatus: publish
 [1716]: https://book.douban.com/subject/26176870/
 [1717]: https://book.douban.com/subject/25783654/
 [1718]: https://book.douban.com/subject/1225983/
+[1719]: https://book.douban.com/subject/3688489/
 
 <a name="2016"></a>
 # 2016
