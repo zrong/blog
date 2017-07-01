@@ -9,6 +9,7 @@ const klawSync = require('klaw-sync')
 const path = require('path')
 const yaml = require('js-yaml')
 const os = require('os')
+const util = require('util')
 
 const workDir = path.join(path.dirname(__filename))
 const output = fs.createWriteStream(path.join(workDir, 'movetohexo_stdout.log'))
@@ -39,7 +40,7 @@ function splitParam (line, multi) {
   for (var param of line.split(/\s/)) {
     var matchObj = param.match(paramRe)
     if (matchObj) {
-            // logger.log('matchObj:%s ', matchObj)
+      // logger.log('matchObj:%s ', matchObj)
       var key = matchObj[1].trim()
       var value = matchObj[2].trim()
       if (multi && multi.sep && multi.key && multi.key === key) {
@@ -104,7 +105,7 @@ function updateFrontMatter (lines, filename) {
       if (value === '$ATTACHMENTS') {
         continue
       }
-      value = value.split(',')
+      value = value.split(/, ?/)
     } else if (key === 'category') {
       key = 'categories'
       // hexo 不支持并列分类，使用第一个分类
@@ -163,6 +164,10 @@ function updatePluginFlash (content, filename) {
   var result = null
   while ((result = flashRe2.exec(content)) !== null) {
     var param = splitParam(result[1])
+    if (!param.movie) {
+      var msg = util.format('无法找到 movie %s, content:%s', filename, content)
+      throw new Error(msg)
+    }
     var flashTag = `{% flash %}${os.EOL}${yaml.safeDump(param)}{% endflash %}`
     content = content.replace(flashRe2, flashTag)
     if (time === 0) flashNum++
