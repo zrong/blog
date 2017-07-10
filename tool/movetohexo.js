@@ -27,6 +27,7 @@ const dlRe = /\[download .*\]/gi
 const paramRe = /(\w+)="([^ ]+)"/
 const uploadsRe = /(http:\/\/(www\.)?zengrong.net)?\/wp-content\/uploads/gi
 const imageRe = /([\w_\-]+)-\d{1,4}x\d{1,4}\.(png|jpg|gif)/gi
+const postRe = /http:\/\/(www\.)?zengrong\.net\/post\/(\d+\.htm)/gi
 
 const filterMD = item => path.extname(item.path) === '.md'
 const filterImage = item => path.extname(item.path) === '.jpg' ||
@@ -164,6 +165,12 @@ function updateContent (lines, filename) {
       var line = line.replace(imageRe, "$1.$2")
       logger.log('update image new:%s', line)
     }
+    // 将 http://zengrong.net/post/xxx.htm 改为 http://blog.zengrong.net/post/xxx.htm
+    if (postRe.test(line)) {
+      logger.log('update post url origin:%s', line)
+      var line = line.replace(postRe, "http://blog.zengrong.net/post/$2")
+      logger.log('update post url new:%s', line)
+    }
     lines[i] = line
   }
   return lines
@@ -239,5 +246,5 @@ function goImages() {
 
 var start = parseInt(process.argv[2]) || -1
 var end = parseInt(process.argv[3]) || (start > -1 ? start : -1)
-//go(start, end)
-goImages()
+go(start, end)
+//goImages()
