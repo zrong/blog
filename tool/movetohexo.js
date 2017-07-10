@@ -2,6 +2,7 @@
 /**
  * 转换博客内容到 hexo
  * 2017-05-24 zrong 替换 [kml_flashembed] 和 [download]
+ * 2017-07-09 zrong 处理静态图片文件
  */
 
 const fs = require('fs-extra')
@@ -21,17 +22,22 @@ const sourceDir = '/Users/zrong/works/mysite/blog'
 // 目标文件夹
 const targetDir = '/Users/zrong/works/mysite/hexoblog/source'
 
-const filterMD = item => path.extname(item.path) === '.md'
 const flashRe2 = /\[kml_flashembed ([\s\S]+?)\/?\]([\s\S]*\[\/kml_flashembed\])?/mgi
 const dlRe = /\[download .*\]/gi
 const paramRe = /(\w+)="([^ ]+)"/
 const uploadsRe = /(http:\/\/(www\.)?zengrong.net)?\/wp-content\/uploads/gi
+const imageRe = /([\w_\-]+)-\d{1,4}x\d{1,4}\.(png|jpg|gif)/gi
+
+const filterMD = item => path.extname(item.path) === '.md'
+const filterImage = item => path.extname(item.path) === '.jpg' ||
+  path.extname(item.path) === '.png' ||
+  path.extname(item.path) === '.gif'
 
 var flashNum = 0
 var dlNum = 0
 
-function getMDFiles (dir) {
-  let paths = klawSync(dir, { filter: filterMD, nodir: true })
+function getFiles (dir, filter) {
+  let paths = klawSync(dir, { filter: filter, nodir: true })
   return paths
 }
 
@@ -150,8 +156,15 @@ function updateContent (lines, filename) {
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i]
     if (uploadsRe.test(line)) {
-      lines[i] = line.replace(uploadsRe, '/uploads')
+      line = line.replace(uploadsRe, '/uploads')
     }
+    // 将wordpress 中类似于 -100x200.jpg 这样的自动图片后缀去掉，直接使用原始图片
+    if (imageRe.test(line)) {
+      logger.log('update image origin:%s', line)
+      var line = line.replace(imageRe, "$1.$2")
+      logger.log('update image new:%s', line)
+    }
+    lines[i] = line
   }
   return lines
 }
@@ -181,6 +194,7 @@ function updatePluginFlash (content, filename) {
 
 function updateMDFile (file) {
   let content = fs.readFileSync(file.path, 'utf8', 'r')
+  // console.log('progress:%s', file.path)
   let targetFile = path.join(targetDir, '_posts', path.basename(file.path))
     // 更新 Flash Tag
   content = updatePluginFlash(content, file.path)
@@ -194,7 +208,7 @@ function updateMDFile (file) {
 }
 
 function go (start, end) {
-  var paths = getMDFiles(path.join(sourceDir, 'post'))
+  var paths = getFiles(path.join(sourceDir, 'post'), filterMD)
   console.log('start: %s, end: %s', start, end)
   // 处理所有的文件
   if (start === -1 && end === -1) {
@@ -210,6 +224,20 @@ function go (start, end) {
   logger.log('flashNum: %s, dlNum: %s', flashNum, dlNum)
 }
 
+/**
+ * 处理所有的图片文件
+ */
+function goImages() {
+  var paths = getFiles(path.join(targetDir, 'uploads'), filterImage)
+  for (var file of paths) {
+    if (imageRe.test(file.path)) {
+      fs.unlinkSync(file.path)
+      console.log('delete file: %s', file.path)
+    }
+  }
+}
+
 var start = parseInt(process.argv[2]) || -1
 var end = parseInt(process.argv[3]) || (start > -1 ? start : -1)
-go(start, end)
+//go(start, end)
+goImages()
