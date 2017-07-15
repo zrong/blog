@@ -1,0 +1,45 @@
+$TTSWFObject
+$DXDefaultDetectionActiveContent.html
+$DS
+在更新用于活动内容的 HTML 文件中显示 Macromedia Flash 电影。 注意: 使用此模板时，必须将 swfObject.js 复制到 HTML 输出文件夹。
+$DF
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<head>
+$CS
+<title>$TI</title>
+<script src="swfObject.js" language="javascript"></script>
+</head>
+<body bgcolor="$BG">
+<!--影片中使用的 URL-->
+$MU
+<!--影片中使用的文本-->
+$MT
+<!-- saved from url=(0013)about:internet -->
+<div id="flashcontent">
+ <noscript>
+	<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=$FV,$JR,$NR,0" width="$WI" height="$HE" id="$TI" align="$HA">
+	<param name="allowScriptAccess" value="sameDomain" />
+	$PO
+	<embed $PEwidth="$WI" height="$HE" name="$TI" align="$HA" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+	</object>
+</noscript>
+</div>
+<script language="javascript">
+	var so = new SWFObject($MO, "$TI", "$WI", "$HE", "$FV.$JR.$NR", "$BG");
+	so.addParam("quality", "$QU");
+	so.addParam("wmode", "$WM");
+	so.addParam("salign", "$SA");
+	so.addParam("align", "$HA");
+	so.addParam("play", "$PL");
+	so.addParam("loop", "$LO");
+	so.addParam("scale", "$SC");
+	so.addParam("devicefont", "$DE");
+	so.addParam("name", "$TI");
+	so.addParam("menu", "$ME");
+	so.addParam("allowScriptAccess", "sameDomain");
+	so.write("flashcontent");
+</script>
+
+</body>
+</html>
