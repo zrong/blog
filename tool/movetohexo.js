@@ -168,7 +168,7 @@ function updateContent (lines, filename) {
     // 将 http://zengrong.net/post/xxx.htm 改为 http://blog.zengrong.net/post/xxx.htm
     if (postRe.test(line)) {
       logger.log('update post url origin:%s', line)
-      var line = line.replace(postRe, "http://blog.zengrong.net/post/$2")
+      var line = line.replace(postRe, "http://blog.zengrong.net/post/$2l")
       logger.log('update post url new:%s', line)
     }
     lines[i] = line
