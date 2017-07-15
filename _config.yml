@@ -21,7 +21,7 @@ permalink_defaults:
 source_dir: source
 public_dir: public
 tag_dir: tag
-archive_dir: date
+archive_dir: archive
 category_dir: category
 code_dir: downloads/code
 i18n_dir: :lang
