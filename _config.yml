@@ -32,9 +32,9 @@ new_post_name: :title.md # File name of new posts
 default_layout: post
 titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
-filename_case: 0
+filename_case: 1
 render_drafts: false
-post_asset_folder: true
+post_asset_folder: false
 relative_link: false
 future: true
 highlight:
@@ -46,6 +46,13 @@ highlight:
 # Category & Tag
 default_category: technology
 category_map:
+  # 技术: technology
+  # 听说: news
+  # 培训: tutorial
+  # 应用: use
+  # 感悟: impressions
+  # 乱弹: others
+  # 网站: web
 tag_map:
 
 # Date / Time format
@@ -72,3 +79,9 @@ deploy:
 
 nunjucks:
   autoescape: true
+
+sitemap:
+  path: sitemap.xml
+  # template: ./sitemap_template.xml
+  tag: true
+  category: true
