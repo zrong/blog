@@ -12,7 +12,7 @@ timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://blog.zengrong.net
+url: https://blog.zengrong.net
 root: /
 permalink: post/:postid.html
 permalink_defaults:

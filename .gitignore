@@ -6,3 +6,4 @@ db.json
 /public/
 .deploy*/
 /themes/
+package-lock.json
