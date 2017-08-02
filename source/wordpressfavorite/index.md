@@ -7,9 +7,9 @@ slug: wordpressfavorite
 nicename: wordpressfavorite
 ---
 
-[WordPress大全](http://blog.zengrong.net/wordpressfavorite/)
+[WordPress大全](https://blog.zengrong.net/wordpressfavorite/)
 
-本文原来的位置在[这里](http://blog.zengrong.net/post/14.html)，后来内容越来越多，就作为一个页面把。  
+本文原来的位置在[这里](https://blog.zengrong.net/post/14.html)，后来内容越来越多，就作为一个页面把。  
 
 最后更新：2007-12-9
 
@@ -53,10 +53,10 @@ nicename: wordpressfavorite
 **修改**
 
 -   [WordPress 2.0.2上传图片标题乱码解决](http://blog.istef.info/2006/04/26/wordpress-202-title-encoding-error-of-inline-upload-bug-and-solution/)
--   [如何在WordPress后台中加入表情符号](http://blog.zengrong.net/post/109.html)
--   [再增加一些表情符号](http://blog.zengrong.net/post/167.html)
+-   [如何在WordPress后台中加入表情符号](https://blog.zengrong.net/post/109.html)
+-   [再增加一些表情符号](https://blog.zengrong.net/post/167.html)
 -   [给wordpress增加quicktags按钮的方法](http://www.coolcode.cn/?p=102)
--   [如何使用SWFObject(FlashObject)插入swf动画](http://blog.zengrong.net/post/103.html)
+-   [如何使用SWFObject(FlashObject)插入swf动画](https://blog.zengrong.net/post/103.html)
 -   [为留言增加序号](http://www.kdolphin.com/269)
 
 **教学**

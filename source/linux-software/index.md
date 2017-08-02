@@ -56,7 +56,7 @@ nicename: linux-software
 1.  FoxitReader
 1. chromeplus
 
-[1]:http://blog.zengrong.net/post/2262.html
+[1]:https://blog.zengrong.net/post/2262.html
 [2]: http://qbittorrent.com
 [3]: http://www.linuxlinks.com/article/20141018070111434/ImageViewers.html
 [4]: http://linux.cn/article-4066-1.html

@@ -79,9 +79,9 @@ HueFilter(240)+StaturationFilter(1.5)+BrightnessFilter(-0.4)**
 [5]: https://github.com/chukong/quick-cocos2d-x/blob/master/framework/filter.lua
 [6]: https://github.com/chukong/quick-cocos2d-x/tree/master/samples/filters
 [7]: https://github.com/dualface/v3quick/tree/v3/quick/lib/quick-src/extra/filters
-[8]: http://zengrong.net/post/2052.htm
-[9]: http://zengrong.net/post/2285.htm
-[10]: http://zengrong.net/post/2290.htm
+[8]: https://blog.zengrong.net/post/2052.htm
+[9]: https://blog.zengrong.net/post/2285.htm
+[10]: https://blog.zengrong.net/post/2290.htm
 
 [51]: /uploads/2015/05/filters-gamma.jpg
 [52]: /uploads/2015/05/filters-hue.jpg

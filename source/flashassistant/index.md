@@ -8,9 +8,9 @@ slug: flashassistant
 nicename: flashassistant
 ---
 
-[Flash＆Flex大全](http://blog.zengrong.net/flashassistant/)
+[Flash＆Flex大全](https://blog.zengrong.net/flashassistant/)
 
-本文不再更新，详见： [Goodbye, Flash!](http://blog.zengrong.net/post/2231.html)
+本文不再更新，详见： [Goodbye, Flash!](https://blog.zengrong.net/post/2231.html)
 
 **目录**
 
@@ -57,7 +57,7 @@ nicename: flashassistant
 <!--more-->
 
 <a name="3d"></a>
-## Flash 3D([FlashPlayer11加入原生3D后的更多资料](http://blog.zengrong.net/post/1281.html "支持3D API的Flash Player 11相关资源"))
+## Flash 3D([FlashPlayer11加入原生3D后的更多资料](https://blog.zengrong.net/post/1281.html "支持3D API的Flash Player 11相关资源"))
 
 * [Minko](http://aerys.in/minko/)
 * [native3D](http://code.google.com/p/native3d/) [来自](http://game-develop.net/blog/?p=232)  
@@ -108,7 +108,7 @@ ActionScript 3D引擎，有AS2、AS3、haXe版
 		* [Canabalt](http://adamatomic.com/canabalt/)该游戏在作者的网站上每月会消耗2.5T的流量，可见流行的程度。游戏中高速流畅的滚屏会让你惊叹Flash的效率。此游戏还移植到iOS上，并在App Store中销量不菲。
 		* [Omega Crisis](http://www.kongregate.com/games/lucidrine/omega-crisis) 这个塔防类游戏，画面、游戏性与操作性都相当不错。
 		* [用此引擎的游戏展示](http://flixel.org/games/)
-		* [简单介绍](http://blog.zengrong.net/post/1121.html)|[功能列表](http://wiki.github.com/AdamAtomic/flixel/what-is-flixel)|[中文教程](http://bbs.9ria.com/viewthread.php?tid=77614&extra=page%3D1%26amp%3Bfilter%3Dtype%26amp%3Btypeid%3D21)
+		* [简单介绍](https://blog.zengrong.net/post/1121.html)|[功能列表](http://wiki.github.com/AdamAtomic/flixel/what-is-flixel)|[中文教程](http://bbs.9ria.com/viewthread.php?tid=77614&extra=page%3D1%26amp%3Bfilter%3Dtype%26amp%3Btypeid%3D21)
 		* [Flixel Power Tools](http://www.photonstorm.com/flixel-power-tools) 在Flixel的基础上加入了一些工具。
 * [Bold Pixel engine](http://blog.vortixgames.com/contact-us/bold-pixel-engine)
 以copyPixels方法写的位图引擎。里面实现了缓存BitmapData贴图管理等优化，不过没有对不在显示区域的对象进行过滤，以及其它优化。
@@ -125,7 +125,7 @@ FlashPunk同样是个针对位图的开源引擎。它具有清晰的框架以�
 		* [Mr. Fat Snake](http://www.kongregate.com/games/ReviveGames/mr-fat-snake?acomplete=mr+fat+snake)贪吃蛇的横轴飞速版。：）
 		* [更多采用此引擎的游戏展示](http://flashpunk.net/?p=games)
 * [pushbuttonengine](http://pushbuttonengine.com/)  
-[简单介绍](http://blog.zengrong.net/post/1121.html)，Pushbutton引擎的特色有很多，包括建立游戏的模块片段，而不是整体式的应用；使用第三方类库更加容易；提供核心功能比如资源管理器、日志管理、调试检测、序列号、时间管理、全局命名对象等等；相关的组件包括基于Box2D的物理引擎、Rendering2D引擎、游戏常用的健康值组件、团队组件、状态机组件、贴图系统、路径查找类库、基本的网络联机和通讯服务； 将来会提供编辑器，以及网络联机组件，这两个组件都是收费组件； 该游戏引擎的官方网站还列出了[组件商店的介绍](http://pushbuttonengine.com/2009/03/component-store-coming-soon/)，作为该组织出售组件和广大开发者出售组件的场所，这不失为一个好的商业模式。典型案例：
+[简单介绍](https://blog.zengrong.net/post/1121.html)，Pushbutton引擎的特色有很多，包括建立游戏的模块片段，而不是整体式的应用；使用第三方类库更加容易；提供核心功能比如资源管理器、日志管理、调试检测、序列号、时间管理、全局命名对象等等；相关的组件包括基于Box2D的物理引擎、Rendering2D引擎、游戏常用的健康值组件、团队组件、状态机组件、贴图系统、路径查找类库、基本的网络联机和通讯服务； 将来会提供编辑器，以及网络联机组件，这两个组件都是收费组件； 该游戏引擎的官方网站还列出了[组件商店的介绍](http://pushbuttonengine.com/2009/03/component-store-coming-soon/)，作为该组织出售组件和广大开发者出售组件的场所，这不失为一个好的商业模式。典型案例：
     * [Social City](http://pushbuttonlabs.com/games/social-city/)这个在Facebook上月活跃用户超过一千万的游戏，采用了PushButton引擎。
     * [The Incredible Machine Mega Pack](http://www.gog.com/en/gamecard/the_incredible_machine_mega_pack)不可思议的机器系列想必大家不陌生，这个版本的近400兆大小的单机游戏也出自该引擎。
 * [mecheye-as3-libraries](http://code.google.com/p/mecheye-as3-libraries/)  
@@ -201,7 +201,7 @@ zrong用过一段时间AsWing。看完AsWing的架构才发现，Flex4的spark�
 * [Gfl](http://pisces.wisestar.net/gfl/)  
 一个轻量级的基于纯AS的独立组件库，可以使用CSS语法。感谢smithfox的推荐。
 * [Minimal Comps](http://code.google.com/p/minimalcomps/)  
-一套小巧可爱的纯AS组件，除AsWing外的又一选择。<del datetime="2010-12-05T13:35:29+00:00">zrong发现纯AS的UI组件并不多，貌似除了AsWing也就只有这套了</del>。[中文使用说明](http://blog.zengrong.net/post/1142.html)
+一套小巧可爱的纯AS组件，除AsWing外的又一选择。<del datetime="2010-12-05T13:35:29+00:00">zrong发现纯AS的UI组件并不多，貌似除了AsWing也就只有这套了</del>。[中文使用说明](https://blog.zengrong.net/post/1142.html)
 * [As3-Bloom](https://github.com/impaler/As3-Bloom)  
 As-Bloom 是为开发者提供的一个轻量级用户界面。简要介绍其特性：
     * 主题编辑器
@@ -230,7 +230,7 @@ MinimalComps的官方版本是不支持皮肤的，而这个就是它支持皮�
 提供纯AS3组件的皮肤和样式的集合。支持Scale9Bitmap
 * [BrowserCanvas](http://www.dncompute.com/blog/2008/06/23/browsercanvas-the-worlds-easiest-way-to-dynamically-resize-flash.html)  
 提供容易的方式动态修改Flash尺寸大小
-* [senocular Layout class](http://blog.zengrong.net/post/352.html)  
+* [senocular Layout class](https://blog.zengrong.net/post/352.html)  
 除了布局工具，还有其他许多有用的工具
 * [Yahoo ASTRA: ActionScript Toolkit for Rich Applications](http://developer.yahoo.com/flash/)  
 这是Yahoo开发的一套RIA组件包，包含以下内容
@@ -317,7 +317,7 @@ FDT是Flash Development Tool 的简称，是非常优秀的ActionScript编辑器
 强大的开源AS编辑器，使用python开发。最近一次更新是在2007年2月10日，估计没戏了。
 
 <a name="debugger"></a>
-## 调试器 [来自](http://zcdxzsz.javaeye.com/blog/727940) [评测](http://blog.zengrong.net/post/1143.html)
+## 调试器 [来自](http://zcdxzsz.javaeye.com/blog/727940) [评测](https://blog.zengrong.net/post/1143.html)
 
 * [Kap Inspect](http://lab.kapit.fr/display/kapinspect/Kap+Inspect)如果你没用过spy工具，你可曾想实时监控swf application的的所有事件？ 你可曾想查看swf有没有内存泄漏问题？你可曾想看看到底DisplayObject tree是什么样的？你可曾想查看所有控件的属性，甚至在运行时改一下？[来自](http://www.smithfox.com/?e=44)
 * [ThunderBolt ](http://code.google.com/p/flash-thunderbolt/)是个面向ActionScript 2和3的Firebug轻量级记录器扩展，无法使用Firebug的AIR程序，ThunderBolt有ThunderBolt AS3 Console可以使用。
@@ -476,8 +476,8 @@ swf2xml和xml2swf
 编译为swf
 * [SWFObject（原名FlashObject）](http://blog.deconcept.com/swfobject/)  
 将swf嵌入到网页中的JavaScript脚本
-  	* [SWFObject的用法](http://blog.zengrong.net/post/103.html)
-	* [基于SWFObject的Flash发布模版](http://blog.zengrong.net/post/185.html)
+  	* [SWFObject的用法](https://blog.zengrong.net/post/103.html)
+	* [基于SWFObject的Flash发布模版](https://blog.zengrong.net/post/185.html)
 * [Xray (Flash Debugger)](http://www.osflash.org/xray)
 
 ## 应用

@@ -7,7 +7,7 @@ slug: anetoolkit
 nicename: anetoolkit
 ---
 
-[ANE Toolkit](http://blog.zengrong.net/anetoolkit/)
+[ANE Toolkit](https://blog.zengrong.net/anetoolkit/)
 
 <del datetime="2013-01-25T02:31:49+00:00">据说Adobe正在开发ANE插件包，但我可能永远也等不到那一天了。</del> Adobe发布了一个闭源的水果插件包(in gaming SDK)，写得很烂，但不知道为什么要闭源？没有Android。
 
@@ -17,7 +17,7 @@ nicename: anetoolkit
 
 目前只有Android版本，采用JAVA API，<del>可能以后会有iOS的版本也说不定</del>应该不会有iOS版本，但我仍会撺掇别人开源，比如这个：
 
-[PLATFORM-ANES](http://blog.zengrong.net/platform-anes/) 。
+[PLATFORM-ANES](https://blog.zengrong.net/platform-anes/) 。
 
 这东西没什么技术含量，就是体力活调试而已。
 
@@ -33,8 +33,8 @@ nicename: anetoolkit
 
 ## 官方更新：
 
-* [2013-01-25 增加电源管理功能](http://blog.zengrong.net/post/1804.html)
-* [2013-05-21 增加重启功能](http://blog.zengrong.net/post/1861.html)
+* [2013-01-25 增加电源管理功能](https://blog.zengrong.net/post/1804.html)
+* [2013-05-21 增加重启功能](https://blog.zengrong.net/post/1861.html)
 
 ## 官方介绍：
 

@@ -484,7 +484,7 @@ WPCMD 会自动检测文章中的图像文件，将其上传到 WordPress 中。
 在完成上述操作后，上面的 Markdown 源码会变成如下所示（以 zengrong.net 为例）：
 
 ```
-![myimage](http://zengrong.net/wp-content/upload/2015/11/myimage.jpg)
+![myimage](/wp-content/upload/2015/11/myimage.jpg)
 ```
 
 同时 media&#47;draft&#47;myimage.jpg 将移动到 media&#47;2015&#47;11&#47;myimage.jpg 。
@@ -592,12 +592,12 @@ util 是一些批量处理博客的小工具，目前仅有 `-r , --readme` 这�
 
 [1]: https://github.com/zrong/wpcmd
 [2]: http://zengrong.net
-[3]: http://blog.zengrong.net/post/2374.html
+[3]: https://blog.zengrong.net/post/2374.html
 [4]: https://github.com/zrong/blog
-[5]: http://blog.zengrong.net/post/2187.html
-[6]: http://blog.zengrong.net/post/2320.html
-[7]: http://blog.zengrong.net/post/2294.html
-[8]: http://blog.zengrong.net/tag/#vim
+[5]: https://blog.zengrong.net/post/2187.html
+[6]: https://blog.zengrong.net/post/2320.html
+[7]: https://blog.zengrong.net/post/2294.html
+[8]: https://blog.zengrong.net/tag/#vim
 [9]: https://github.com/zrong/blog/blob/master/README.md
 [10]: http://pygments.org
 [11]: http://pythonhosted.org/Markdown/

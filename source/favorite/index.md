@@ -14,14 +14,14 @@ poststatus: publish
 
 ## Flash & Flex 大全
 
-<http://blog.zengrong.net/flashassistant/>
+<https://blog.zengrong.net/flashassistant/>
 
 
 ## 十年学会程序设计
 
-<http://blog.zengrong.net/21-days/>
+<https://blog.zengrong.net/21-days/>
 
 
 ## 提问的智慧
 
-<http://blog.zengrong.net/howtoask/>
+<https://blog.zengrong.net/howtoask/>

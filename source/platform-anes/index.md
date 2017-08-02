@@ -7,7 +7,7 @@ slug: platform-anes
 nicename: platform-anes
 ---
 
-[Platform ANEs](http://blog.zengrong.net/platform-anes/)
+[Platform ANEs](https://blog.zengrong.net/platform-anes/)
 
 我讨厌ANE，更讨厌国内那些要要死不活还非要你接SDK的三流平台。
 
@@ -42,4 +42,4 @@ BTW: Rect还有不少私货！！！
 * 另一个通用的ANE源码免费送： [ANE Toolkit][anetoolkit]
 
 [rect]: http://www.shadowkong.com/
-[anetoolkit]: http://blog.zengrong.net/anetoolkit/
+[anetoolkit]: https://blog.zengrong.net/anetoolkit/

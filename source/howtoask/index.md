@@ -8,7 +8,7 @@ slug: howtoask
 nicename: howtoask
 ---
 
-[提问的智慧](http://blog.zengrong.net/howtoask/)
+[提问的智慧](https://blog.zengrong.net/howtoask/)
 
 在技术论坛提问的时候，为什么没人理你呢？
 

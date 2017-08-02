@@ -9,7 +9,7 @@ nicename: sprite_sheet_editor
 attachments: 1407, 1408, 1409, 1410, 1411, 1412
 ---
 
-[Sprite Sheet Editor](http://blog.zengrong.net/sprite_sheet_editor/)
+[Sprite Sheet Editor](https://blog.zengrong.net/spritesheeteditor/)
 
 ## Sprite Sheet Editor 不再更新
 
@@ -85,30 +85,30 @@ Sprite sheet Editor有许多缺点，因此我必须推荐两个优秀的软件�
 
 ## 更新历史
 
-这个工具原来的名字叫做<a href="http://zengrong.net/spritesheetpacker" target="_blank">Sprite Sheet Packer</a>，从v0.5.0改名为Sprite Sheet Editor。
+这个工具原来的名字叫做<a href="https://blog.zengrong.net/spritesheetpacker/" target="_blank">Sprite Sheet Packer</a>，从v0.5.0改名为Sprite Sheet Editor。
 
-* [2013-08-21：v0.8.2版发布](http://blog.zengrong.net/post/1901.html)
-* [2013-06-14：v0.8.1版发布](http://blog.zengrong.net/post/1880.html)
-* [2013-02-19：v0.8.0版发布](http://blog.zengrong.net/post/1815.html)
-* [2012-10-15：v0.7.3版发布](http://blog.zengrong.net/post/1706.html)
-* [2012-08-20：v0.7.2版发布](http://blog.zengrong.net/post/1672.html)
-* [2012-08-18：v0.7.1版发布](http://blog.zengrong.net/post/1668.html)
-* [2012-07-26：v0.7.0版发布](http://blog.zengrong.net/post/1660.html)
-* [2011-12-21：v0.6.2版发布](http://blog.zengrong.net/post/1482.html)
-* [2011-11-04：v0.5.9版发布](http://blog.zengrong.net/post/1468.html)
-* [2011-09-02：v0.5.7版发布](http://blog.zengrong.net/post/1436.html)
-* [2011-08-23：v0.5.6版发布](http://blog.zengrong.net/post/1414.html)
-* [2011-08-18：v0.5.0版发布，同时更名为Sprite Sheet Editor](http://blog.zengrong.net/post/1402.html)
-* [2011-06-30：v0.4版发布](http://blog.zengrong.net/post/1357.html)
-* [2011-04-26：v0.3版发布](http://blog.zengrong.net/post/1313.html)
-* [2011-04-22：v0.2版发布](http://blog.zengrong.net/post/1311.html)
-* [2011-04-19：v0.1版发布](http://blog.zengrong.net/post/1306.html)
+* [2013-08-21：v0.8.2版发布](https://blog.zengrong.net/post/1901.html)
+* [2013-06-14：v0.8.1版发布](https://blog.zengrong.net/post/1880.html)
+* [2013-02-19：v0.8.0版发布](https://blog.zengrong.net/post/1815.html)
+* [2012-10-15：v0.7.3版发布](https://blog.zengrong.net/post/1706.html)
+* [2012-08-20：v0.7.2版发布](https://blog.zengrong.net/post/1672.html)
+* [2012-08-18：v0.7.1版发布](https://blog.zengrong.net/post/1668.html)
+* [2012-07-26：v0.7.0版发布](https://blog.zengrong.net/post/1660.html)
+* [2011-12-21：v0.6.2版发布](https://blog.zengrong.net/post/1482.html)
+* [2011-11-04：v0.5.9版发布](https://blog.zengrong.net/post/1468.html)
+* [2011-09-02：v0.5.7版发布](https://blog.zengrong.net/post/1436.html)
+* [2011-08-23：v0.5.6版发布](https://blog.zengrong.net/post/1414.html)
+* [2011-08-18：v0.5.0版发布，同时更名为Sprite Sheet Editor](https://blog.zengrong.net/post/1402.html)
+* [2011-06-30：v0.4版发布](https://blog.zengrong.net/post/1357.html)
+* [2011-04-26：v0.3版发布](https://blog.zengrong.net/post/1313.html)
+* [2011-04-22：v0.2版发布](https://blog.zengrong.net/post/1311.html)
+* [2011-04-19：v0.1版发布](https://blog.zengrong.net/post/1306.html)
 
 ## 界面截图
 
 [gallery link="file"]
 
 [1]: https://github.com/zrong/sprite_sheet_editor
-[2]: http://blog.zengrong.net/anetoolkit/
-[3]: http://blog.zengrong.net/platform-anes/
-[4]: http://blog.zengrong.net/post/2231.html
+[2]: https://blog.zengrong.net/anetoolkit/
+[3]: https://blog.zengrong.net/platform-anes/
+[4]: https://blog.zengrong.net/post/2231.html
