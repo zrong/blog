@@ -69,19 +69,27 @@ Sprite sheet Editor有许多缺点，因此我必须推荐两个优秀的软件�
 
 ## 下载和安装
 
-* <a href="http://get.adobe.com/cn/air/" target="_blank">安装AIR环境</a>
-* [download id="114"]
+<a href="http://get.adobe.com/cn/air/" target="_blank">安装AIR环境</a>
+
+{% download %}
+id:
+  - '114'
+{% enddownload %}
+
 
 **历史版本**
 
-* [download id="113"]
-* [download id="112"]
-* [download id="109"]
-* [download id="101"]
-* [download id="100"]
-* [download id="95"]
-* [download id="92"]
-* [download id="86"]
+{% download %}
+id:
+  - '113'
+  - '112'
+  - '109'
+  - '101'
+  - '100'
+  - '95'
+  - '92'
+  - '86'
+{% enddownload %}
 
 ## 更新历史
 
