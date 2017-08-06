@@ -8,7 +8,7 @@ nicename: spritesheetpacker
 attachments: 1358, 1359, 1360
 ---
 
-2011-08-18：v0.5.0版发布，同时更名为[Sprite Sheet Editor](/sprite_sheet_editor "Sprite Sheet Editor")，请访问[Sprite Sheet Editor](/sprite_sheet_editor "Sprite Sheet Editor")的页面获得最新版本。本页面不再更新。
+2011-08-18：v0.5.0版发布，同时更名为[Sprite Sheet Editor](/spritesheeteditor/ "Sprite Sheet Editor")，请访问[Sprite Sheet Editor](/spritesheeteditor/ "Sprite Sheet Editor")的页面获得最新版本。本页面不再更新。
 
 下载和安装：  
 
@@ -105,4 +105,4 @@ A：暂时不会公开源码（主要原因是写的太烂，不好意思）。�
 
 **Q：你是谁？**  
 
-A：Kao！问了半天你不知道我是谁！我是个写代码的家伙，<span style="color: #0000ff;"><span style="text-decoration: underline;">[zengrong.net](http://www.zengrong.net)</span></span>是我的博客。<span style="color: #0000ff;"><span style="text-decoration: underline;"><i@zengrong.net></span></span>是我的邮箱。
+A：Kao！问了半天你不知道我是谁！我是个写代码的家伙，<span style="color: #0000ff;"><span style="text-decoration: underline;">[zengrong.net](https://zengrong.net)</span></span>是我的博客。<span style="color: #0000ff;"><span style="text-decoration: underline;"><i@zengrong.net></span></span>是我的邮箱。
