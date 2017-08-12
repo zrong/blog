@@ -4,7 +4,7 @@ date: 2017-08-06 11:12:42
 comment: false
 ---
 
-使用 [Google CSE ](https://cse.google.com/) ，若无法访问 Google， 请使用主页面中嵌入的 360 搜索框。
+使用 [Google CSE ](https://cse.google.com/) ，若无法访问 Google， 请使用首页中嵌入的搜索框。
 
 {% raw %}
 <script>

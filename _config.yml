@@ -85,3 +85,7 @@ sitemap:
   # template: ./sitemap_template.xml
   tag: true
   category: true
+
+markdown:
+  # 禁止渲染时自动换行
+  breaks: false
