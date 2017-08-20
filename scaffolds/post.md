@@ -5,4 +5,5 @@ postid: {{ title }}
 nicename:
 tags:
 categories: technology
+toc: true
 ---
