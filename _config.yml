@@ -89,3 +89,12 @@ sitemap:
 markdown:
   # 禁止渲染时自动换行
   breaks: false
+
+feed:
+  type: atom
+  path: atom.xml
+  limit: 40
+  hub:
+  content: false
+  content_limit: 200
+  content_limit_delim: ' '
