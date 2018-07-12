@@ -2,10 +2,10 @@ graph {
     graph[rankdir="LR"]
     node[shape=rect]
 
-    name[label=猎头专家,shape=doubleoctagon]
+    name[label=猎头专家,shape=doubleoctagon,style=filled,fillcolor=navy,fontcolor=white]
 
     {
-        node[shape=component]
+        node[shape=component,style=filled,fillcolor=gold]
         product[label=产品立项]
         module[label=模块实现]
         ccc[label="CCC 踩坑"]
@@ -18,8 +18,9 @@ graph {
     name -- robot
 
     {
-        node[shape=signature]
+        node[shape=rect,style=filled,fillcolor=white]
         product -- {
+            node[fillcolor=deepskyblue]
             为什么要做《猎头专家》
             技术选型
         }
@@ -34,7 +35,7 @@ graph {
             让机器人学会瞄准
         }
         ccc -- {
-            动态资源加载与释放技巧
+            动态资源加载与释放技巧[fillcolor=deepskyblue,url="https://zengrong.net"]
             "H5 横竖屏切换后，物理坐标系出错了"
         }
     }
