@@ -1,6 +1,9 @@
 ---
 title: 友情链接
+author: zrong
 date: 2017-07-15 22:45:40
+slug: link 
+nicename: link
 ---
 
 - [CoolCode.Org][coolcode]
@@ -13,8 +16,8 @@ date: 2017-07-15 22:45:40
 - [ChildhoodAndy][childhood]
 - [CiNiao's Blog][ciniao]
 
-[coolcode]: http://www.coolcode.org/
-[findhao]: https://www.findhao.net "一个程序员的成长之路""
+[coolcode]:(http://www.coolcode.org/
+[findhao]: https://www.findhao.net "一个程序员的成长之路"
 [fmser]: http://www.fmser.cn "专注于Flash+FMS技术研究与应用"
 [wonder]: http://blog.sina.com.cn/wonderxhd
 [rect]: http://www.shadowkong.com
