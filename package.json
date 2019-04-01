@@ -18,9 +18,10 @@
     "hexo-renderer-j2": "^1.0.1",
     "hexo-renderer-marked": "^0.2.10",
     "hexo-renderer-njks": "^0.1.0",
+    "hexo-renderer-sass": "^0.3.2",
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.2.0",
     "hexo-tag-bootstrap": "0.0.8",
-    "package.json": "^2.0.1"
+    "node-sass": "^4.9.3"
   }
 }
