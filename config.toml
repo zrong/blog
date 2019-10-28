@@ -1,0 +1,62 @@
+baseURL = "https://blog.zengrong.net"
+languageCode = "zh-CN"
+title = "ZRONG's Blog"
+theme = "maupassant"
+# theme = "capsule"
+# uglyurls = true
+
+# Ignore the WARNING when build site: found no layout file for "HTML" for "section"
+disableKinds = ['section']
+comment = true
+
+[author]
+  name = "zrong"
+
+[taxonomies]
+  category = "category"
+  tag = "tag"
+
+[menu]
+  [[menu.main]]
+    identifier = "category"
+    name = "分类"
+    url = "/category/"
+    weight = 3
+
+  [[menu.main]]
+    identifier = "tag"
+    name = "标签"
+    url = "/tag/"
+    weight = 3
+
+  [[menu.main]]
+    identifier = "archive"
+    name = "归档"
+    url = "/archive/"
+    weight = 3
+
+  [[menu.main]]
+    identifier = "link"
+    name = "友情链接"
+    url = "/link/"
+    weight = 2
+
+  [[menu.main]]
+    identifier = "search"
+    name = "Google站内搜索"
+    url = "/search/"
+    weight = 4
+
+[params]
+  author = "zrong"
+  subtitle = "Every man dies but not every man really lives."
+  keywords = "flash,zrong,blog,团队管理"
+  description = "曾嵘的博客，乱七八糟的胡扯IT互联网，游戏，团队管理，创业以及各种有趣的东西。"
+
+[params.cc]
+    name = "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
+    link = "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
+
+[params.isso]
+    enable = true
+    host = "blog.zengrong.net/isso"
