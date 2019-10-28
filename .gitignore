@@ -1,10 +1,4 @@
-.DS_Store
-Thumbs.db
-db.json
-*.log
-/node_modules/
+/venv/
+/.vscode/
 /public/
-.deploy*/
-/themes/
-package-lock.json
-.vscode
+.DS_Store
