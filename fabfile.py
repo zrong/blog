@@ -91,7 +91,7 @@ def test_tmux(c):
 
 
 SITE_WEBROOT = '/srv/www/blog.zengrong.net'
-GIT_URI = 'git@github.com:zrong/blog.hugo.git'
+GIT_URI = 'git@github.com:zrong/blog.git'
 
 
 @task
@@ -99,7 +99,7 @@ def deploy(c):
     if not isinstance(c, Connection):
         raise Exit('Use -H to provide a host!')
     logger.warning('conn: %s', c)
-    git_dir = '$HOME/blog.hugo'
+    git_dir = '$HOME/blog'
     hugo_cache_dir = '{0}/hugo_cache'.format(git_dir)
     r = c.run('test -e ' + git_dir, warn=True)
     logger.warning('r: %s', r.command)
@@ -114,4 +114,4 @@ def deploy(c):
         ]
         t.run_singleton(' && '.join(cmd_list), 'hugo', wait=False)
     else:
-        t.run_singleton('git clone --recursive {0} $HOME/blog.hugo'.format(GIT_URI), 'git', wait=False)
+        t.run_singleton('git clone --recursive {0} $HOME/blog'.format(GIT_URI), 'git', wait=False)
