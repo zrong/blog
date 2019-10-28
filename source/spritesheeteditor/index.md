@@ -4,8 +4,8 @@ date: 2011-08-18 12:29:04
 modified: 2015-01-21 14:45:51
 author: zrong
 postid: 1403
-slug: sprite_sheet_editor
-nicename: sprite_sheet_editor
+slug: spritesheeteditor
+nicename: spritesheeteditor
 attachments: 1407, 1408, 1409, 1410, 1411, 1412
 ---
 
