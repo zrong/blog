@@ -10,7 +10,7 @@ url = "/search/"
 comment = false
 +++
 
-使用 [Google CSE ](https://cse.google.com/) ，若无法访问 Google， 请使用首页中嵌入的搜索框。
+使用 [Google CSE ](https://cse.google.com/) ，请自行科学上网。
 
 {{< rawhtml >}}
 <script>
