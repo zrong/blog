@@ -55,9 +55,12 @@ comment = true
   beian = "鄂ICP备05002429号"
 
 [params.cc]
-    name = "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
-    link = "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
+  name = "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
+  link = "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
 
 [params.isso]
-    enable = true
-    host = "blog.zengrong.net/isso"
+  enable = true
+  host = "blog.zengrong.net/isso"
+
+[markup.highlight]
+  style = "vs"
