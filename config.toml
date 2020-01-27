@@ -64,3 +64,6 @@ comment = true
 
 [markup.highlight]
   style = "vs"
+
+[markup.goldmark.renderer]
+  unsafe = true
