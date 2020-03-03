@@ -1,4 +1,5 @@
 baseURL = "https://blog.zengrong.net"
+homeURL = "https://zengrong.net"
 languageCode = "zh-CN"
 title = "zrong's Blog"
 theme = "maupassant"
