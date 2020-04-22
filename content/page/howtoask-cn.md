@@ -1,6 +1,6 @@
 +++
 title = "提问的智慧"
-postid = "howtoask-cn"
+postid = 2708 
 date = 2005-10-08T11:20:04+08:00
 isCJKLanguage = true
 toc = true
