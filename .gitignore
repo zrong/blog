@@ -2,3 +2,5 @@
 /.vscode/
 /public/
 .DS_Store
+*.cfg
+*.db
