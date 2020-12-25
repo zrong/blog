@@ -1,3 +1,6 @@
 [submodule "themes/maupassant"]
 	path = themes/maupassant
 	url = git@github.com:zrong/maupassant-hugo.git
+[submodule "themes/clarity"]
+	path = themes/clarity
+	url = https://github.com/zrong/hugo-clarity

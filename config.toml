@@ -1,13 +1,13 @@
 baseURL = "https://blog.zengrong.net"
 languageCode = "zh-CN"
 title = "zrong's Blog"
-theme = "maupassant"
+theme = "clarity"
 # theme = "capsule"
 # uglyurls = true
 
 # Ignore the WARNING when build site: found no layout file for "HTML" for "section"
 disableKinds = ['section']
-comment = true
+showShare = false
 
 [author]
   name = "zrong"
@@ -53,6 +53,7 @@ comment = true
   keywords = "flash,zrong,blog,团队管理"
   description = "曾嵘的博客，乱七八糟的胡扯IT互联网，游戏，团队管理，创业以及各种有趣的东西。"
   beian = "鄂ICP备05002429号"
+  showShare = false
 
 [params.cc]
   name = "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
@@ -62,8 +63,21 @@ comment = true
   enable = true
   host = "blog.zengrong.net/isso"
 
-[markup.highlight]
-  style = "vs"
-
-[markup.goldmark.renderer]
-  unsafe = true
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      hardWraps = false
+      unsafe = true # change to false to disable inclusion of rawHTML and math functions
+      xhtml = false
+    [markup.goldmark.extensions]
+      typographer = false
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    hl_Lines = "--"
+    lineNoStart = 1
+    lineNos = true # always set to true # else line numbers won't show at all! even when you toggle them on in the UI
+    lineNumbersInTable = false # toggling this on (i.e to true) or deleting this line will break the code blocks functionality. Will
+    noClasses = false
+    # style = "monokai"
+    tabWidth = 2
