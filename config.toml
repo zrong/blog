@@ -1,13 +1,13 @@
 baseURL = "https://blog.zengrong.net"
 languageCode = "zh-CN"
-title = "zrong's Blog"
+title = "ZRONG's BLOG"
 theme = "clarity"
 # theme = "capsule"
 # uglyurls = true
 
 # Ignore the WARNING when build site: found no layout file for "HTML" for "section"
 disableKinds = ['section']
-showShare = false
+
 
 [author]
   name = "zrong"
@@ -15,53 +15,93 @@ showShare = false
 [taxonomies]
   category = "category"
   tag = "tag"
+  archive = "archive"
 
 [menu]
+  [[menu.main]]
+    identifier = ""
+    name = "首页"
+    url = "https://zengrong.net"
+    weight = 1
+
+  [[menu.main]]
+    identifier = ""
+    name = "最新"
+    url = "/"
+    weight = 2
+
   [[menu.main]]
     identifier = "category"
     name = "分类"
     url = "/category/"
-    weight = 2
+    weight = 3
 
   [[menu.main]]
     identifier = "tag"
     name = "标签"
     url = "/tag/"
-    weight = 3
+    weight = 4
 
   [[menu.main]]
     identifier = "archive"
     name = "归档"
     url = "/archive/"
-    weight = 4
+    weight = 5
 
   [[menu.main]]
     identifier = "link"
-    name = "友情链接"
+    name = "友链"
     url = "/link/"
-    weight = 5
+    weight = 6
 
   [[menu.main]]
     identifier = "search"
-    name = "Google站内搜索"
+    name = "搜索"
     url = "/search/"
-    weight = 5
+    weight = 7
+
+  [[menu.social]]
+    name = "github"
+    type = "social"
+    weight = 1
+    url = "https://github.com/zrong"
+  [[menu.social]]
+    name = "zhihu"
+    weight = 2
+    url = "https://www.zhihu.com/people/zrong"
 
 [params]
-  author = "zrong"
+  author = "zrong(Jacky)"
+  introDescription = "一个沦为程序员的美术老师"
+  introURL = "https://zengrong.net/about/"
   subtitle = "Every man dies but not every man really lives."
-  keywords = "flash,zrong,blog,团队管理"
-  description = "曾嵘的博客，乱七八糟的胡扯IT互联网，游戏，团队管理，创业以及各种有趣的东西。"
+  keywords = "zrong,blog,管理,flash"
+  description = "乱七八糟地胡扯IT互联网，游戏，管理，创业以及各种有趣的东西。"
   beian = "鄂ICP备05002429号"
   showShare = false
+  numberOfTagsShown = 40
+  codeMaxLines = 7
+  codeLineNumbers = true
+  dateFormat = "2006-01-02"
+  mobileNavigation = "right"
+  mainSections = ["posts", "post"]
 
-[params.cc]
-  name = "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
-  link = "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
+  [params.cc]
+    name = "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
+    link = "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
 
-[params.isso]
-  enable = true
-  host = "blog.zengrong.net/isso"
+  [params.isso]
+    enable = true
+    host = "blog.zengrong.net/isso"
+
+  [params.aid.download]
+    info = "https://aid.zengrong.net/dl/info/%s/"
+    go = "https://aid.zengrong.net/dl/go/%s/"
+    root = "https://blog.zengrong.net/uploads"
+    btn_title = "下载"
+
+  [params.aid.pageview]
+    info = "https://aid.zengrong.net/pv/js/%s/"
 
 [markup]
   [markup.goldmark]
