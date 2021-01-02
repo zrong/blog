@@ -1,5 +1,6 @@
 baseURL = "https://blog.zengrong.net/"
 languageCode = "zh-CN"
+defaultContentLanguage = "zh-cn"
 title = "ZRONG's BLOG"
 theme = "clarity"
 # theme = "capsule"
