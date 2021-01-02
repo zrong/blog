@@ -1,4 +1,4 @@
-baseURL = "https://blog.zengrong.net"
+baseURL = "https://blog.zengrong.net/"
 languageCode = "zh-CN"
 title = "ZRONG's BLOG"
 theme = "clarity"
