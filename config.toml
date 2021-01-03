@@ -102,7 +102,7 @@ disableKinds = ['section']
     btn_title = "下载"
 
   [params.aid.pageview]
-    info = "https://aid.zengrong.net/pv/js/%s/"
+    info = "https://aid.zengrong.net/pv/hit/%s/"
 
 [markup]
   [markup.goldmark]
