@@ -115,3 +115,29 @@ def deploy(c):
         t.run_singleton(' && '.join(cmd_list), 'hugo', wait=False)
     else:
         t.run_singleton('git clone --recursive {0} $HOME/blog'.format(GIT_URI), 'git', wait=False)
+
+
+from pathlib import Path
+
+def _readline(file):
+    linenum = 0
+    with open(file) as f:
+        line = f.readline()
+        while line:
+            print(f.readline())
+            print(line)
+
+@task
+def fix_thumbnail(c):
+    """ 查询每篇文章中是否有图像文件，若有则将其作为文章的 thumbnail 
+    """
+    all_md_files = list(Path(__file__).parent.joinpath('content/post/').glob('*.md'))
+    # 排序，最新文件在前
+    all_md_files.sort(key=lambda path: int(path.name[:-3]), reverse=True)
+    consume = 1
+    i = 0
+    while i < consume:
+        linenum = 0
+        _readline(all_md_files[i])
+        print(i)
+        i += 1
