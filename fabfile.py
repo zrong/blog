@@ -120,10 +120,7 @@ def deploy(c):
 from pathlib import Path
 import re
 FIRST_IMG = re.compile(r'\/uploads\/20\d{2}\/\d{2}\/\w+\.(jpg|png)')
-# FIRST_IMG = re.compile(r'\/uploads')
 
-def _writeline(f):
-    f.write_text('AAAAAAAAAAAAAAAAAAAAAAAAA\n')
 
 def _fill_thumb_line(f):
     linenum = 0
@@ -160,10 +157,12 @@ def fix_thumbnail(c):
     # 排序，最新文件在前
     all_md_files.sort(key=lambda path: int(path.name[:-3]), reverse=True)
     # 处理 这么数量的文件
-    consume = 1
+    consume = 900
     # 从第几个文件开始
-    i = 6
+    i = 0
     end = i + consume
+    if end > len(all_md_files):
+        end = len(all_md_files)
     while i < end:
         f = all_md_files[i]
         logger.info('=' * 14 + f'\n处理文件{i}: {f.name}')
