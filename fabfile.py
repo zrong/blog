@@ -118,14 +118,39 @@ def deploy(c):
 
 
 from pathlib import Path
+import re
+FIRST_IMG = re.compile(r'\/uploads\/20\d{2}\/\d{2}\/\w+\.(jpg|png)')
+# FIRST_IMG = re.compile(r'\/uploads')
 
-def _readline(file):
+def _writeline(f):
+    f.write_text('AAAAAAAAAAAAAAAAAAAAAAAAA\n')
+
+def _fill_thumb_line(f):
     linenum = 0
-    with open(file) as f:
-        line = f.readline()
-        while line:
-            print(f.readline())
-            print(line)
+    lines = f.readlines()
+    insert_linenum = 0
+    thumb_image = None
+    for line in lines:
+        logger.info(f'readline {linenum}: {line}')
+        if line.startswith('thumbnail'):
+            logger.info(f'包含 thumbnali， 跳过')
+            break
+        elif line.startswith('+++'):
+            # 如果已经找到这里，代表，没有 thumbnail，记录待插入的行
+            if linenum > 1:
+                insert_linenum = linenum
+        else:
+            matchobj = FIRST_IMG.search(line)
+            if matchobj is not None:
+                logger.info(matchobj)
+                thumb_image = matchobj.group(0)
+                break
+        linenum += 1
+    if insert_linenum > 0 and thumb_image is not None:
+        lines.insert(insert_linenum, f'thumbnail = "{thumb_image}"\n')
+        return lines
+    return None
+
 
 @task
 def fix_thumbnail(c):
@@ -134,10 +159,21 @@ def fix_thumbnail(c):
     all_md_files = list(Path(__file__).parent.joinpath('content/post/').glob('*.md'))
     # 排序，最新文件在前
     all_md_files.sort(key=lambda path: int(path.name[:-3]), reverse=True)
+    # 处理 这么数量的文件
     consume = 1
-    i = 0
-    while i < consume:
-        linenum = 0
-        _readline(all_md_files[i])
-        print(i)
+    # 从第几个文件开始
+    i = 6
+    end = i + consume
+    while i < end:
+        f = all_md_files[i]
+        logger.info('=' * 14 + f'\n处理文件{i}: {f.name}')
+
+        f = open(all_md_files[i])
+        new_lines = _fill_thumb_line(f)
+        f.close()
+
+        if new_lines:
+            f = open(all_md_files[i], 'w')
+            f.writelines(new_lines)
+            f.close()
         i += 1
