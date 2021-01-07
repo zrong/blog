@@ -88,6 +88,8 @@ disableKinds = ['section']
   mainSections = ["posts", "post"]
   figurePositionShow = false
   figurePositionLabel = "图像"
+  baidu_analytics = "dbc80b637f684b05f8467bd3d1a67d1c"
+  ga_analytics = "UA-178999-6"
 
   [params.cc]
     name = "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
