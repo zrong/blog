@@ -1,0 +1,14 @@
+graph LR
+    p1["100%"]
+    p2["0%"]
+    p3["0%"]
+    subgraph 广告1
+       p3 
+    end
+    subgraph 广告2
+       p2 
+    end
+    subgraph 广告3
+       p1 
+    end
+    p1 --> p2 --> p3 --> 转化
