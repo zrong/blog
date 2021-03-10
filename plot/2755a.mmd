@@ -1,0 +1,20 @@
+gantt
+    title iOS 广告 ID 演化史
+    dateFormat  YYYY-MM
+
+    section iOS
+    IMEI(iOS 5禁止获取)   :imei, 2010-06, 480d
+    UDID(2010-06~2013-05)   :udid, 2010-06,1050d 
+    MAC Address(2010-06~2013-09)    :after udid, 2010-06, 1170d
+    OpenUDID(2013-06~2013-09)   :after udid, 2013-06, 90d
+    IDFA(2012-09~2021-03)     :after udid, 2012-09, 3110d
+    iOS6-iOS14(2012-09,2020-09)  :2012-09, 2920d
+
+    section Android
+    IMEI,Device ID(read_phone_state权限)   :imei, 2010-06,3930d 
+    MAC Address(网络权限):    mac, 2010-06, 3930d
+    ADID(2011-10)   :adid, 2011-10,3450d 
+
+    section 政府隐私法案
+    GDPR(2018-05)    :2018-05, 1040d
+    CCPA(2020-01)    :2020-01, 430d
