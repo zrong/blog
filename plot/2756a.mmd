@@ -1,0 +1,17 @@
+sequenceDiagram
+    autonumber
+    iOS设备 ->>+ 用户: 展示SKAdNetwork签名广告
+    用户 ->>- iOS设备: 点击广告
+    iOS设备 ->> 广告平台: 跳转到广告平台
+    Note left of AppStore: 广告平台跳转到 AppStore
+    广告平台 ->>+ AppStore: 下载
+    AppStore ->>- iOS设备: 安装APP
+    iOS设备 ->> 广告平台: 激活
+    loop 24小时倒计时，新事件则重启倒计时
+        iOS设备 -->> AppStore: registerAppForAdNetworkAttribution()
+        iOS设备 -->> AppStore: updateConversionValue()
+        iOS设备 ->>+ AppStore: 没有新的事件
+        AppStore -->>- iOS设备: 0-24小时随机倒计时
+    end
+    iOS设备 ->> 广告平台: 归因结果数据
+    广告平台 -->> 归因平台: 归因结果数据
