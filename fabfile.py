@@ -93,27 +93,32 @@ def test_tmux(c):
 SITE_WEBROOT = '/srv/www/blog.zengrong.net'
 GIT_URI = 'git@github.com:zrong/blog.git'
 
+
 @task
-def deploy_sync(c):
+def deploy_sync(c, nopull=False):
     """ 使用 fabric 的远程调用功能同步执行部署，命令行会一直等待执行结束
+    :param nopull: 默认会执行 git pull，若提供此参数则不执行
     """
     if not isinstance(c, Connection):
         raise Exit('Use -H to provide a host!')
     logger.warning('conn: %s', c)
     git_dir = '$HOME/blog'
-    hugo_cache_dir = '{0}/hugo_cache'.format(git_dir)
+    hugo_cache_dir = f'{git_dir}/hugo_cache'
     cmd = f'test -e {git_dir}'
     logger.warning(cmd)
     r = c.run(cmd, warn=True)
     if r.ok:
-        cmd_list = [
-            'git -C {0} reset --hard'.format(git_dir),
-            'git -C {0} pull origin master'.format(git_dir),
-            'git -C {0} submodule update'.format(git_dir),
-            'cd {0}'.format(git_dir),
-            'hugo --cacheDir {0} -d {1}'.format(hugo_cache_dir, SITE_WEBROOT)
-        ]
-        cmd = ' && '.join(cmd_list)
+        hugo_cmd = f'cd {git_dir} && hugo --cacheDir {hugo_cache_dir} -d {SITE_WEBROOT}'
+        if nopull:
+            cmd = hugo_cmd 
+        else:
+            cmd_list = [
+                f'git -C {git_dir} reset --hard',
+                f'git -C {git_dir} pull origin master',
+                f'git -C {git_dir} submodule update',
+                hugo_cmd
+            ]
+            cmd = ' && '.join(cmd_list)
         logger.warning(cmd)
         r = c.run(cmd, warn=True)
     else:
