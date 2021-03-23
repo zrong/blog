@@ -100,13 +100,13 @@ disableKinds = ['section']
     host = "blog.zengrong.net/isso"
 
   [params.aid.download]
-    info = "https://aid.zengrong.net/dl/info/%s/"
-    go = "https://aid.zengrong.net/dl/go/%s/"
+    info = "https://aid.zengrong.net/api/dl/info/%s"
+    go = "https://aid.zengrong.net/api/dl/go/%s"
     root = "https://blog.zengrong.net/uploads"
     btn_title = "下载"
 
   [params.aid.pageview]
-    info = "https://aid.zengrong.net/pv/hit/%s/"
+    info = "https://aid.zengrong.net/api/pv/hit/%s"
 
 [markup]
   [markup.goldmark]
