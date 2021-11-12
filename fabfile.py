@@ -102,7 +102,7 @@ def deploy_sync(c, nopull=False):
     if not isinstance(c, Connection):
         raise Exit('Use -H to provide a host!')
     logger.warning('conn: %s', c)
-    git_dir = '$HOME/blog'
+    git_dir = '$HOME/blog.git'
     hugo_cache_dir = f'{git_dir}/hugo_cache'
     cmd = f'test -e {git_dir}'
     logger.warning(cmd)
