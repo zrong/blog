@@ -6,3 +6,4 @@
 *.cfg
 *.db
 .hugo*
+stark_*

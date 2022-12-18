@@ -4,84 +4,13 @@ import logging
 import sys
 from fabric import task, Connection
 from invoke.exceptions import Exit
+from pyape.builder.fabric import Tmux
+from pyape.config import GlobalConfig
+import tomli
 
 
 logger = logging.Logger('fabric', level=logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stdout))
-
-
-class Tmux(object):
-    """Tmux helper for fabric 2"""
-    def __init__(self, runner, session_name='default'):
-        self.session_name = session_name
-        self.run_cmd = runner.run
-
-        self.create_session()
-
-    def create_session(self):
-        test = self.run_cmd('tmux has-session -t %s' % self.session_name, warn=True)
-
-        if test.failed:
-            self.run_cmd('tmux new-session -d -s %s' % self.session_name)
-
-        self.run_cmd(
-            'tmux set-option -t %s -g allow-rename off' % self.session_name)
-
-    def recreate(self):
-        self.kill_session()
-        self.create_session()
-
-    def kill_session(self):
-        self.run_cmd('tmux kill-session -t %s' % self.session_name)
-
-    def command(self, command, pane=0):
-        self.run_cmd('tmux send-keys -t %s:%s "%s" ENTER' % (
-            self.session_name, pane, command))
-
-    def new_window(self, name):
-        self.run_cmd('tmux new-window -t %s -n %s' % (self.session_name, name))
-
-    def find_window(self, name):
-        test = self.run_cmd('tmux list-windows -t %s | grep \'%s\'' % (self.session_name, name), warn=True)
-
-        return test.ok
-
-    def rename_window(self, new_name, old_name=None):
-        if old_name is None:
-            self.run_cmd('tmux rename-window %s' % new_name)
-        else:
-            self.run_cmd('tmux rename-window -t %s %s' % (old_name, new_name))
-
-    def wait_for(self, signal_name):
-        self.run_cmd('tmux wait-for %s' % signal_name)
-
-    def run_singleton(self, command, orig_name, wait=True):
-        run_name = "run/%s" % orig_name
-        done_name = "done/%s" % orig_name
-
-        # If the program is running we wait to be finished.
-        if self.find_window(run_name):
-            self.wait_for(run_name)
-
-        # If the program is not running we create a window with done_name
-        if not self.find_window(done_name):
-            self.new_window(done_name)
-
-        self.rename_window(run_name, done_name)
-
-        # Check that we can execute the commands in the correct window
-        assert self.find_window(run_name)
-
-        rename_window_cmd = 'tmux rename-window -t %s %s' % (
-            run_name, done_name)
-        signal_cmd = 'tmux wait-for -S %s' % run_name
-
-        expanded_command = '%s ; %s ; %s' % (
-            command, rename_window_cmd, signal_cmd)
-        self.command(expanded_command, run_name)
-
-        if wait:
-            self.wait_for(run_name)
 
 
 @task
@@ -211,3 +140,41 @@ def fix_thumbnail(c):
             f.writelines(new_lines)
             f.close()
         i += 1
+
+
+@task
+def build_stark_config(c):
+    """ 构建 stark 需要的配置文件。
+    由于 stark 生成的索引文件高达 350M+，放弃使用 stark。
+    """
+    gconf = GlobalConfig(Path(__file__).parent)
+    stark_input_files = []
+    for d in (gconf.getdir('content/post'), gconf.getdir('content/page')):
+        flist = list(d.glob('*.md'))
+        is_post = d.name == 'post'
+        # 对于 post 根据编号来排序
+        if is_post:
+            flist.sort(key=lambda f: int(f.name.split('.')[0]))
+        for f in flist:
+            s = f.read_text()
+            # 找到 +++ 的开头和结尾
+            first = s.find('+++')
+            end = s.find('+++', 3)
+
+            front_matter_s = s[first+3: end]
+            front_matter = tomli.loads(front_matter_s)
+            # print(front_matter['slug'], front_matter['title'], front_matter['postid'])
+            stark_input_files.append({
+                'path': f'{d.name}/{f.name}',
+                'url': f'post/{front_matter["slug"]}/' if is_post else f'{front_matter["slug"]}/',
+                'title': front_matter['title'],
+                'filetype': "Markdown",
+            })
+    stark_input = {
+        'base_directory': 'content',
+        'url_prefix': 'https://blog.zengrong.net/',
+        'files': stark_input_files,
+        'stemming': 'None',
+    }
+    gconf.write('stark_conf.toml', {'input': stark_input})
+
