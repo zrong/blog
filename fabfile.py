@@ -4,9 +4,9 @@ import logging
 import sys
 from fabric import task, Connection
 from invoke.exceptions import Exit
-from pyape.builder.fabric import Tmux
+from pyape.builder.fabric.tmux import Tmux
 from pyape.config import GlobalConfig
-import tomli
+import tomllib
 
 
 logger = logging.Logger('fabric', level=logging.DEBUG)
@@ -162,7 +162,7 @@ def build_stark_config(c):
             end = s.find('+++', 3)
 
             front_matter_s = s[first+3: end]
-            front_matter = tomli.loads(front_matter_s)
+            front_matter = tomllib.loads(front_matter_s)
             # print(front_matter['slug'], front_matter['title'], front_matter['postid'])
             stark_input_files.append({
                 'path': f'{d.name}/{f.name}',

@@ -25,4 +25,4 @@ comment = false
   })();
 </script>
 <gcse:search></gcse:search>
-{{< rawhtml >}}
+{{</ rawhtml >}}
