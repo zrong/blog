@@ -100,14 +100,9 @@ disableKinds = ['section']
     enable = true
     host = "blog.zengrong.net/isso"
 
-  [params.aid.download]
-    info = "https://aid.zengrong.net/api/dl/info/%s"
-    go = "https://aid.zengrong.net/api/dl/go/%s"
-    root = "https://blog.zengrong.net/uploads"
-    btn_title = "下载"
-
-  [params.aid.pageview]
-    info = "https://aid.zengrong.net/api/pv/hit/%s"
+  [params.aid]
+    messageboard_enable = true
+    api_js = 'http://localhost:8000/static/aidapi.js'
 
 [markup]
   [markup.goldmark]
