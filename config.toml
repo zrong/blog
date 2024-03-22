@@ -102,7 +102,7 @@ disableKinds = ['section']
 
   [params.aid]
     messageboard_enable = true
-    api_js = 'http://localhost:8000/static/aidapi.js'
+    api_js = 'https://aid.zengrong.net/static/aidapi.js'
 
 [markup]
   [markup.goldmark]
