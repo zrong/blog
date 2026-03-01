@@ -19,3 +19,18 @@ appsecret = ""
 content_dir = "content"
 blog_url = "https://blog.zengrong.net"
 author = "zrong"
+
+[deploy]
+# 博客仓库根目录（相对于此配置文件的路径，或绝对路径）
+blog_root = "../.."
+# Hugo 构建输出目录（相对于 blog_root）
+output_dir = "public"
+# 远程服务器
+remote_host = ""
+remote_user = "root"
+# 远程 web 根目录
+webroot = "/srv/www/blog.zengrong.net"
+# SSH 密钥路径（可选，留空则使用默认 SSH 配置）
+ssh_key = ""
+# Hugo 可执行文件路径（可选，留空则使用 PATH 中的 hugo）
+hugo_bin = ""

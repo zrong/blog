@@ -10,3 +10,5 @@ stark_*
 *.bkp
 tools/rspeak/config.toml
 tools/rspeak/.venv/
+__pycache__/
+*.pyc

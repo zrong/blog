@@ -12,7 +12,8 @@ except ImportError:
     import tomli as tomllib
 
 
-CONFIG_DIR = Path(__file__).parent
+# 配置文件在项目根目录（tools/rspeak/），而非 Python 包目录（tools/rspeak/rspeak/）
+CONFIG_DIR = Path(__file__).parent.parent
 CONFIG_PATH = CONFIG_DIR / "config.toml"
 CONFIG_EXAMPLE_PATH = CONFIG_DIR / "config.example.toml"
 
@@ -50,3 +51,9 @@ def get_hugo_config(config: dict | None = None) -> dict:
     """获取 Hugo 配置"""
     config = config or load_config()
     return config.get("hugo", {})
+
+
+def get_deploy_config(config: dict | None = None) -> dict:
+    """获取部署配置"""
+    config = config or load_config()
+    return config.get("deploy", {})
