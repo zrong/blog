@@ -97,7 +97,30 @@ allowed-tools: Bash(uv run *), Read, Grep, Glob, Edit
 
 ### 第三步：执行发布
 
-使用 `tools/rspeak/` 下的 Python 模块执行操作。运行 Python 脚本时使用 `uv run --project tools/rspeak` 前缀。
+优先使用 CLI 命令，也可以用 Python API。所有命令使用 `uv run --project tools/rspeak rspeak` 前缀。
+
+**CLI 命令：**
+
+```bash
+# 同步 Hugo ↔ Joplin
+uv run --project tools/rspeak rspeak sync -p <postid>
+uv run --project tools/rspeak rspeak sync -t "标题关键词" -s "english-slug"
+
+# 部署博客到远程服务器
+uv run --project tools/rspeak rspeak deploy blog
+uv run --project tools/rspeak rspeak deploy blog --dry-run
+
+# 发布到微信公众号（创建草稿）
+uv run --project tools/rspeak rspeak deploy wechat -p <postid>
+
+# 转为知乎格式
+uv run --project tools/rspeak rspeak deploy zhihu -p <postid>
+
+# 校对文章（基础检查）
+uv run --project tools/rspeak rspeak review -p <postid>
+```
+
+**Python API：** 需要更灵活的控制时，用 `uv run --project tools/rspeak python -c "..."` 调用 Python 模块（详见 [reference.md](reference.md)）。调用时需加 `sys.path.insert(0, 'tools/rspeak')`。
 
 **Hugo→Joplin 方向特殊步骤：**
 - **同步前必须执行链接转换**：将 Hugo 中的 relref 链接还原为 Joplin 内部链接（见「链接转换规则 - Hugo → Joplin」）。`hugo_to_joplin()` 函数**不会**自动转换链接，必须在同步完成后手动替换 Joplin 笔记中的 relref 为 `(:/joplin_id)` 格式
@@ -180,3 +203,12 @@ Hugo 文章中的 relref 链接 `[文字]({{< relref "post/{postid}.md" >}})` �
 - Joplin 操作前先 ping 确认服务可用
 - 所有敏感信息（token、apikey）从配置文件读取，不硬编码
 - 分类参考：影视拉片、剧评、影评等影视媒体相关内容归入 `media` 类别，而非 `impressions`
+
+## Windows 环境注意事项
+
+- **rsync 不可用**：Scoop 安装的 rsync 与 Git Bash 的 SSH 不兼容（`dup() in/out/err failed` 或路径中 `C:` 被误判为远程主机）。`deploy blog` 命令会失败
+- **替代部署方式**：先用 `hugo_build()` 构建，再用 tar+ssh 部署：
+  ```bash
+  cd public && tar czf - . | ssh ubuntu@zengrong-net "cd /srv/www/blog.zengrong.net && tar xzf -"
+  ```
+- **Python API 编码**：在 Git Bash 中调用 Python API 输出中文时，需设置 `sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')`，否则会乱码

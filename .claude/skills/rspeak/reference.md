@@ -20,15 +20,63 @@ blog_url = "https://blog.zengrong.net"
 author = "zrong"
 ```
 
-## 代码调用示例
+## CLI 命令
 
-所有脚本通过 `uv run --project tools/rspeak python -c "..."` 执行。
+rspeak 提供 CLI 封装，通过 `uv run --project tools/rspeak rspeak <command>` 调用。
+
+### 同步 Hugo ↔ Joplin
+
+```bash
+# 通过 postid 同步
+uv run --project tools/rspeak rspeak sync -p 2850
+
+# 通过标题搜索同步（Joplin→Hugo 时需提供 slug）
+uv run --project tools/rspeak rspeak sync -t "文章标题" -s "english-slug"
+```
+
+### 部署博客
+
+```bash
+# Hugo 构建 + rsync 部署
+uv run --project tools/rspeak rspeak deploy blog
+
+# 模拟运行（不实际传输）
+uv run --project tools/rspeak rspeak deploy blog --dry-run
+```
+
+### 发布到微信公众号
+
+```bash
+# 创建草稿（需要登录公众号后台确认发布）
+uv run --project tools/rspeak rspeak deploy wechat -p 2850
+```
+
+### 转知乎格式
+
+```bash
+# 输出到终端供复制粘贴
+uv run --project tools/rspeak rspeak deploy zhihu -p 2850
+```
+
+### 校对文章（基础检查）
+
+```bash
+uv run --project tools/rspeak rspeak review -p 2850
+```
+
+> **注意**：`review` 命令只做基础格式检查（中英文空格、标点混用、多余空行）。完整校对（错别字、语义、风格）由 Claude 在 skill 工作流中完成。
+
+## Python API 调用
+
+需要更灵活控制时，通过 `uv run --project tools/rspeak python -c "..."` 调用 Python 模块。
+
+> **重要**：在 Git Bash 环境中需添加 `sys.path.insert(0, 'tools/rspeak')`，并设置 UTF-8 输出：`sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')`。
 
 ### 搜索 Joplin 笔记
 
 ```python
-from tools.rspeak.config import get_joplin_config
-from tools.rspeak.joplin import JoplinClient
+from rspeak.config import get_joplin_config
+from rspeak.joplin import JoplinClient
 
 conf = get_joplin_config()
 with JoplinClient(token=conf["token"], base_url=conf["base_url"]) as client:
@@ -43,10 +91,10 @@ with JoplinClient(token=conf["token"], base_url=conf["base_url"]) as client:
 
 ```python
 from pathlib import Path
-from tools.rspeak.hugo import parse_post
-from tools.rspeak.config import get_joplin_config
-from tools.rspeak.joplin import JoplinClient
-from tools.rspeak.converter import hugo_to_joplin
+from rspeak.hugo import parse_post
+from rspeak.config import get_joplin_config
+from rspeak.joplin import JoplinClient
+from rspeak.converter import hugo_to_joplin
 
 post = parse_post(Path("content/post/{postid}.md"))
 conf = get_joplin_config()
@@ -60,9 +108,9 @@ with JoplinClient(token=conf["token"], base_url=conf["base_url"]) as client:
 
 ```python
 from pathlib import Path
-from tools.rspeak.config import get_joplin_config
-from tools.rspeak.joplin import JoplinClient
-from tools.rspeak.converter import joplin_to_hugo
+from rspeak.config import get_joplin_config
+from rspeak.joplin import JoplinClient
+from rspeak.converter import joplin_to_hugo
 
 conf = get_joplin_config()
 with JoplinClient(token=conf["token"], base_url=conf["base_url"]) as client:
@@ -80,9 +128,9 @@ with JoplinClient(token=conf["token"], base_url=conf["base_url"]) as client:
 
 ```python
 from pathlib import Path
-from tools.rspeak.config import get_joplin_config
-from tools.rspeak.joplin import JoplinClient
-from tools.rspeak.converter import sync_article
+from rspeak.config import get_joplin_config
+from rspeak.joplin import JoplinClient
+from rspeak.converter import sync_article
 
 conf = get_joplin_config()
 with JoplinClient(token=conf["token"], base_url=conf["base_url"]) as client:
@@ -114,9 +162,9 @@ with JoplinClient(token=conf["token"], base_url=conf["base_url"]) as client:
 ### Hugo/Joplin -> 微信公众号
 
 ```python
-from tools.rspeak.config import get_wechat_config
-from tools.rspeak.converter import hugo_to_wechat
-from tools.rspeak.wechat import WechatClient
+from rspeak.config import get_wechat_config
+from rspeak.converter import hugo_to_wechat
+from rspeak.wechat import WechatClient
 
 article = hugo_to_wechat(post)
 conf = get_wechat_config()
@@ -129,8 +177,8 @@ with WechatClient(appid=conf["appid"], appsecret=conf["appsecret"]) as client:
 ### Hugo/Joplin -> 知乎
 
 ```python
-from tools.rspeak.converter import hugo_to_zhihu
-from tools.rspeak.zhihu import format_for_clipboard
+from rspeak.converter import hugo_to_zhihu
+from rspeak.zhihu import format_for_clipboard
 
 zhihu_article = hugo_to_zhihu(post)
 text = format_for_clipboard(zhihu_article)
@@ -144,8 +192,8 @@ text = format_for_clipboard(zhihu_article)
 ### Joplin → Hugo：`(:/note_id)` → relref
 
 ```python
-from tools.rspeak.config import get_joplin_config
-from tools.rspeak.joplin import JoplinClient
+from rspeak.config import get_joplin_config
+from rspeak.joplin import JoplinClient
 
 conf = get_joplin_config()
 with JoplinClient(token=conf["token"], base_url=conf["base_url"]) as client:
@@ -165,7 +213,7 @@ with JoplinClient(token=conf["token"], base_url=conf["base_url"]) as client:
 
 ```python
 from pathlib import Path
-from tools.rspeak.hugo import parse_post
+from rspeak.hugo import parse_post
 
 # 1. 从 relref 路径提取 postid
 #    [文字]({{< relref "post/2849.md" >}}) → postid = 2849
@@ -180,18 +228,37 @@ joplin_id = post.extra.get("joplin_id")
 Hugo relref 语法参考：`{{< relref "post/{postid}.md" >}}`，Hugo 构建时自动解析为正确的相对路径。
 Joplin 内部链接语法：`(:/note_id)`，Joplin 客户端自动解析为笔记链接。
 
+## Windows 环境
+
+- **rsync 不兼容**：Scoop 安装的 rsync 在 Git Bash 中无法正常工作（`dup() in/out/err failed`，或 `C:` 被误判为远程主机）
+- **替代部署方式**：先单独执行 Hugo 构建，再用 tar+ssh 部署：
+  ```bash
+  # Hugo 构建（deploy_blog 的前半部分）
+  hugo -d public
+  # tar+ssh 部署
+  cd public && tar czf - . | ssh ubuntu@zengrong-net "cd /srv/www/blog.zengrong.net && tar xzf -"
+  ```
+- **Python 中文输出乱码**：Git Bash 中需设置 UTF-8：
+  ```python
+  import sys, io
+  sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+  ```
+
 ## 模块结构
 
 ```
 tools/rspeak/
-├── pyproject.toml          # uv 项目配置
+├── pyproject.toml          # uv 项目配置（CLI 入口：rspeak = "rspeak.cli:app"）
 ├── config.toml             # 实际配置（.gitignore）
 ├── config.example.toml     # 配置模板
-├── __init__.py
-├── config.py               # 配置加载
-├── hugo.py                 # Hugo 文章解析/写入/搜索
-├── joplin.py               # Joplin REST API 客户端
-├── wechat.py               # 微信公众号 API 客户端
-├── zhihu.py                # 知乎格式转换
-└── converter.py            # 跨平台格式转换
+└── rspeak/
+    ├── __init__.py
+    ├── cli.py              # CLI 命令行入口（typer）
+    ├── config.py           # 配置加载
+    ├── deploy.py           # 部署：Hugo 构建 + rsync + 微信/知乎发布
+    ├── hugo.py             # Hugo 文章解析/写入/搜索
+    ├── joplin.py           # Joplin REST API 客户端
+    ├── converter.py        # 跨平台格式转换
+    ├── wechat.py           # 微信公众号 API 客户端
+    └── zhihu.py            # 知乎格式转换
 ```

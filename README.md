@@ -1,14 +1,67 @@
-## 构建
+## 构建与部署
 
 下载 hugo <= 0.128.2: https://github.com/gohugoio/hugo/releases/tag/v0.128.2
 
+使用 [rspeak][rspeak]（博客写作与发布工具）一键构建并部署：
 
 ```shell
-hugo && rsync -avz --delete public/ app@zengrong.net:~/www/blog.zengrong.net/
+uv run --project tools/rspeak rspeak deploy blog
 ```
 
+也可以手动执行：
+
+```shell
+hugo && rsync -avz --delete public/ ubuntu@zengrong-net:/srv/www/blog.zengrong.net
+```
+
+> **Windows 注意**：Scoop 安装的 rsync 与 Git Bash 不兼容，需使用 tar+ssh 替代：
+> ```shell
+> hugo -d public && cd public && tar czf - . | ssh ubuntu@zengrong-net "cd /srv/www/blog.zengrong.net && tar xzf -"
+> ```
+
+### 其他 rspeak 命令
+
+```shell
+# Hugo ↔ Joplin 双向同步
+uv run --project tools/rspeak rspeak sync -p <postid>
+
+# 发布到微信公众号（创建草稿）
+uv run --project tools/rspeak rspeak deploy wechat -p <postid>
+
+# 转为知乎格式
+uv run --project tools/rspeak rspeak deploy zhihu -p <postid>
+
+# 基础校对检查
+uv run --project tools/rspeak rspeak review -p <postid>
+```
+
+## AI 辅助写作
+
+本项目配置了 [Claude Code][claudecode] skill（`.claude/skills/rspeak/`），可以通过自然语言指令完成博客写作流程。
+
+### 可用指令
+
+- **校对文章**：`校对 2850` 或 `校对这篇 Joplin 文章：标题关键词`
+  自动定位文章，对照[风格指南][styleguide]逐段检查错别字、标点、中英文混排等问题，逐个修改并展示差异。
+- **同步文章**：`同步 2850` 或 `同步到 Joplin`
+  Hugo ↔ Joplin 双向同步，自动比较更新时间判断方向，处理图片和内部链接转换。
+- **发布文章**：`发布博客` / `发到公众号` / `转知乎格式`
+  Hugo 构建部署、微信公众号草稿创建、知乎格式转换。
+
+### Skill 文件结构
+
+```
+.claude/skills/rspeak/
+├── SKILL.md          # 工作流定义（校对、同步、发布流程）
+├── reference.md      # 技术参考（CLI 命令、Python API、模块结构）
+└── style-guide.md    # 写作风格指南（标点、混排、段落规范）
+```
 
 ## [blog.zengrong.net](https://blog.zengrong.net) 的历史
+
+### 2026年3月1日
+
+引入 AI 辅助写作流程。使用 [Claude Code][claudecode] 的 skill 机制，将博客校对、Hugo/Joplin 同步、多平台发布封装为自然语言指令。配套工具 [rspeak][rspeak] 提供 CLI 和 Python API，支持一键部署到远程服务器、微信公众号和知乎。
 
 ### 2019年8月29日
 
@@ -55,3 +108,6 @@ Hexo 的生成速度无法满足博客近千篇文章的更新，我放弃了 [H
 [isso]: https://github.com/posativ/isso
 [wordpress]: https://wordpress.org
 [cc]: https://blog.zengrong.net/post/creative-commons/
+[rspeak]: tools/rspeak/
+[claudecode]: https://claude.com/claude-code
+[styleguide]: .claude/skills/rspeak/style-guide.md
