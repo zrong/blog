@@ -1,0 +1,21 @@
+# 多平台发布工具配置文件
+# 复制为 config.toml 并填入实际值
+
+[joplin]
+# 在 Joplin 中通过 工具 -> 选项 -> Web Clipper 获取 token
+token = ""
+base_url = "http://localhost:41184"
+# 同步到 Joplin 时的笔记本路径（嵌套用 / 分隔）
+notebook_path = "Thought/Writing/Blog"
+
+[wechat]
+# 微信公众号后台 -> 开发 -> 基本配置
+appid = ""
+appsecret = ""
+# 也可以直接提供 access_token（有效期 2 小时）
+# access_token = ""
+
+[hugo]
+content_dir = "content"
+blog_url = "https://blog.zengrong.net"
+author = "zrong"

@@ -8,3 +8,5 @@
 .hugo*
 stark_*
 *.bkp
+tools/rspeak/config.toml
+tools/rspeak/.venv/
