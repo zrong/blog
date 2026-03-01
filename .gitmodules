@@ -1,6 +1,3 @@
-[submodule "themes/maupassant"]
-	path = themes/maupassant
-	url = https://gitee.com/zrong/maupassant-hugo.git
 [submodule "themes/clarity"]
 	path = themes/clarity
-	url = https://gitee.com/zrong/hugo-clarity.git
+	url = https://github.com/zrong/hugo-clarity.git
