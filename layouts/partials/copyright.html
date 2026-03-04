@@ -1,0 +1,21 @@
+<div class="post_copyright">
+    <ul>
+        <li><strong>文章ID：</strong>{{ .Param "postid" }}</li>
+        <li><strong>原文作者：</strong><a rel="author" href="{{ .Site.BaseURL}}">{{ with .Site.Params.author }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="{{ .Permalink}}">{{ .Permalink}}</a></li>
+        {{- range $key, $value := .Params.wechat }}
+          {{- if and (eq $value.status "published") $value.url }}
+            {{- $name := index $.Site.Params.wechat_accounts $key }}
+            {{- if not $name }}{{- $name = "微信公众号" }}{{- end }}
+        <li style="word-break:break-all"><strong>公众号链接：</strong><a href="{{ $value.url }}" target="_blank" rel="noopener">{{ $value.url }}</a>（{{ $name }}）</li>
+          {{- end }}
+        {{- end }}
+        {{- with .Params.zhihu }}{{- with .url }}
+        <li style="word-break:break-all"><strong>知乎链接：</strong><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></li>
+        {{- end }}{{- end }}
+        {{- with .Params.xiaohongshu }}{{- with .url }}
+        <li style="word-break:break-all"><strong>小红书链接：</strong><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></li>
+        {{- end }}{{- end }}
+        <li><strong>版权声明：</strong>本作品采用 <a rel="license" href="{{.Site.Params.cc.link}}">{{.Site.Params.cc.name}}</a> 进行许可，非商业转载请注明出处（原文作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>

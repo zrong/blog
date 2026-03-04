@@ -243,7 +243,7 @@ from rspeak.config import get_wechat_config
 from rspeak.converter import hugo_to_wechat
 from rspeak.wechat import WechatClient
 
-article = hugo_to_wechat(post)
+article = hugo_to_wechat(post, content_dir=Path("content"), wechat_account="main")
 conf = get_wechat_config(account="main")
 with WechatClient(appid=conf["appid"], appsecret=conf["appsecret"]) as client:
     media_id = client.add_draft([article])
@@ -375,7 +375,7 @@ tools/rspeak/
 
 | 函数 | 说明 |
 |------|------|
-| `deploy_wechat(postid, account, publish)` | 完整微信发布流程 |
+| `deploy_wechat(postid, account, publish)` | 完整微信发布流程（已有草稿时自动更新） |
 | `publish_wechat_draft(media_id, account, postid)` | 发布已有草稿 |
 | `_upload_wechat_images(article, client, static_dir, blog_url)` | 上传正文图片到微信 |
 | `_resolve_cover_image(post, static_dir)` | 获取封面图本地路径 |
@@ -392,5 +392,9 @@ tools/rspeak/
 | `hugo_to_joplin(post, client, ...)` | Hugo→Joplin（含链接转换 + frontmatter 合并） |
 | `joplin_to_hugo(note, content_dir, ...)` | Joplin→Hugo（含链接转换 + frontmatter 解析） |
 | `sync_article(client, content_dir, ...)` | 自动判断方向同步 |
-| `hugo_to_wechat(post)` / `joplin_to_wechat(note)` | 转微信 HTML（自动剥离 frontmatter） |
+| `hugo_to_wechat(post, author, content_dir, wechat_account)` | 转微信 HTML（内联样式 + TOC + relref 解析 + 微信互链） |
+| `_inline_styles_for_wechat(html)` | HTML 标签添加内联样式（Joplin 风格） |
+| `_generate_toc_html(html)` | 从 h2/h3 生成 TOC 目录 HTML |
+| `_resolve_relref_links(body, blog_url, content_dir, wechat_account)` | Hugo relref 短代码转实际 URL（支持微信 URL 优先） |
+| `_generate_digest(md_text)` | 从 Markdown 提取纯文本摘要 |
 | `hugo_to_zhihu(post)` / `joplin_to_zhihu(note)` | 转知乎格式（自动剥离 frontmatter） |

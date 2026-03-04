@@ -46,6 +46,7 @@ allowed-tools: Bash(uv run *), Read, Grep, Glob, Edit
 4. **断句**：过长段落拆分、不自然断句修正
 5. **格式规范**：标题层级、代码块标注、列表格式
 6. **链接转换**：按「链接转换规则」处理 Joplin 内部链接等平台特有链接
+7. **内部链接标题一致性**：检查文章中所有 relref 链接（Hugo）或内部链接（Joplin）的显示文字是否与目标文章的当前标题一致。若不一致，以目标文章最新标题为准更新链接文字，并同步更新另一平台
 
 ### 第四步：逐个修改
 
@@ -147,10 +148,32 @@ uv run --project tools/rspeak rspeak review -p <postid>
 - **Frontmatter 同步**：Joplin body 顶部的共享 frontmatter 字段合并到 Hugo `extra`
 
 **微信公众号发布流程：**
-1. 创建草稿：上传正文图片 + 封面图 + 创建草稿 → `media_id`
+1. 创建或更新草稿：上传正文图片 + 封面图 + 创建/更新草稿 → `media_id`
+   - **幂等性**：若 Hugo frontmatter 中已有该账号的 `media_id` 且状态为 `draft`，调用 `update_draft` 原地更新，不会创建重复草稿
+   - **新建**：无已有草稿时调用 `add_draft` 创建
 2. 发布：发布草稿 → 轮询状态 → 获取永久链接
 3. 元数据回写：永久链接和状态写回 Hugo frontmatter `extra["wechat"]` 和 Joplin frontmatter
 4. 标签标记：在 Joplin 笔记上打 `mp:账号名` 标签
+
+**微信公众号 HTML 渲染规则：**
+- 微信**不支持 `<style>` 标签**，所有样式必须内联到 HTML 元素上
+- `_inline_styles_for_wechat()` 自动将 h2/h3/p/code/blockquote/img/table/strong 标签转为内联样式
+- 样式参考 Joplin `userstyle.css`：h2 顶部 2px 灰色边框、strong 使用 `#ab1942` 强调色、正文 17px
+- 代码块使用 `<section>` + 等宽字体内联样式，`white-space: pre-wrap` 防止溢出
+- Hugo relref 短代码自动转为实际博客 URL（`_resolve_relref_links()`）
+- 若 Hugo frontmatter `toc = true`，自动生成目录（Joplin 风格虚线边框）插入第一个 h2 之前
+
+**微信公众号文章默认设置：**
+- 作者：从 config.toml `[hugo] author` 读取（默认「曾嵘」）
+- 留言：默认开启（`need_open_comment=1`）
+- 摘要：从正文智能提取纯文本（去除代码块、图片、标记），非截取开头段落
+- 原创声明/创作来源/合集：API 不支持，需在公众号后台手动操作
+
+**微信公众号草稿管理 API：**
+- `WechatClient.add_draft(articles)` — 创建草稿
+- `WechatClient.update_draft(media_id, article)` — 更新已有草稿
+- `WechatClient.delete_draft(media_id)` — 删除草稿
+- `WechatClient.list_drafts(offset, count)` — 列出草稿
 
 ## 链接转换规则
 
@@ -176,9 +199,46 @@ uv run --project tools/rspeak rspeak review -p <postid>
 
 **校对时的额外处理**：若同步后发现警告（目标文章没有 `joplin_id`），询问用户是否将目标文章也同步到 Joplin。
 
-### 微信公众号文章链接（待扩展）
+### 微信公众号文章互链
 
-预留规则：将公众号文章 URL 转换为合适的引用格式。
+发布到微信时，文章中引用的其他文章优先使用微信永久链接（而非博客 URL），让微信读者可以直接在微信内跳转。
+
+**机制：**
+- `_resolve_relref_links()` 接收 `content_dir` 和 `wechat_account` 参数
+- 解析 relref 目标文章的 `[wechat.{account}].url`（状态须为 `published`）
+- 找到微信 URL → 使用微信 URL；未找到 → 回退到博客 URL
+- `deploy_wechat()` 自动传入这些参数
+
+**永久链接获取：**
+- **自动获取**：使用 `--publish` 参数或 `wechat-publish` 命令发布草稿，系统自动轮询获取永久链接并写回 Hugo/Joplin frontmatter
+- **手动获取**：用户在微信后台手动发布后，将永久链接写入 Joplin frontmatter `[wechat.{account}] url = "..."`，下次同步时自动同步到 Hugo
+
+### 博客文章平台链接（版权区）
+
+当文章 frontmatter 中有已发布的平台 URL 时，Hugo 版权区自动在"原文链接"下方追加对应平台链接。
+
+**实现：**
+- `layouts/partials/copyright.html` 覆盖主题同名 partial
+- 微信：遍历 `.Params.wechat`，`status = "published"` 且有 `url` 时渲染"公众号链接"
+- 知乎：检测 `.Params.zhihu.url`，有则渲染"知乎链接"
+- 小红书：检测 `.Params.xiaohongshu.url`，有则渲染"小红书链接"
+- 账号显示名称来自 Hugo 站点配置 `[params.wechat_accounts]` 映射
+- 无需修改文章正文，纯模板层面实现
+
+**frontmatter 格式：**
+```toml
+[wechat.rongspeak]        # 微信（多账号支持）
+status = "published"
+url = "https://mp.weixin.qq.com/s/..."
+
+[zhihu]                   # 知乎（未来扩展）
+url = "https://zhuanlan.zhihu.com/p/..."
+
+[xiaohongshu]             # 小红书（未来扩展）
+url = "https://..."
+```
+
+**数据流：** Joplin frontmatter `[wechat.{account}].url` → 同步到 Hugo frontmatter → 版权区自动渲染
 
 <!-- 未来扩展：
 ### 知乎链接（待扩展）

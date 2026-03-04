@@ -36,35 +36,11 @@ _SHARED_FRONTMATTER_KEYS = {"wechat", "postid", "slug"}
 # Markdown -> HTML 扩展配置
 MD_EXTENSIONS = [
     'markdown.extensions.fenced_code',
-    'markdown.extensions.codehilite',
     'markdown.extensions.tables',
     'markdown.extensions.toc',
-    'markdown.extensions.nl2br',
 ]
 
-MD_EXTENSION_CONFIGS = {
-    'codehilite': {
-        'css_class': 'highlight',
-        'linenums': False,
-    },
-}
-
-# 微信公众号文章的 CSS 样式
-WECHAT_STYLE = """
-<style>
-h1, h2, h3 { color: #333; font-weight: bold; }
-h2 { border-bottom: 1px solid #eee; padding-bottom: 8px; }
-p { line-height: 1.8; margin: 10px 0; }
-code { background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-size: 14px; color: #c7254e; }
-pre { background: #f5f5f5; padding: 16px; border-radius: 4px; overflow-x: auto; }
-pre code { background: none; padding: 0; color: inherit; }
-blockquote { border-left: 4px solid #ddd; padding: 8px 16px; color: #666; margin: 10px 0; }
-img { max-width: 100%; }
-table { border-collapse: collapse; width: 100%; }
-th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-th { background: #f5f5f5; }
-</style>
-"""
+MD_EXTENSION_CONFIGS = {}
 
 
 def markdown_to_html(md_text: str) -> str:
@@ -76,6 +52,123 @@ def markdown_to_html(md_text: str) -> str:
         extensions=MD_EXTENSIONS,
         extension_configs=MD_EXTENSION_CONFIGS,
     )
+
+
+def _generate_toc_html(html: str) -> str:
+    """从 HTML 中提取 h2/h3 标题，生成目录 HTML（Joplin 风格：虚线边框 + 浅灰背景）"""
+    headings = re.findall(r'<(h[23])[^>]*>(.*?)</\1>', html)
+    if not headings:
+        return ""
+    toc_items = []
+    for tag, text in headings:
+        # 去除内部 HTML 标签
+        clean_text = re.sub(r'<[^>]+>', '', text)
+        indent = "padding-left:0;" if tag == "h2" else "padding-left:1.5em;"
+        toc_items.append(
+            f'<li style="list-style:none;{indent}line-height:2;font-size:15px;">{clean_text}</li>'
+        )
+    items_html = "\n".join(toc_items)
+    return (
+        '<section style="border:1px dashed #999;background-color:rgba(222,222,222,0.2);'
+        'padding:1em;margin:10px 0;border-radius:4px;">'
+        f'<ul style="margin:0;padding:0;">\n{items_html}\n</ul>'
+        '</section>'
+    )
+
+
+def _inline_styles_for_wechat(html: str) -> str:
+    """将 HTML 标签替换为带内联样式的版本（微信公众号不支持 <style> 标签）"""
+    # h2 标题（Joplin 风格：顶部边框 + 顶部内边距）— 匹配带 id 属性的 h2
+    html = re.sub(
+        r'<h2[^>]*>(.*?)</h2>',
+        r'<h2 style="color:#333;font-weight:bold;font-size:20px;border-top:2px solid #ccc;padding-top:1em;margin:24px 0 12px 0;">\1</h2>',
+        html,
+    )
+    # h3 标题
+    html = re.sub(
+        r'<h3[^>]*>(.*?)</h3>',
+        r'<h3 style="color:#333;font-weight:bold;font-size:17px;margin:20px 0 10px 0;">\1</h3>',
+        html,
+    )
+    # 段落（Joplin 风格：17px 字体）
+    html = re.sub(
+        r'<p>(.*?)</p>',
+        r'<p style="line-height:1.8;margin:10px 0;font-size:17px;">\1</p>',
+        html,
+        flags=re.DOTALL,
+    )
+    # 代码块 <pre><code> — 微信需要用 <section> 包裹并内联样式
+    def _replace_pre_code(m):
+        code_content = m.group(1)
+        # 去掉 <code...> 和 </code> 标签，保留内容
+        code_content = re.sub(r'<code[^>]*>', '', code_content)
+        code_content = code_content.replace('</code>', '')
+        return (
+            '<section style="background:#f6f8fa;border-radius:4px;padding:14px 16px;'
+            'margin:10px 0;overflow-x:auto;font-size:13px;line-height:1.6;'
+            'font-family:Consolas,Monaco,monospace;white-space:pre-wrap;word-break:break-all;">'
+            f'{code_content}</section>'
+        )
+    html = re.sub(r'<pre>(.*?)</pre>', _replace_pre_code, html, flags=re.DOTALL)
+    # 行内代码（不在 section 内的）
+    html = re.sub(
+        r'<code>(.*?)</code>',
+        r'<code style="background:#f5f5f5;padding:2px 6px;border-radius:3px;font-size:13px;color:#c7254e;font-family:Consolas,Monaco,monospace;">\1</code>',
+        html,
+    )
+    # 引用块
+    html = re.sub(
+        r'<blockquote>',
+        '<blockquote style="border-left:4px solid #ddd;padding:8px 16px;color:#666;margin:10px 0;background:#fafafa;">',
+        html,
+    )
+    # 图片
+    html = re.sub(
+        r'<img (.*?)/>',
+        r'<img \1 style="max-width:100%;height:auto;display:block;margin:10px auto;"/>',
+        html,
+    )
+    html = re.sub(
+        r'<img (.*?)(?<!/)>',
+        r'<img \1 style="max-width:100%;height:auto;display:block;margin:10px auto;"/>',
+        html,
+    )
+    # 表格
+    html = re.sub(
+        r'<table>',
+        '<table style="border-collapse:collapse;width:100%;margin:10px 0;font-size:14px;">',
+        html,
+    )
+    html = re.sub(r'<th>', '<th style="border:1px solid #ddd;padding:8px;text-align:left;background:#f5f5f5;">', html)
+    html = re.sub(r'<td>', '<td style="border:1px solid #ddd;padding:8px;text-align:left;">', html)
+    # 粗体（Joplin 风格：#ab1942 强调色）
+    html = re.sub(r'<strong>(.*?)</strong>', r'<strong style="font-weight:bold;color:#ab1942;">\1</strong>', html)
+    return html
+
+
+def _generate_digest(md_text: str, max_len: int = 120) -> str:
+    """从 Markdown 正文生成摘要（去除标记、代码块、图片，提取纯文本）"""
+    text = md_text.replace("<!--more-->", "")
+    # 去除代码块
+    text = re.sub(r'```.*?```', '', text, flags=re.DOTALL)
+    # 去除图片
+    text = re.sub(r'!\[.*?\]\(.*?\)', '', text)
+    # 去除链接，保留文字
+    text = re.sub(r'\[([^\]]*)\]\(.*?\)', r'\1', text)
+    # 去除 Hugo shortcodes
+    text = re.sub(r'\{\{<.*?>}\}', '', text)
+    # 去除标题标记
+    text = re.sub(r'^#{1,6}\s+', '', text, flags=re.MULTILINE)
+    # 去除粗体/斜体标记
+    text = re.sub(r'\*{1,2}(.*?)\*{1,2}', r'\1', text)
+    # 去除行内代码
+    text = re.sub(r'`([^`]*)`', r'\1', text)
+    # 合并空行和多余空白
+    text = re.sub(r'\n{2,}', ' ', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    if len(text) > max_len:
+        text = text[:max_len - 1] + "…"
+    return text
 
 
 def parse_joplin_frontmatter(body: str) -> tuple[dict, str]:
@@ -559,26 +652,90 @@ def _extract_joplin_images(
     return body
 
 
+def _resolve_relref_links(
+    body: str,
+    blog_url: str = "https://blog.zengrong.net",
+    content_dir: Path | None = None,
+    wechat_account: str | None = None,
+) -> str:
+    """将 Hugo relref 短代码替换为实际 URL
+
+    默认行为：{{< relref "post/2848.md" >}} → https://blog.zengrong.net/post/2848/
+
+    当指定 content_dir 和 wechat_account 时，优先使用目标文章的微信公众号永久链接。
+    这样在发布到微信时，文章间的互相引用可以直接跳转到微信文章，而非博客。
+    """
+    # 构建 postid → wechat_url 映射（仅在需要时）
+    wechat_url_map: dict[str, str] = {}
+    if content_dir and wechat_account:
+        for f in (content_dir / "post").glob("*.md"):
+            try:
+                target_post = parse_post(f)
+                wechat_meta = target_post.extra.get("wechat", {})
+                if isinstance(wechat_meta, dict):
+                    acct_meta = wechat_meta.get(wechat_account, {})
+                    if isinstance(acct_meta, dict) and acct_meta.get("status") == "published":
+                        url = acct_meta.get("url", "")
+                        if url:
+                            wechat_url_map[str(target_post.postid)] = url
+            except (ValueError, KeyError):
+                pass
+
+    def _replace(m):
+        path = m.group(1)  # e.g. "post/2848.md"
+        # 提取 postid
+        postid_match = re.search(r'post/(\d+)\.md$', path)
+        if postid_match:
+            postid = postid_match.group(1)
+            if postid in wechat_url_map:
+                return wechat_url_map[postid]
+        # 回退到博客 URL
+        path = re.sub(r'\.md$', '', path)
+        return f"{blog_url}/{path}/"
+
+    return re.sub(r'\{\{<\s*relref\s+"([^"]+)"\s*>\}\}', _replace, body)
+
+
 def hugo_to_wechat(
     post: HugoPost,
-    author: str = "zrong",
+    author: str = "曾嵘",
+    content_dir: Path | None = None,
+    wechat_account: str | None = None,
 ) -> WechatArticle:
     """Hugo 文章 -> 微信公众号文章
 
     Args:
         post: Hugo 文章
         author: 作者名
+        content_dir: Hugo content 目录（用于查找目标文章的微信 URL）
+        wechat_account: 微信账号名称（用于查找目标文章的微信 URL）
 
     Returns:
-        WechatArticle（content 为 HTML）
+        WechatArticle（content 为 HTML，内联样式）
     """
-    html_content = markdown_to_html(post.body)
+    body = _resolve_relref_links(
+        post.body,
+        content_dir=content_dir,
+        wechat_account=wechat_account,
+    )
+    html_content = markdown_to_html(body)
 
-    # 加上样式
-    styled_html = WECHAT_STYLE + html_content
+    # 生成 TOC（如果 Hugo frontmatter 中 toc=true）
+    toc_html = ""
+    if post.toc:
+        toc_html = _generate_toc_html(html_content)
+
+    styled_html = _inline_styles_for_wechat(html_content)
+
+    # 将 TOC 插入到第一个 h2 之前
+    if toc_html:
+        first_h2 = re.search(r'<h2 ', styled_html)
+        if first_h2:
+            styled_html = styled_html[:first_h2.start()] + toc_html + styled_html[first_h2.start():]
+        else:
+            styled_html = toc_html + styled_html
 
     # 处理本地图片路径 -> 需要先上传再替换
-    # 这里标记出需要上传的图片，由调用方处理
     local_imgs = re.findall(r'src="(/uploads/[^"]+)"', styled_html)
     if local_imgs:
         styled_html += f"\n<!-- 需要上传的本地图片: {', '.join(local_imgs)} -->"
@@ -591,8 +748,10 @@ def hugo_to_wechat(
         title=post.title,
         content=styled_html,
         author=author,
-        digest=post.summary[:120],
+        digest=_generate_digest(post.body),
         content_source_url=source_url,
+        need_open_comment=1,
+        only_fans_can_comment=0,
     )
 
 
@@ -607,19 +766,21 @@ def hugo_to_zhihu(post: HugoPost) -> ZhihuArticle:
 
 def joplin_to_wechat(
     note: JoplinNote,
-    author: str = "zrong",
+    author: str = "曾嵘",
 ) -> WechatArticle:
     """Joplin 笔记 -> 微信公众号文章"""
     _, body = parse_joplin_frontmatter(note.body)
     html_content = markdown_to_html(body)
-    styled_html = WECHAT_STYLE + html_content
+    styled_html = _inline_styles_for_wechat(html_content)
 
     return WechatArticle(
         title=note.title,
         content=styled_html,
         author=author,
-        digest=body[:120],
+        digest=_generate_digest(body),
         content_source_url=note.source_url,
+        need_open_comment=1,
+        only_fans_can_comment=0,
     )
 
 

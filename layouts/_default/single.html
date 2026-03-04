@@ -1,0 +1,38 @@
+{{- define "main" }}
+{{- $scratch := newScratch }}
+{{- if isset .Params "image" }}
+  {{- $scratch.Set "image" .Params.image }}
+{{- else }}
+  {{ $scratch.Set "image" .Site.Params.fallBackOgImage }}
+{{- end }}
+{{- $image := $scratch.Get "image" }}
+{{- $bg := (path.Join "images" $image | absLangURL) }}
+<div class="grid-inverse wrap content">
+  <article class="post_content">
+    <h1 class="post_title">{{ .Title }}</h1>
+    {{- partial "post-meta" . }}
+    {{ if and ( ne .Site.Params.showShare false ) ( ne .Params.showShare false ) }}
+      {{- partial "share" . }}
+    {{- end }}
+    {{ if .IsPage }}
+      {{- partial "pageview" . }}
+    {{ end }}
+    {{ with .Params.featureImage }}
+    <img src="{{ . }}" class="image_featured">
+    {{ end }}
+    {{ if .Params.toc }}
+    <h2>{{ T "overview" }}</h2>
+    {{ .TableOfContents }}
+    {{ end }}
+    {{- .Content }}
+    {{ if and (isset .Site.Params "cc")  (in site.Params.mainSections .Type) }}
+      {{- partial "copyright" .}}
+    {{ end }}
+    {{ if and .IsPage ( ne .Site.Params.comment false ) ( ne .Params.comment false ) }}
+      {{ partial "comments" . }}
+    {{ end }}
+    {{- partial "i18nlist" . }}
+  </article>
+  {{- partial "sidebar" . }}
+</div>
+{{- end }}

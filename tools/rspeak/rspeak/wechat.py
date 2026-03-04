@@ -132,6 +132,54 @@ class WechatClient:
             raise RuntimeError(f"创建草稿失败: {data}")
         return data["media_id"]
 
+    def update_draft(self, media_id: str, article: WechatArticle, index: int = 0) -> None:
+        """更新已有草稿
+
+        Args:
+            media_id: 草稿 media_id
+            article: 更新后的文章内容
+            index: 多图文中的文章位置（从 0 开始）
+        """
+        payload = {
+            "media_id": media_id,
+            "index": index,
+            "articles": {
+                "title": article.title,
+                "author": article.author,
+                "digest": article.digest,
+                "content": article.content,
+                "thumb_media_id": article.thumb_media_id,
+                "content_source_url": article.content_source_url,
+                "need_open_comment": article.need_open_comment,
+                "only_fans_can_comment": article.only_fans_can_comment,
+            },
+        }
+        resp = self._client.post(self._api_url("/draft/update"), json=payload)
+        resp.raise_for_status()
+        data = resp.json()
+        if data.get("errcode", 0) != 0:
+            raise RuntimeError(f"更新草稿失败: {data}")
+
+    def delete_draft(self, media_id: str) -> None:
+        """删除草稿"""
+        resp = self._client.post(
+            self._api_url("/draft/delete"),
+            json={"media_id": media_id},
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        if data.get("errcode", 0) != 0:
+            raise RuntimeError(f"删除草稿失败: {data}")
+
+    def list_drafts(self, offset: int = 0, count: int = 20, no_content: bool = True) -> dict:
+        """获取草稿列表"""
+        resp = self._client.post(
+            self._api_url("/draft/batchget"),
+            json={"offset": offset, "count": count, "no_content": 1 if no_content else 0},
+        )
+        resp.raise_for_status()
+        return resp.json()
+
     def publish_draft(self, media_id: str) -> str:
         """发布草稿
 

@@ -96,6 +96,10 @@ disableKinds = ['section']
     name = "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
     link = "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
 
+  # 微信公众号账号名称映射（用于文章顶部引流横幅）
+  [params.wechat_accounts]
+    rongspeak = "曾嵘胡扯的地方"
+
   [params.isso]
     enable = true
     host = "blog.zengrong.net/isso"

@@ -162,7 +162,12 @@ def deploy_wechat(
 
     post_file = content_dir / "post" / f"{postid}.md"
     post = parse_post(post_file)
-    article = hugo_to_wechat(post, author=hugo_conf.get("author", "zrong"))
+    article = hugo_to_wechat(
+        post,
+        author=hugo_conf.get("author", "曾嵘"),
+        content_dir=content_dir,
+        wechat_account=wechat_conf["account_name"],
+    )
 
     account_name = wechat_conf["account_name"]
 
@@ -182,8 +187,23 @@ def deploy_wechat(
         else:
             print("警告：未找到封面图，草稿可能创建失败（thumb_media_id 为空）")
 
-        # 创建草稿
-        draft_media_id = client.add_draft([article])
+        # 检查是否已有草稿（从 Hugo frontmatter 中读取 media_id）
+        existing_media_id = None
+        wechat_meta = post.extra.get("wechat", {})
+        if isinstance(wechat_meta, dict):
+            acct_meta = wechat_meta.get(account_name, {})
+            if isinstance(acct_meta, dict) and acct_meta.get("status") == "draft":
+                existing_media_id = acct_meta.get("media_id")
+
+        if existing_media_id:
+            # 更新已有草稿
+            client.update_draft(existing_media_id, article)
+            draft_media_id = existing_media_id
+            print(f"已更新草稿: {draft_media_id}")
+        else:
+            # 创建新草稿
+            draft_media_id = client.add_draft([article])
+            print(f"已创建草稿: {draft_media_id}")
 
         result = {
             "article": article,
