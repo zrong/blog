@@ -26,7 +26,16 @@ hugo && rsync -avz --delete public/ ubuntu@zengrong-net:/srv/www/blog.zengrong.n
 uv run --project tools/rspeak rspeak sync -p <postid>
 
 # 发布到微信公众号（创建草稿）
-uv run --project tools/rspeak rspeak deploy wechat -p <postid>
+uv run --project tools/rspeak rspeak deploy wechat -p <postid> [-a <account>]
+
+# 创建草稿并自动发布
+uv run --project tools/rspeak rspeak deploy wechat -p <postid> -a <account> --publish
+
+# 发布已有草稿
+uv run --project tools/rspeak rspeak wechat-publish -m <media_id> -p <postid> [-a <account>]
+
+# 列出配置的微信公众号账号
+uv run --project tools/rspeak rspeak wechat-accounts
 
 # 转为知乎格式
 uv run --project tools/rspeak rspeak deploy zhihu -p <postid>
@@ -46,7 +55,7 @@ uv run --project tools/rspeak rspeak review -p <postid>
 - **同步文章**：`同步 2850` 或 `同步到 Joplin`
   Hugo ↔ Joplin 双向同步，自动比较更新时间判断方向，处理图片和内部链接转换。
 - **发布文章**：`发布博客` / `发到公众号` / `转知乎格式`
-  Hugo 构建部署、微信公众号草稿创建、知乎格式转换。
+  Hugo 构建部署、微信公众号完整发布流程（多账号、图片上传、发布轮询、永久链接回写）、知乎格式转换。
 
 ### Skill 文件结构
 

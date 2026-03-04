@@ -41,10 +41,67 @@ def get_joplin_config(config: dict | None = None) -> dict:
     return config.get("joplin", {})
 
 
-def get_wechat_config(config: dict | None = None) -> dict:
-    """获取微信公众号配置"""
+def get_wechat_config(config: dict | None = None, account: str | None = None) -> dict:
+    """获取微信公众号配置
+
+    支持两种格式：
+    1. 旧格式（单账号）：[wechat] appid = ... appsecret = ...
+    2. 新格式（多账号）：[wechat.accounts.main] appid = ... appsecret = ...
+
+    Args:
+        config: 配置字典，None 时自动加载
+        account: 账号名称，None 使用 default_account 或旧格式
+
+    Returns:
+        {"appid", "appsecret", "account_name", "name", ...}
+    """
     config = config or load_config()
-    return config.get("wechat", {})
+    wechat = config.get("wechat", {})
+
+    # 新格式：存在 accounts 子键
+    if "accounts" in wechat:
+        account_name = account or wechat.get("default_account", "")
+        accounts = wechat["accounts"]
+        if not account_name:
+            account_name = next(iter(accounts))
+        if account_name not in accounts:
+            available = ", ".join(accounts.keys())
+            raise ValueError(f"微信账号 '{account_name}' 不存在，可用: {available}")
+        acc = accounts[account_name]
+        return {
+            "appid": acc["appid"],
+            "appsecret": acc["appsecret"],
+            "access_token": acc.get("access_token", ""),
+            "account_name": account_name,
+            "name": acc.get("name", account_name),
+        }
+
+    # 旧格式兼容
+    return {
+        "appid": wechat.get("appid", ""),
+        "appsecret": wechat.get("appsecret", ""),
+        "access_token": wechat.get("access_token", ""),
+        "account_name": "default",
+        "name": "默认账号",
+    }
+
+
+def list_wechat_accounts(config: dict | None = None) -> list[dict]:
+    """列出所有配置的微信公众号账号
+
+    Returns:
+        [{"key": "main", "name": "主账号", "appid": "wx..."}, ...]
+    """
+    config = config or load_config()
+    wechat = config.get("wechat", {})
+    if "accounts" not in wechat:
+        if wechat.get("appid"):
+            return [{"key": "default", "name": "默认账号", "appid": wechat["appid"]}]
+        return []
+    return [
+        {"key": k, "name": v.get("name", k), "appid": v.get("appid", "")}
+        for k, v in wechat["accounts"].items()
+    ]
 
 
 def get_hugo_config(config: dict | None = None) -> dict:

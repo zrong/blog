@@ -64,17 +64,41 @@ def deploy_blog(
 @deploy_app.command("wechat")
 def deploy_wechat(
     postid: int = typer.Option(..., "--postid", "-p", help="Hugo 文章 ID"),
+    account: str = typer.Option(None, "--account", "-a", help="微信账号名称"),
+    publish: bool = typer.Option(False, "--publish", help="创建草稿后立即发布"),
 ):
-    """将 Hugo 文章发布到微信公众号（创建草稿）"""
+    """将 Hugo 文章发布到微信公众号
+
+    默认只创建草稿。加 --publish 可在创建草稿后自动发布并获取永久链接。
+    """
     from .deploy import deploy_wechat as _deploy_wechat
 
     typer.echo(f"正在将文章 {postid} 发布到微信公众号...")
+    if account:
+        typer.echo(f"使用账号: {account}")
+
     try:
-        result = _deploy_wechat(postid)
-        typer.echo("草稿创建成功！")
+        result = _deploy_wechat(postid, account=account, publish=publish)
+
+        typer.echo(f"账号: {result['account_name']}")
         typer.echo(f"标题: {result['article'].title}")
         typer.echo(f"草稿 media_id: {result['media_id']}")
-        typer.echo("请登录微信公众号后台确认并发布草稿。")
+
+        if result["status"] == "draft":
+            typer.echo("草稿创建成功！")
+            acct_flag = f" -a {account}" if account else ""
+            typer.echo("请登录微信公众号后台确认并发布，或使用以下命令发布：")
+            typer.echo(
+                f"  uv run --project tools/rspeak rspeak wechat-publish"
+                f" -m {result['media_id']} -p {postid}{acct_flag}"
+            )
+        elif result["status"] == "published":
+            typer.echo("发布成功！")
+            typer.echo(f"文章永久链接: {result['article_url']}")
+        elif result["status"] == "failed":
+            typer.echo("发布失败，请登录微信公众号后台查看详情。", err=True)
+            raise typer.Exit(1)
+
     except FileNotFoundError:
         typer.echo(f"错误: 找不到文章 {postid}", err=True)
         raise typer.Exit(1)
@@ -106,6 +130,55 @@ def deploy_xiaohongshu():
     """小红书发布（待实现）"""
     typer.echo("小红书发布功能尚未实现，敬请期待。")
     raise typer.Exit(0)
+
+
+# ---- wechat 子命令 ----
+
+
+@app.command("wechat-publish")
+def wechat_publish(
+    media_id: str = typer.Option(..., "--media-id", "-m", help="草稿 media_id"),
+    postid: int = typer.Option(None, "--postid", "-p", help="Hugo 文章 ID（用于写回 URL）"),
+    account: str = typer.Option(None, "--account", "-a", help="微信账号名称"),
+):
+    """发布已有的微信草稿并获取永久链接"""
+    from .deploy import publish_wechat_draft
+
+    typer.echo(f"正在发布草稿 {media_id}...")
+    try:
+        result = publish_wechat_draft(
+            media_id=media_id,
+            account=account,
+            postid=postid,
+        )
+
+        if result["status"] == "published":
+            typer.echo("发布成功！")
+            typer.echo(f"文章永久链接: {result['article_url']}")
+            if postid:
+                typer.echo(f"已写回 Hugo frontmatter (wechat.{result['account_name']})")
+        else:
+            typer.echo("发布失败，请登录微信公众号后台查看详情。", err=True)
+            raise typer.Exit(1)
+
+    except Exception as e:
+        typer.echo(f"发布失败: {e}", err=True)
+        raise typer.Exit(1)
+
+
+@app.command("wechat-accounts")
+def wechat_accounts():
+    """列出配置的微信公众号账号"""
+    from .config import list_wechat_accounts
+
+    accounts = list_wechat_accounts()
+    if not accounts:
+        typer.echo("未配置任何微信公众号账号。请编辑 tools/rspeak/config.toml。")
+        return
+
+    for acc in accounts:
+        appid_preview = acc["appid"][:8] + "..." if len(acc["appid"]) > 8 else acc["appid"]
+        typer.echo(f"  {acc['key']}: {acc['name']} (appid={appid_preview})")
 
 
 # ---- sync 子命令 ----

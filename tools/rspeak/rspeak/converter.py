@@ -13,6 +13,13 @@ from pathlib import Path
 
 import markdown
 
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
+
+import tomli_w
+
 from .hugo import HugoPost, parse_post, write_post, next_postid, search_posts
 from .joplin import JoplinClient, JoplinNote
 from .wechat import WechatArticle
@@ -20,6 +27,10 @@ from .zhihu import convert_to_zhihu, ZhihuArticle
 
 # 标签前缀
 CATEGORY_TAG_PREFIX = "blog:category:"
+MP_TAG_PREFIX = "mp:"
+
+# Joplin frontmatter 中需要与 Hugo 同步的共享字段
+_SHARED_FRONTMATTER_KEYS = {"wechat", "postid", "slug"}
 
 
 # Markdown -> HTML 扩展配置
@@ -67,6 +78,55 @@ def markdown_to_html(md_text: str) -> str:
     )
 
 
+def parse_joplin_frontmatter(body: str) -> tuple[dict, str]:
+    """从 Joplin 笔记 body 中提取 TOML frontmatter
+
+    格式与 Hugo 相同：+++ 包裹的 TOML 块。
+
+    Returns:
+        (frontmatter_dict, body_without_frontmatter)
+    """
+    match = re.match(r'^\+\+\+\s*\n(.*?)\n\+\+\+\s*\n?', body, re.DOTALL)
+    if not match:
+        return {}, body
+    fm_text = match.group(1)
+    body_content = body[match.end():]
+    try:
+        fm = tomllib.loads(fm_text)
+    except Exception:
+        # frontmatter 解析失败时当作普通内容
+        return {}, body
+    return fm, body_content.lstrip("\n")
+
+
+def write_joplin_frontmatter(fm: dict, body: str) -> str:
+    """将 TOML frontmatter 写入 Joplin 笔记 body 顶部
+
+    如果 fm 为空则直接返回 body。
+
+    Returns:
+        带 frontmatter 的完整 body
+    """
+    if not fm:
+        return body
+    fm_str = tomli_w.dumps(fm)
+    return f"+++\n{fm_str}+++\n\n{body}"
+
+
+def _deep_merge(base: dict, override: dict) -> dict:
+    """深度合并两个字典，override 的值优先
+
+    嵌套的 dict 递归合并，其他类型直接覆盖。
+    """
+    result = base.copy()
+    for key, value in override.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = _deep_merge(result[key], value)
+        else:
+            result[key] = value
+    return result
+
+
 def hugo_to_joplin(
     post: HugoPost,
     client: JoplinClient,
@@ -103,14 +163,26 @@ def hugo_to_joplin(
 
     from datetime import datetime, timezone
 
+    # 构建 Joplin frontmatter（从 Hugo 共享字段）
+    hugo_shared_fm = {"postid": post.postid, "slug": post.slug}
+    for key in _SHARED_FRONTMATTER_KEYS:
+        if key in post.extra:
+            hugo_shared_fm[key] = post.extra[key]
+
     # 检查是否已存在同名笔记（通过 source_url 匹配）
     if source_url:
         existing = client.search_notes(post.title, limit=5)
         for note in existing:
             if note.source_url == source_url:
                 body = post.body_without_more
+                if post.source_path:
+                    body = _convert_relref_to_joplin(body, post.source_path.parent.parent)
                 if static_dir:
                     body = _upload_hugo_images(body, client, static_dir, note_id=note.id)
+                # 合并 Joplin 已有 frontmatter（Hugo 方向为准）
+                existing_fm, _ = parse_joplin_frontmatter(note.body)
+                merged_fm = _deep_merge(existing_fm, hugo_shared_fm)
+                body = write_joplin_frontmatter(merged_fm, body)
                 client.update_note(
                     note.id,
                     title=post.title,
@@ -124,8 +196,12 @@ def hugo_to_joplin(
                 return client.get_note(note.id)
 
     body = post.body_without_more
+    if post.source_path:
+        body = _convert_relref_to_joplin(body, post.source_path.parent.parent)
     if static_dir:
         body = _upload_hugo_images(body, client, static_dir)
+    # 写入 Joplin frontmatter
+    body = write_joplin_frontmatter(hugo_shared_fm, body)
 
     note = client.create_note(
         title=post.title,
@@ -189,12 +265,25 @@ def joplin_to_hugo(
     if not category:
         category = ["technology"]
 
-    # 处理图片
-    body = _extract_joplin_images(note.body, client, static_dir, year, slug)
+    # 过滤掉 mp: 标签（微信公众号标记，不同步到 Hugo）
+    tag = [t for t in tag if not t.startswith(MP_TAG_PREFIX)]
+
+    # 解析并剥离 Joplin frontmatter
+    joplin_fm, note_body = parse_joplin_frontmatter(note.body)
+
+    # 处理图片和链接（在无 frontmatter 的 body 上）
+    body = _extract_joplin_images(note_body, client, static_dir, year, slug)
+    body = _convert_joplin_links_to_relref(body, content_dir)
 
     # 计算 lastmod（Joplin updated_time → ISO 字符串）
     updated = datetime.fromtimestamp(note.updated_time / 1000, tz=timezone.utc).astimezone()
     lastmod_str = updated.isoformat()
+
+    # 从 Joplin frontmatter 提取共享字段，合并到 Hugo extra
+    shared_from_joplin = {}
+    for key in _SHARED_FRONTMATTER_KEYS:
+        if key in joplin_fm:
+            shared_from_joplin[key] = joplin_fm[key]
 
     # 查找已有文章（通过 joplin_id 匹配），更新而非创建
     existing = _find_post_by_joplin_id(content_dir, note.id)
@@ -204,12 +293,16 @@ def joplin_to_hugo(
         existing.tag = tag
         existing.body = body
         existing.lastmod = lastmod_str
+        # 合并 Joplin frontmatter 共享字段（Joplin 方向为准）
+        existing.extra = _deep_merge(existing.extra, shared_from_joplin)
         _auto_feature_image(existing)
         write_post(existing)
         post = existing
     else:
         # 创建新文章
         postid = next_postid(content_dir)
+        extra = {"joplin_id": note.id}
+        extra.update(shared_from_joplin)
         post = HugoPost(
             title=note.title,
             postid=postid,
@@ -223,7 +316,7 @@ def joplin_to_hugo(
             tag=tag,
             aliases=[f"/post/{postid}.html"],
             body=body,
-            extra={"joplin_id": note.id},
+            extra=extra,
         )
         _auto_feature_image(post)
 
@@ -286,6 +379,76 @@ def _find_post_by_joplin_id(content_dir: Path, joplin_id: str) -> HugoPost | Non
         except (ValueError, KeyError):
             pass
     return None
+
+
+def _convert_relref_to_joplin(body: str, content_dir: Path) -> str:
+    """将 Hugo relref 链接转换为 Joplin 内部链接
+
+    [text]({{< relref "post/2849.md" >}}) → [text](:/joplin_id)
+
+    找不到 joplin_id 时打印警告并保留原始链接。
+    """
+    pattern = re.compile(r'\[([^\]]*)\]\({{<\s*relref\s+"post/(\d+)\.md"\s*>}}\)')
+    matches = list(pattern.finditer(body))
+    if not matches:
+        return body
+
+    for match in matches:
+        text = match.group(1)
+        postid = match.group(2)
+        post_file = content_dir / "post" / f"{postid}.md"
+        if not post_file.exists():
+            print(f"警告：relref 目标文章不存在: post/{postid}.md，保留原始链接")
+            continue
+        try:
+            target_post = parse_post(post_file)
+            joplin_id = target_post.extra.get("joplin_id")
+            if joplin_id:
+                body = body.replace(match.group(0), f"[{text}](:/{joplin_id})")
+            else:
+                print(f"警告：post/{postid}.md 没有 joplin_id，保留原始链接")
+        except (ValueError, KeyError) as e:
+            print(f"警告：解析 post/{postid}.md 失败: {e}，保留原始链接")
+
+    return body
+
+
+def _convert_joplin_links_to_relref(body: str, content_dir: Path) -> str:
+    """将 Joplin 内部链接转换为 Hugo relref
+
+    [text](:/note_id) → [text]({{< relref "post/2849.md" >}})
+
+    仅处理非图片链接（不以 ! 开头）。
+    找不到对应 Hugo 文章时打印警告并保留原始链接。
+    """
+    # 负向回顾断言排除图片链接 ![alt](:/id)
+    pattern = re.compile(r'(?<!!)\[([^\]]*)\]\(:/([\w]+)\)')
+    matches = list(pattern.finditer(body))
+    if not matches:
+        return body
+
+    # 构建 joplin_id → postid 映射（一次扫描，避免重复遍历）
+    joplin_id_map = {}
+    for f in (content_dir / "post").glob("*.md"):
+        try:
+            post = parse_post(f)
+            jid = post.extra.get("joplin_id")
+            if jid:
+                joplin_id_map[jid] = post.postid
+        except (ValueError, KeyError):
+            pass
+
+    for match in matches:
+        text = match.group(1)
+        note_id = match.group(2)
+        if note_id in joplin_id_map:
+            postid = joplin_id_map[note_id]
+            relref = f'[{text}]({{{{< relref "post/{postid}.md" >}}}})'
+            body = body.replace(match.group(0), relref)
+        else:
+            print(f"警告：找不到 joplin_id={note_id} 对应的 Hugo 文章，保留原始链接")
+
+    return body
 
 
 def _upload_hugo_images(body, client, static_dir, note_id=None):
@@ -447,23 +610,25 @@ def joplin_to_wechat(
     author: str = "zrong",
 ) -> WechatArticle:
     """Joplin 笔记 -> 微信公众号文章"""
-    html_content = markdown_to_html(note.body)
+    _, body = parse_joplin_frontmatter(note.body)
+    html_content = markdown_to_html(body)
     styled_html = WECHAT_STYLE + html_content
 
     return WechatArticle(
         title=note.title,
         content=styled_html,
         author=author,
-        digest=note.body[:120],
+        digest=body[:120],
         content_source_url=note.source_url,
     )
 
 
 def joplin_to_zhihu(note: JoplinNote) -> ZhihuArticle:
     """Joplin 笔记 -> 知乎格式"""
+    _, body = parse_joplin_frontmatter(note.body)
     return convert_to_zhihu(
         title=note.title,
-        body=note.body,
+        body=body,
     )
 
 

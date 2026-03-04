@@ -9,11 +9,23 @@ base_url = "http://localhost:41184"
 notebook_path = "Thought/Writing/Blog"
 
 [wechat]
-# 微信公众号后台 -> 开发 -> 基本配置
+# 默认使用的账号名称（对应下方 accounts 中的 key）
+default_account = "main"
+
+# 微信公众号账号配置（支持多个）
+# 在微信公众号后台 -> 开发 -> 基本配置 获取 appid 和 appsecret
+[wechat.accounts.main]
+name = "主账号"
 appid = ""
 appsecret = ""
 # 也可以直接提供 access_token（有效期 2 小时）
 # access_token = ""
+
+# 添加更多账号：
+# [wechat.accounts.tech]
+# name = "技术号"
+# appid = ""
+# appsecret = ""
 
 [hugo]
 content_dir = "content"
