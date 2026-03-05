@@ -55,7 +55,12 @@ allowed-tools: Bash(uv run *), Read, Grep, Glob, Edit
 - 修正后的内容
 - 修改原因
 
-**Joplin 校对场景**：先将内容同步到 Hugo（`joplin_to_hugo`），在本地 markdown 上用 Edit 修改，最后写回 Joplin。
+**Joplin 校对场景**：
+1. 先调用 `sync_article()` 将 Joplin 同步到 Hugo（自动下载图片、转换链接）
+2. 在本地 Hugo markdown 上用 Edit 工具修改
+3. 修改完成后，**直接调用 `hugo_to_joplin()` Python API** 写回 Joplin，**不要**再次调用 `rspeak sync` 或 `sync_article()`
+
+> **原因**：`joplin_to_hugo` 在写回 `source_url` 时会更新 Joplin 的 `updated_time`，导致下次 `sync` 误判为 Joplin 更新，反复覆盖 Hugo 修改。直接调用 `hugo_to_joplin` 可明确同步方向。
 
 ### 第五步：汇总并提示同步
 

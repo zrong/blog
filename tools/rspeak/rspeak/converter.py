@@ -364,6 +364,9 @@ def joplin_to_hugo(
     # 解析并剥离 Joplin frontmatter
     joplin_fm, note_body = parse_joplin_frontmatter(note.body)
 
+    # 移除 Joplin 专用的 [toc] 标记（Hugo 通过 frontmatter toc=true 控制）
+    note_body = re.sub(r"^\[toc\]\s*\n?", "", note_body, flags=re.MULTILINE | re.IGNORECASE)
+
     # 处理图片和链接（在无 frontmatter 的 body 上）
     body = _extract_joplin_images(note_body, client, static_dir, year, slug)
     body = _convert_joplin_links_to_relref(body, content_dir)
@@ -418,12 +421,24 @@ def joplin_to_hugo(
 
     # 将 Hugo frontmatter 回写到 Joplin 笔记
     source_url = f"https://blog.zengrong.net/post/{post.slug}/"
+    wrote_back = False
     if note.source_url != source_url:
         client.update_note(note.id, source_url=source_url)
+        wrote_back = True
     # 同步标签到 Joplin（category → blog:category:xxx，tag 直接对应）
     joplin_tags = [f"{CATEGORY_TAG_PREFIX}{cat}" for cat in post.category]
     joplin_tags.extend(post.tag)
     client.set_note_tags(note.id, joplin_tags)
+
+    # 回写 Joplin 后 updated_time 会更新，将 Hugo lastmod 同步为最新值，
+    # 避免下次 sync 因 Joplin 时间戳更新而误判为 Joplin→Hugo 方向
+    if wrote_back:
+        refreshed = client.get_note(note.id, fields="id,updated_time")
+        new_updated = datetime.fromtimestamp(
+            refreshed.updated_time / 1000, tz=timezone.utc
+        ).astimezone()
+        post.lastmod = new_updated.isoformat()
+        write_post(post)
 
     return post
 
