@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(hugo version)",
+      "Bash(uv lock)",
+      "Bash(uv run rspeak --help)",
+      "Bash(uv run python -c \"import rspeak; print\\(rspeak.__file__\\)\")",
+      "Bash(uv run python -c \"import sys; print\\([p for p in sys.path]\\)\")",
+      "Bash(uv run rspeak deploy --help)",
+      "Bash(uv run rspeak deploy blog --dry-run)",
+      "Bash(hugo -d public)",
+      "Bash(uv run rspeak review -p 2849)",
+      "Bash(uv run rspeak sync --help)",
+      "Bash(hugo build)",
+      "Bash(git -C /c/Users/zrong/works/blog log --oneline themes/clarity --all)"
+    ]
+  }
+}
