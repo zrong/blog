@@ -68,6 +68,10 @@ uv run --project tools/rspeak rspeak review -p <postid>
 
 ## [blog.zengrong.net](https://blog.zengrong.net) 的历史
 
+### 2026年3月19日
+
+新增文章 2856《腾讯2025财报：营销服务营收达1450亿元，「AI赋能+全域协同」筑牢增长底盘》。校对文章修正标点（中英文弯引号→直角引号）、中英文混排空格、「第四季」→「第四季度」等问题，同步到 Hugo 并部署到博客。
+
 ### 2026年3月1日
 
 引入 AI 辅助写作流程。使用 [Claude Code][claudecode] 的 skill 机制，将博客校对、Hugo/Joplin 同步、多平台发布封装为自然语言指令。配套工具 [rspeak][rspeak] 提供 CLI 和 Python API，支持一键部署到远程服务器、微信公众号和知乎。
