@@ -68,6 +68,10 @@ uv run --project tools/rspeak rspeak review -p <postid>
 
 ## [blog.zengrong.net](https://blog.zengrong.net) 的历史
 
+### 2026年3月27日
+
+文章 2857《沉不住气了！微信终于接入龙虾 OpenClaw》补充微信公众号草稿元数据，记录 `wechat.rongspeak.status = "draft"` 与对应 `media_id`，便于后续通过 rspeak 继续发布流程。
+
 ### 2026年3月19日
 
 新增文章 2856《腾讯2025财报：营销服务营收达1450亿元，「AI赋能+全域协同」筑牢增长底盘》。校对文章修正标点（中英文弯引号→直角引号）、中英文混排空格、「第四季」→「第四季度」等问题，同步到 Hugo 并部署到博客。
