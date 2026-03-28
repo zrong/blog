@@ -1,6 +1,6 @@
 ## 构建与部署
 
-下载 hugo <= 0.128.2: https://github.com/gohugoio/hugo/releases/tag/v0.128.2
+下载 hugo_extended >= 0.158.0: <https://github.com/gohugoio/hugo/releases/tag/v0.158.0>
 
 使用 [rspeak][rspeak]（博客写作与发布工具）一键构建并部署：
 
