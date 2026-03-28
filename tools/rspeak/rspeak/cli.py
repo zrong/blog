@@ -33,19 +33,39 @@ app.add_typer(deploy_app, name="deploy")
 @deploy_app.command("blog")
 def deploy_blog(
     dry_run: bool = typer.Option(False, "--dry-run", "-n", help="仅模拟运行，不实际传输"),
+    verify: bool = typer.Option(False, "--verify", help="部署后执行收尾检查"),
+    verify_timeout: int = typer.Option(15, "--verify-timeout", help="URL 验证超时（秒）"),
 ):
     """Hugo 构建并 rsync 部署到远程服务器"""
     from .deploy import deploy_blog as _deploy_blog
 
     typer.echo("开始部署博客...")
     try:
-        result = _deploy_blog(dry_run=dry_run)
+        result = _deploy_blog(dry_run=dry_run, verify=verify, verify_timeout=verify_timeout)
         typer.echo(f"Hugo 构建完成: {result['build_dir']}")
         if dry_run:
             typer.echo("[模拟运行] rsync 输出:")
         else:
             typer.echo("rsync 同步完成:")
         typer.echo(result["rsync_result"].stdout)
+
+        # 输出收尾检查结果
+        if verify:
+            verify_result = result.get("verify_result")
+            if verify_result:
+                if verify_result.get("skipped"):
+                    typer.echo(f"收尾检查已跳过: {verify_result.get('reason')}")
+                elif verify_result.get("ok"):
+                    typer.echo("收尾检查通过")
+                    typer.echo(f"  站点: {verify_result.get('url')}")
+                    typer.echo(f"  状态码: {verify_result.get('status_code')}")
+                else:
+                    typer.echo("收尾检查失败", err=True)
+                    error = verify_result.get("error")
+                    if error:
+                        typer.echo(f"  错误: {error}", err=True)
+                    raise typer.Exit(1)
+
     except FileNotFoundError as e:
         typer.echo(f"错误: {e}", err=True)
         raise typer.Exit(1)
@@ -66,6 +86,8 @@ def deploy_wechat(
     postid: int = typer.Option(..., "--postid", "-p", help="Hugo 文章 ID"),
     account: str = typer.Option(None, "--account", "-a", help="微信账号名称"),
     publish: bool = typer.Option(False, "--publish", help="创建草稿后立即发布"),
+    verify: bool = typer.Option(False, "--verify", help="发布后执行收尾检查"),
+    verify_timeout: int = typer.Option(15, "--verify-timeout", help="URL 验证超时（秒）"),
 ):
     """将 Hugo 文章发布到微信公众号
 
@@ -78,7 +100,7 @@ def deploy_wechat(
         typer.echo(f"使用账号: {account}")
 
     try:
-        result = _deploy_wechat(postid, account=account, publish=publish)
+        result = _deploy_wechat(postid, account=account, publish=publish, verify=verify, verify_timeout=verify_timeout)
 
         typer.echo(f"账号: {result['account_name']}")
         typer.echo(f"标题: {result['article'].title}")
@@ -98,6 +120,26 @@ def deploy_wechat(
         elif result["status"] == "failed":
             typer.echo("发布失败，请登录微信公众号后台查看详情。", err=True)
             raise typer.Exit(1)
+
+        # 输出收尾检查结果
+        if verify and result.get("verify_result"):
+            verify_result = result["verify_result"]
+            if verify_result.get("ok"):
+                typer.echo("收尾检查通过")
+                target = verify_result.get("target")
+                if target == "wechat_draft":
+                    typer.echo(f"  账号: {verify_result.get('account_name')}")
+                    typer.echo(f"  状态: {verify_result.get('status')}")
+                elif target == "wechat_publish":
+                    typer.echo(f"  账号: {verify_result.get('account_name')}")
+                    typer.echo(f"  永久链接: {verify_result.get('article_url')}")
+                    typer.echo(f"  状态码: {verify_result.get('status_code')}")
+            else:
+                typer.echo("收尾检查失败", err=True)
+                error = verify_result.get("error")
+                if error:
+                    typer.echo(f"  错误: {error}", err=True)
+                raise typer.Exit(1)
 
     except FileNotFoundError:
         typer.echo(f"错误: 找不到文章 {postid}", err=True)
@@ -140,6 +182,8 @@ def wechat_publish(
     media_id: str = typer.Option(..., "--media-id", "-m", help="草稿 media_id"),
     postid: int = typer.Option(None, "--postid", "-p", help="Hugo 文章 ID（用于写回 URL）"),
     account: str = typer.Option(None, "--account", "-a", help="微信账号名称"),
+    verify: bool = typer.Option(False, "--verify", help="发布后执行收尾检查"),
+    verify_timeout: int = typer.Option(15, "--verify-timeout", help="URL 验证超时（秒）"),
 ):
     """发布已有的微信草稿并获取永久链接"""
     from .deploy import publish_wechat_draft
@@ -150,6 +194,8 @@ def wechat_publish(
             media_id=media_id,
             account=account,
             postid=postid,
+            verify=verify,
+            verify_timeout=verify_timeout,
         )
 
         if result["status"] == "published":
@@ -160,6 +206,21 @@ def wechat_publish(
         else:
             typer.echo("发布失败，请登录微信公众号后台查看详情。", err=True)
             raise typer.Exit(1)
+
+        # 输出收尾检查结果
+        if verify and result.get("verify_result"):
+            verify_result = result["verify_result"]
+            if verify_result.get("ok"):
+                typer.echo("收尾检查通过")
+                typer.echo(f"  账号: {verify_result.get('account_name')}")
+                typer.echo(f"  永久链接: {verify_result.get('article_url')}")
+                typer.echo(f"  状态码: {verify_result.get('status_code')}")
+            else:
+                typer.echo("收尾检查失败", err=True)
+                error = verify_result.get("error")
+                if error:
+                    typer.echo(f"  错误: {error}", err=True)
+                raise typer.Exit(1)
 
     except Exception as e:
         typer.echo(f"发布失败: {e}", err=True)

@@ -9,6 +9,8 @@ import time
 import subprocess
 from pathlib import Path
 
+import httpx
+
 from .config import CONFIG_DIR, load_config, get_deploy_config, get_hugo_config, get_wechat_config
 
 
@@ -91,11 +93,16 @@ def rsync_to_remote(
     return result
 
 
-def deploy_blog(dry_run: bool = False) -> dict:
+def deploy_blog(dry_run: bool = False, verify: bool = False, verify_timeout: int = 15) -> dict:
     """完整部署流程：Hugo 构建 + rsync 到远程
 
+    Args:
+        dry_run: 是否仅模拟运行
+        verify: 是否执行部署后验证
+        verify_timeout: URL 验证超时（秒）
+
     Returns:
-        {"build_dir": Path, "rsync_result": CompletedProcess}
+        {"build_dir": Path, "rsync_result": CompletedProcess, "verify_result": dict|None}
     """
     config = load_config()
     deploy_conf = get_deploy_config(config)
@@ -115,7 +122,19 @@ def deploy_blog(dry_run: bool = False) -> dict:
         dry_run=dry_run,
     )
 
-    return {"build_dir": build_dir, "rsync_result": rsync_result}
+    result = {"build_dir": build_dir, "rsync_result": rsync_result, "verify_result": None}
+
+    # 执行收尾检查
+    if verify:
+        if dry_run:
+            result["verify_result"] = {
+                "skipped": True,
+                "reason": "dry_run",
+            }
+        else:
+            result["verify_result"] = verify_blog_deploy(timeout=verify_timeout)
+
+    return result
 
 
 def deploy_wechat(
@@ -124,6 +143,8 @@ def deploy_wechat(
     publish: bool = False,
     poll_interval: int = 5,
     poll_timeout: int = 120,
+    verify: bool = False,
+    verify_timeout: int = 15,
 ) -> dict:
     """将 Hugo 文章发布到微信公众号
 
@@ -135,6 +156,7 @@ def deploy_wechat(
     5. 创建草稿
     6. （可选）发布草稿并轮询状态
     7. 写回元数据到 Hugo frontmatter 和 Joplin frontmatter
+    8. （可选）执行收尾检查
 
     Args:
         postid: Hugo 文章 ID
@@ -142,9 +164,11 @@ def deploy_wechat(
         publish: 是否在创建草稿后立即发布
         poll_interval: 发布状态轮询间隔（秒）
         poll_timeout: 发布状态轮询超时（秒）
+        verify: 是否执行收尾检查
+        verify_timeout: URL 验证超时（秒）
 
     Returns:
-        {"article", "media_id", "account_name", "publish_id", "article_url", "status"}
+        {"article", "media_id", "account_name", "publish_id", "article_url", "status", "verify_result"}
     """
     from .hugo import parse_post, write_post
     from .converter import hugo_to_wechat
@@ -212,6 +236,7 @@ def deploy_wechat(
             "publish_id": None,
             "article_url": None,
             "status": "draft",
+            "verify_result": None,
         }
 
         # 写回 draft 状态
@@ -220,6 +245,11 @@ def deploy_wechat(
         )
 
         if not publish:
+            # 草稿模式，可选执行收尾检查
+            if verify:
+                result["verify_result"] = verify_wechat_draft(
+                    postid, account=account_name, media_id=draft_media_id,
+                )
             return result
 
         # 发布草稿
@@ -247,6 +277,13 @@ def deploy_wechat(
                 post, account_name, status="failed", media_id=draft_media_id,
             )
 
+    # 发布模式，可选执行收尾检查
+    if verify and article_url:
+        result["verify_result"] = verify_wechat_publish(
+            postid, account=account_name, article_url=article_url,
+            media_id=result.get("media_id"), timeout=verify_timeout,
+        )
+
     return result
 
 
@@ -256,6 +293,8 @@ def publish_wechat_draft(
     postid: int | None = None,
     poll_interval: int = 5,
     poll_timeout: int = 120,
+    verify: bool = False,
+    verify_timeout: int = 15,
 ) -> dict:
     """发布已有的微信草稿
 
@@ -265,9 +304,13 @@ def publish_wechat_draft(
         media_id: 草稿 media_id
         account: 微信账号名称
         postid: Hugo 文章 ID（用于写回 URL，可选）
+        poll_interval: 发布状态轮询间隔（秒）
+        poll_timeout: 发布状态轮询超时（秒）
+        verify: 是否执行收尾检查
+        verify_timeout: URL 验证超时（秒）
 
     Returns:
-        {"publish_id", "article_url", "account_name", "status"}
+        {"publish_id", "article_url", "account_name", "status", "verify_result"}
     """
     from .hugo import parse_post
     from .wechat import WechatClient
@@ -291,6 +334,7 @@ def publish_wechat_draft(
         "article_url": article_url,
         "account_name": account_name,
         "status": "published" if article_url else "failed",
+        "verify_result": None,
     }
 
     # 写回 URL 到 Hugo frontmatter
@@ -309,6 +353,17 @@ def publish_wechat_draft(
             )
             if article_url:
                 _tag_joplin_mp(post, account_name)
+
+    # 执行收尾检查
+    if verify and article_url:
+        verify_postid = postid
+        if not verify_postid:
+            # 如果没有 postid，尽量从文章 URL 反推（但不推荐）
+            verify_postid = None
+        result["verify_result"] = verify_wechat_publish(
+            verify_postid, account=account_name, article_url=article_url,
+            media_id=media_id, timeout=verify_timeout,
+        )
 
     return result
 
@@ -532,3 +587,297 @@ def deploy_zhihu(postid: int) -> str:
     post = parse_post(post_file)
     zhihu_article = hugo_to_zhihu(post)
     return format_for_clipboard(zhihu_article)
+
+
+# ---- 收尾检查函数 ----
+
+
+def verify_url_accessible(url: str, timeout: int = 15, allow_redirects: bool = True) -> dict:
+    """检查 URL 是否可访问
+
+    先尝试 HEAD 请求，失败时 fallback 到 GET。
+
+    Args:
+        url: 待检查的 URL
+        timeout: 超时时间（秒）
+        allow_redirects: 是否允许重定向
+
+    Returns:
+        {"ok": bool, "status_code": int|None, "final_url": str, "error": str|None}
+    """
+    result = {
+        "ok": False,
+        "status_code": None,
+        "final_url": url,
+        "error": None,
+    }
+
+    try:
+        with httpx.Client(timeout=timeout) as client:
+            # 先尝试 HEAD
+            try:
+                resp = client.head(url, follow_redirects=allow_redirects)
+                result["status_code"] = resp.status_code
+                result["final_url"] = str(resp.url)
+                if resp.status_code < 400:
+                    result["ok"] = True
+                    return result
+            except httpx.HTTPMethodMixin:
+                # HEAD 不支持，fallback 到 GET
+                pass
+
+            # Fallback 到 GET
+            resp = client.get(url, follow_redirects=allow_redirects)
+            result["status_code"] = resp.status_code
+            result["final_url"] = str(resp.url)
+            if resp.status_code < 400:
+                result["ok"] = True
+
+    except httpx.TimeoutException:
+        result["error"] = f"请求超时（{timeout}s）"
+    except httpx.NetworkError as e:
+        result["error"] = f"网络错误: {e}"
+    except Exception as e:
+        result["error"] = str(e)
+
+    return result
+
+
+def verify_blog_deploy(timeout: int = 15) -> dict:
+    """检查 blog 部署后站点是否可访问
+
+    从配置读取 blog_url 并检查可访问性。
+
+    Args:
+        timeout: 超时时间（秒）
+
+    Returns:
+        {"target": "blog", "ok": bool, "url": str, "status_code": int|None, "error": str|None}
+    """
+    config = load_config()
+    hugo_conf = get_hugo_config(config)
+    blog_url = hugo_conf.get("blog_url", "")
+
+    if not blog_url:
+        return {
+            "target": "blog",
+            "ok": False,
+            "url": "",
+            "error": "配置文件中未设置 hugo.blog_url",
+        }
+
+    check_result = verify_url_accessible(blog_url, timeout=timeout)
+    return {
+        "target": "blog",
+        "ok": check_result["ok"],
+        "url": blog_url,
+        "status_code": check_result["status_code"],
+        "error": check_result["error"],
+    }
+
+
+def verify_wechat_draft(
+    postid: int,
+    account: str | None = None,
+    media_id: str | None = None,
+) -> dict:
+    """检查微信草稿元数据是否已写回
+
+    Args:
+        postid: Hugo 文章 ID
+        account: 微信账号名称
+        media_id: 草稿 media_id（优先使用此值）
+
+    Returns:
+        {"target": "wechat_draft", "ok": bool, "account_name": str, "media_id": str, "status": str, "error": str|None}
+    """
+    config = load_config()
+    wechat_conf = get_wechat_config(config, account=account)
+    account_name = wechat_conf["account_name"]
+
+    deploy_conf = get_deploy_config(config)
+    blog_root = resolve_blog_root(deploy_conf)
+    hugo_conf = get_hugo_config(config)
+    content_dir = blog_root / hugo_conf.get("content_dir", "content")
+
+    from .hugo import parse_post
+    post_file = content_dir / "post" / f"{postid}.md"
+    if not post_file.exists():
+        return {
+            "target": "wechat_draft",
+            "ok": False,
+            "account_name": account_name,
+            "media_id": "",
+            "status": "",
+            "error": f"找不到文章 {postid}",
+        }
+
+    post = parse_post(post_file)
+
+    # 优先使用传入的 media_id，否则从 frontmatter 读取
+    target_media_id = media_id
+    if not target_media_id:
+        wechat_meta = post.extra.get("wechat", {})
+        if isinstance(wechat_meta, dict):
+            acct_meta = wechat_meta.get(account_name, {})
+            if isinstance(acct_meta, dict):
+                target_media_id = acct_meta.get("media_id")
+
+    if not target_media_id:
+        return {
+            "target": "wechat_draft",
+            "ok": False,
+            "account_name": account_name,
+            "media_id": "",
+            "status": "",
+            "error": f"未找到账号 {account_name} 的草稿 media_id",
+        }
+
+    # 检查状态
+    wechat_meta = post.extra.get("wechat", {})
+    if isinstance(wechat_meta, dict):
+        acct_meta = wechat_meta.get(account_name, {})
+        if isinstance(acct_meta, dict):
+            status = acct_meta.get("status", "")
+            if status != "draft":
+                return {
+                    "target": "wechat_draft",
+                    "ok": False,
+                    "account_name": account_name,
+                    "media_id": target_media_id,
+                    "status": status,
+                    "error": f"状态不是 draft（当前：{status}）",
+                }
+
+    return {
+        "target": "wechat_draft",
+        "ok": True,
+        "account_name": account_name,
+        "media_id": target_media_id,
+        "status": "draft",
+        "error": None,
+    }
+
+
+def verify_wechat_publish(
+    postid: int,
+    account: str | None = None,
+    article_url: str | None = None,
+    media_id: str | None = None,
+    timeout: int = 15,
+) -> dict:
+    """检查微信发布后永久链接是否可访问
+
+    Args:
+        postid: Hugo 文章 ID
+        account: 微信账号名称
+        article_url: 永久链接（优先使用此值）
+        media_id: 草稿 media_id
+        timeout: URL 检查超时（秒）
+
+    Returns:
+        {"target": "wechat_publish", "ok": bool, "account_name": str, "media_id": str, "article_url": str, "status_code": int|None, "error": str|None}
+    """
+    config = load_config()
+    wechat_conf = get_wechat_config(config, account=account)
+    account_name = wechat_conf["account_name"]
+
+    deploy_conf = get_deploy_config(config)
+    blog_root = resolve_blog_root(deploy_conf)
+    hugo_conf = get_hugo_config(config)
+    content_dir = blog_root / hugo_conf.get("content_dir", "content")
+
+    from .hugo import parse_post
+    post_file = content_dir / "post" / f"{postid}.md"
+    if not post_file.exists():
+        return {
+            "target": "wechat_publish",
+            "ok": False,
+            "account_name": account_name,
+            "media_id": media_id or "",
+            "article_url": article_url or "",
+            "status_code": None,
+            "error": f"找不到文章 {postid}",
+        }
+
+    post = parse_post(post_file)
+
+    # 优先使用传入的 article_url，否则从 frontmatter 读取
+    target_url = article_url
+    if not target_url:
+        wechat_meta = post.extra.get("wechat", {})
+        if isinstance(wechat_meta, dict):
+            acct_meta = wechat_meta.get(account_name, {})
+            if isinstance(acct_meta, dict):
+                target_url = acct_meta.get("url")
+
+    if not target_url:
+        return {
+            "target": "wechat_publish",
+            "ok": False,
+            "account_name": account_name,
+            "media_id": media_id or "",
+            "article_url": "",
+            "status_code": None,
+            "error": f"未找到账号 {account_name} 的永久链接",
+        }
+
+    # 检查 URL 可访问性
+    check_result = verify_url_accessible(target_url, timeout=timeout)
+
+    return {
+        "target": "wechat_publish",
+        "ok": check_result["ok"],
+        "account_name": account_name,
+        "media_id": media_id or "",
+        "article_url": target_url,
+        "status_code": check_result["status_code"],
+        "error": check_result["error"],
+    }
+
+
+def verify_publish(
+    target: str,
+    postid: int | None = None,
+    account: str | None = None,
+    media_id: str | None = None,
+    url: str | None = None,
+    timeout: int = 15,
+) -> dict:
+    """统一的发布后收尾检查入口
+
+    Args:
+        target: 检查目标类型，支持 "blog"、"wechat-draft"、"wechat-publish"
+        postid: Hugo 文章 ID（wechat 需要）
+        account: 微信账号名称
+        media_id: 草稿 media_id
+        url: 永久链接
+        timeout: URL 检查超时
+
+    Returns:
+        对应 verify_* 函数的返回值
+    """
+    if target == "blog":
+        return verify_blog_deploy(timeout=timeout)
+    elif target == "wechat-draft":
+        if postid is None:
+            return {
+                "target": "wechat_draft",
+                "ok": False,
+                "error": "wechat-draft 检查需要 postid",
+            }
+        return verify_wechat_draft(postid, account=account, media_id=media_id)
+    elif target == "wechat-publish":
+        if postid is None:
+            return {
+                "target": "wechat_publish",
+                "ok": False,
+                "error": "wechat-publish 检查需要 postid",
+            }
+        return verify_wechat_publish(postid, account=account, article_url=url, media_id=media_id, timeout=timeout)
+    else:
+        return {
+            "target": target,
+            "ok": False,
+            "error": f"不支持的检查类型: {target}",
+        }

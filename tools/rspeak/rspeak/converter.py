@@ -291,6 +291,7 @@ def hugo_to_joplin(
     body = post.body_without_more
     if post.source_path:
         body = _convert_relref_to_joplin(body, post.source_path.parent.parent)
+    body = _convert_mermaid_shortcode_to_codeblock(body)
     if static_dir:
         body = _upload_hugo_images(body, client, static_dir)
     # 写入 Joplin frontmatter
@@ -370,6 +371,7 @@ def joplin_to_hugo(
     # 处理图片和链接（在无 frontmatter 的 body 上）
     body = _extract_joplin_images(note_body, client, static_dir, year, slug)
     body = _convert_joplin_links_to_relref(body, content_dir)
+    body = _convert_mermaid_codeblock_to_shortcode(body)
 
     # 计算 lastmod（Joplin updated_time → ISO 字符串）
     updated = datetime.fromtimestamp(note.updated_time / 1000, tz=timezone.utc).astimezone()
@@ -557,6 +559,50 @@ def _convert_joplin_links_to_relref(body: str, content_dir: Path) -> str:
             print(f"警告：找不到 joplin_id={note_id} 对应的 Hugo 文章，保留原始链接")
 
     return body
+
+
+def _convert_mermaid_codeblock_to_shortcode(body: str) -> str:
+    """将 Markdown mermaid 代码块转换为 Hugo mermaid shortcode
+
+    ```mermaid
+    graph TD
+        A --> B
+    ```
+
+    转换为：
+
+    {{< mermaid >}}
+    graph TD
+        A --> B
+    {{< /mermaid >}}
+    """
+    pattern = re.compile(r'```mermaid\s*\n(.*?)```', re.DOTALL)
+    def _replace(m):
+        inner = m.group(1).rstrip('\n')
+        return '{{< mermaid >}}\n' + inner + '\n{{< /mermaid >}}'
+    return pattern.sub(_replace, body)
+
+
+def _convert_mermaid_shortcode_to_codeblock(body: str) -> str:
+    """将 Hugo mermaid shortcode 转换为 Markdown mermaid 代码块（Joplin 兼容）
+
+    {{< mermaid >}}
+    graph TD
+        A --> B
+    {{< /mermaid >}}
+
+    转换为：
+
+    ```mermaid
+    graph TD
+        A --> B
+    ```
+    """
+    pattern = re.compile(r'\{\{<\s*mermaid\s*>\}\}\s*\n(.*?)\n\s*\{\{<\s*/mermaid\s*>\}\}', re.DOTALL)
+    def _replace(m):
+        inner = m.group(1).rstrip('\n')
+        return '```mermaid\n' + inner + '\n```'
+    return pattern.sub(_replace, body)
 
 
 def _upload_hugo_images(body, client, static_dir, note_id=None):

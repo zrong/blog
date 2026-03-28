@@ -115,15 +115,19 @@ uv run --project tools/rspeak rspeak sync -t "标题关键词" -s "english-slug"
 # 部署博客到远程服务器
 uv run --project tools/rspeak rspeak deploy blog
 uv run --project tools/rspeak rspeak deploy blog --dry-run
+uv run --project tools/rspeak rspeak deploy blog --verify
 
 # 微信公众号：创建草稿（默认）
 uv run --project tools/rspeak rspeak deploy wechat -p <postid> [-a <account>]
+uv run --project tools/rspeak rspeak deploy wechat -p <postid> [-a <account>] --verify
 
 # 微信公众号：创建草稿 + 自动发布
 uv run --project tools/rspeak rspeak deploy wechat -p <postid> -a <account> --publish
+uv run --project tools/rspeak rspeak deploy wechat -p <postid> -a <account> --publish --verify
 
 # 微信公众号：发布已有草稿
 uv run --project tools/rspeak rspeak wechat-publish -m <media_id> -p <postid> [-a <account>]
+uv run --project tools/rspeak rspeak wechat-publish -m <media_id> -p <postid> [-a <account>] --verify
 
 # 微信公众号：列出配置的账号
 uv run --project tools/rspeak rspeak wechat-accounts
@@ -136,6 +140,83 @@ uv run --project tools/rspeak rspeak review -p <postid>
 ```
 
 **Python API：** 需要更灵活的控制时，用 `uv run --project tools/rspeak python -c "..."` 调用 Python 模块（详见 [reference.md](reference.md)）。调用时需加 `sys.path.insert(0, 'tools/rspeak')`。
+
+**所有发布命令执行后，必须自动执行收尾检查并汇报结果。**
+
+### 第四步：收尾检查
+
+每次发布后，应自动执行对应的收尾检查命令并汇报结果。检查失败时应明确告知用户。
+
+**Blog 部署收尾检查：**
+
+```bash
+uv run --project tools/rspeak rspeak deploy blog --verify
+```
+
+检查内容：
+- Hugo 构建是否成功
+- rsync 同步是否成功
+- 博客站点首页是否可访问
+
+**微信草稿收尾检查：**
+
+```bash
+uv run --project tools/rspeak rspeak deploy wechat -p <postid> [-a <account>] --verify
+```
+
+检查内容：
+- 草稿是否创建或更新成功（返回 `media_id`）
+- Hugo frontmatter 中是否已写入 `wechat.{account}.status = "draft"` 和 `media_id`
+
+**微信发布收尾检查：**
+
+```bash
+# 方式一：创建草稿后立即发布并检查
+uv run --project tools/rspeak rspeak deploy wechat -p <postid> -a <account> --publish --verify
+
+# 方式二：发布已有草稿并检查
+uv run --project tools/rspeak rspeak wechat-publish -m <media_id> -p <postid> [-a <account>] --verify
+```
+
+检查内容：
+- 发布是否成功（返回永久链接）
+- Hugo frontmatter 中是否已写入 `wechat.{account}.status = "published"` 和 `url`
+- 永久链接是否可访问
+
+**汇报格式：**
+
+收尾检查结果应作为发布结果的补充信息，在输出中明确展示：
+
+- 检查通过：明确说明「收尾检查通过」及关键验证点
+- 检查失败：明确说明「收尾检查失败」及具体错误原因
+
+若检查失败，应视为发布流程不完整，建议用户人工排查。
+
+### Python API verify 参数
+
+在 Python API 中调用 deploy 函数时，可通过 `verify` 和 `verify_timeout` 参数启用收尾检查：
+
+```python
+from rspeak.deploy import deploy_blog, deploy_wechat, publish_wechat_draft
+
+# Blog 部署 + 验证
+result = deploy_blog(dry_run=False, verify=True, verify_timeout=15)
+if result["verify_result"]:
+    if result["verify_result"]["ok"]:
+        print("验证通过")
+    else:
+        print(f"验证失败: {result['verify_result']['error']}")
+
+# 微信草稿 + 验证
+result = deploy_wechat(postid=2857, account="rongspeak", publish=False, verify=True)
+if result["verify_result"]:
+    print(f"验证状态: {result['verify_result']['ok']}")
+
+# 微信发布 + 验证
+result = publish_wechat_draft(media_id="...", postid=2857, verify=True, verify_timeout=15)
+if result["verify_result"]:
+    print(f"验证状态: {result['verify_result']['ok']}")
+```
 
 **Hugo→Joplin 方向特殊步骤：**
 - **链接自动转换**：`hugo_to_joplin()` 会自动将 relref 链接还原为 Joplin 内部链接 `(:/joplin_id)`。若目标文章没有 `joplin_id`，打印警告并保留原始链接

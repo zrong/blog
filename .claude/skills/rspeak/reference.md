@@ -78,6 +78,12 @@ uv run --project tools/rspeak rspeak deploy blog
 
 # 模拟运行（不实际传输）
 uv run --project tools/rspeak rspeak deploy blog --dry-run
+
+# 部署后执行收尾检查（验证站点可访问性）
+uv run --project tools/rspeak rspeak deploy blog --verify
+
+# 自定义 URL 验证超时（默认 15 秒）
+uv run --project tools/rspeak rspeak deploy blog --verify --verify-timeout 30
 ```
 
 ### 发布到微信公众号
@@ -92,8 +98,17 @@ uv run --project tools/rspeak rspeak deploy wechat -p 2850 -a main
 # 创建草稿 + 自动发布
 uv run --project tools/rspeak rspeak deploy wechat -p 2850 -a main --publish
 
+# 创建草稿后执行收尾检查（验证元数据已写回）
+uv run --project tools/rspeak rspeak deploy wechat -p 2850 -a main --verify
+
+# 创建草稿 + 自动发布 + 收尾检查（验证永久链接可访问）
+uv run --project tools/rspeak rspeak deploy wechat -p 2850 -a main --publish --verify
+
 # 发布已有草稿
 uv run --project tools/rspeak rspeak wechat-publish -m MEDIA_ID -p 2850 -a main
+
+# 发布已有草稿 + 收尾检查
+uv run --project tools/rspeak rspeak wechat-publish -m MEDIA_ID -p 2850 -a main --verify
 
 # 列出配置的微信账号
 uv run --project tools/rspeak rspeak wechat-accounts
@@ -216,15 +231,27 @@ from rspeak.deploy import deploy_wechat, publish_wechat_draft
 
 # 创建草稿（默认账号）
 result = deploy_wechat(postid=2850)
-# -> {"media_id", "account_name", "article", "status": "draft"}
+# -> {"media_id", "account_name", "article", "status": "draft", "verify_result": None}
 
 # 创建草稿 + 自动发布
 result = deploy_wechat(postid=2850, account="main", publish=True)
-# -> {"media_id", "account_name", "article", "article_url", "status": "published"}
+# -> {"media_id", "account_name", "article", "article_url", "status": "published", "verify_result": None}
+
+# 创建草稿 + 收尾检查
+result = deploy_wechat(postid=2850, verify=True)
+# -> verify_result = {"target": "wechat_draft", "ok": bool, "account_name": str, "media_id": str, "status": "draft", "error": str|None}
+
+# 发布 + 收尾检查
+result = deploy_wechat(postid=2850, account="main", publish=True, verify=True, verify_timeout=15)
+# -> verify_result = {"target": "wechat_publish", "ok": bool, "account_name": str, "article_url": str, "status_code": int|None, "error": str|None}
 
 # 发布已有草稿
 result = publish_wechat_draft(media_id="MEDIA_ID", account="main", postid=2850)
-# -> {"article_url", "account_name", "status": "published"}
+# -> {"publish_id", "article_url", "account_name", "status": "published", "verify_result": None}
+
+# 发布已有草稿 + 收尾检查
+result = publish_wechat_draft(media_id="MEDIA_ID", account="main", postid=2850, verify=True)
+# -> verify_result = {"target": "wechat_publish", "ok": bool, "account_name": str, "article_url": str, "status_code": int|None, "error": str|None}
 ```
 
 `deploy_wechat()` 内部流程：
@@ -252,6 +279,50 @@ with WechatClient(appid=conf["appid"], appsecret=conf["appsecret"]) as client:
     result = client.get_publish_status(publish_id)
     # result["article_detail"]["item"][0]["article_url"]
 ```
+
+### 收尾检查（verify）
+
+```python
+from rspeak.deploy import verify_publish, verify_blog_deploy, verify_wechat_draft, verify_wechat_publish
+
+# Blog 部署检查
+result = verify_blog_deploy(timeout=15)
+# -> {"target": "blog", "ok": bool, "url": str, "status_code": int|None, "error": str|None}
+
+# 微信草稿检查
+result = verify_wechat_draft(postid=2850, account="main")
+# -> {"target": "wechat_draft", "ok": bool, "account_name": str, "media_id": str, "status": "draft", "error": str|None}
+
+# 微信发布检查
+result = verify_wechat_publish(postid=2850, account="main", article_url="https://mp.weixin.qq.com/s/xxx", timeout=15)
+# -> {"target": "wechat_publish", "ok": bool, "account_name": str, "media_id": str, "article_url": str, "status_code": int|None, "error": str|None}
+
+# 统一检查入口
+result = verify_publish(target="blog", timeout=15)
+result = verify_publish(target="wechat-draft", postid=2850, account="main")
+result = verify_publish(target="wechat-publish", postid=2850, account="main", url="https://mp.weixin.qq.com/s/xxx", timeout=15)
+```
+
+**verify_result 结构说明：**
+
+- `target`: 检查目标类型（`blog`、`wechat_draft`、`wechat_publish`）
+- `ok`: 检查是否通过
+- `error`: 失败原因（成功时为 `None`）
+
+**Blog 特有字段：**
+- `url`: 博客站点 URL
+- `status_code`: HTTP 状态码
+
+**Wechat Draft 特有字段：**
+- `account_name`: 微信账号名称
+- `media_id`: 草稿 media_id
+- `status`: 前端状态（应为 `draft`）
+
+**Wechat Publish 特有字段：**
+- `account_name`: 微信账号名称
+- `media_id`: 草稿 media_id
+- `article_url`: 永久链接
+- `status_code`: HTTP 状态码
 
 ### Hugo/Joplin -> 知乎
 
