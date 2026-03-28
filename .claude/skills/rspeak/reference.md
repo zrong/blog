@@ -255,13 +255,14 @@ result = publish_wechat_draft(media_id="MEDIA_ID", account="main", postid=2850, 
 ```
 
 `deploy_wechat()` 内部流程：
-1. 解析 Hugo 文章 → `hugo_to_wechat()` 转 HTML
-2. 上传正文图片（`/uploads/...` → 微信 `mmbiz` URL）
-3. 上传封面图 → `thumb_media_id`
-4. 创建草稿 → `media_id`
-5. （可选）发布 → 轮询状态 → 获取永久链接
-6. 元数据写回 Hugo `extra["wechat"]` 和 Joplin frontmatter
-7. 在 Joplin 笔记上打 `mp:账号名` 标签
+1. 解析 Hugo 文章 → `hugo_to_wechat()` 转 HTML（含 mermaid 渲染）
+2. 上传 mermaid 渲染图片（临时文件 → 微信公众号 `mmbiz` URL，上传后自动清理临时文件）
+3. 上传正文图片（`/uploads/...` → 微信 `mmbiz` URL）
+4. 上传封面图 → `thumb_media_id`
+5. 创建草稿 → `media_id`
+6. （可选）发布 → 轮询状态 → 获取永久链接
+7. 元数据写回 Hugo `extra["wechat"]` 和 Joplin frontmatter
+8. 在 Joplin 笔记上打 `mp:账号名` 标签
 
 底层 API（需要更灵活控制时）：
 
@@ -449,6 +450,7 @@ tools/rspeak/
 | `deploy_wechat(postid, account, publish)` | 完整微信发布流程（已有草稿时自动更新） |
 | `publish_wechat_draft(media_id, account, postid)` | 发布已有草稿 |
 | `_upload_wechat_images(article, client, static_dir, blog_url)` | 上传正文图片到微信 |
+| `_upload_mermaid_images(article, client)` | 上传 mermaid 渲染图片到微信公众号（自动清理临时文件） |
 | `_resolve_cover_image(post, static_dir)` | 获取封面图本地路径 |
 | `_poll_publish_status(client, publish_id)` | 轮询发布状态 |
 | `_write_wechat_metadata(post, account_name, status, ...)` | 元数据写回 Hugo + Joplin |
@@ -463,7 +465,8 @@ tools/rspeak/
 | `hugo_to_joplin(post, client, ...)` | Hugo→Joplin（含链接转换 + frontmatter 合并） |
 | `joplin_to_hugo(note, content_dir, ...)` | Joplin→Hugo（含链接转换 + frontmatter 解析） |
 | `sync_article(client, content_dir, ...)` | 自动判断方向同步 |
-| `hugo_to_wechat(post, author, content_dir, wechat_account)` | 转微信 HTML（内联样式 + TOC + relref 解析 + 微信互链） |
+| `hugo_to_wechat(post, author, content_dir, wechat_account)` | 转微信 HTML（内联样式 + TOC + relref 解析 + 微信互链 + mermaid 渲染） |
+| `_render_mermaid_to_temp(body)` | 将 mermaid 短代码渲染为临时 PNG（通过 mermaid.ink） |
 | `_inline_styles_for_wechat(html)` | HTML 标签添加内联样式（Joplin 风格） |
 | `_generate_toc_html(html)` | 从 h2/h3 生成 TOC 目录 HTML |
 | `_resolve_relref_links(body, blog_url, content_dir, wechat_account)` | Hugo relref 短代码转实际 URL（支持微信 URL 优先） |

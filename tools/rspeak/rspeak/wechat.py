@@ -11,7 +11,7 @@ API 文档：https://developers.weixin.qq.com/doc/offiaccount/
 
 import re
 from pathlib import Path
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import httpx
 import markdown
@@ -31,6 +31,7 @@ class WechatArticle:
     content_source_url: str = ""  # 原文链接
     need_open_comment: int = 0
     only_fans_can_comment: int = 0
+    mermaid_temp_files: list = field(default_factory=list)  # mermaid 渲染临时文件 [Path, ...]
 
 
 class WechatClient:

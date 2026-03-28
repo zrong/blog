@@ -245,9 +245,23 @@ if result["verify_result"]:
 - 微信**不支持 `<style>` 标签**，所有样式必须内联到 HTML 元素上
 - `_inline_styles_for_wechat()` 自动将 h2/h3/p/code/blockquote/img/table/strong 标签转为内联样式
 - 样式参考 Joplin `userstyle.css`：h2 顶部 2px 灰色边框、strong 使用 `#ab1942` 强调色、正文 17px
-- 代码块使用 `<section>` + 等宽字体内联样式，`white-space: pre-wrap` 防止溢出
 - Hugo relref 短代码自动转为实际博客 URL（`_resolve_relref_links()`）
 - 若 Hugo frontmatter `toc = true`，自动生成目录（Joplin 风格虚线边框）插入第一个 h2 之前
+- **Mermaid 图表自动渲染**：`{{< mermaid >}}` 短代码通过 mermaid.ink 在线服务渲染为 PNG 图片，上传到微信公众号后嵌入文章。渲染失败时回退为代码块显示
+
+**微信公众号 ProseMirror 兼容性规则：**
+
+微信公众号后台编辑器基于 ProseMirror，提交的 HTML 会被重新解析。以下规则确保渲染正确：
+
+- **列表标签间无空白**：`</li>` 与 `<li>` 之间的换行/空格会被 ProseMirror 解析为空文本节点，产生空列表项。必须压缩为 `<li>...</li><li>...</li>` 连续格式
+- **`<li>` 内容包 `<span>`**：含行内 `<code>` 的列表项，ProseMirror 会将 `<code>` 后的文本拆到独立 `<section>` 块级元素导致换行。用 `<span>` 包裹整个 `<li>` 内容可避免：`<li><span><code>text</code>说明文字</span></li>`
+- **剥离 `<li>` 内的 `<p>`**：Python markdown 的 loose list 会在 `<li>` 内生成 `<p>`，微信公众号会额外渲染空行。先用正则剥离 `<li><p>...</p></li>` → `<li>...</li>`，再加内联样式（**顺序很重要**）
+- **代码块使用原生 `code-snippet` 结构**：微信公众号编辑器的代码块格式为 `<section class="code-snippet__js"><pre class="code-snippet__js code-snippet code-snippet_nowrap" data-lang="xxx"><code><span leaf="">line1</span></code><code><span leaf="">line2</span></code></pre></section>`。每行代码用独立 `<code>` 元素，缩进用 `&nbsp;`
+- **行内代码排除 code-snippet**：行内代码样式正则需排除含 `<span leaf="">` 的 `<code>` 元素（即 code-snippet 内部的行元素），避免为代码块内每行添加背景/边框
+- **行内代码样式**：浅灰背景 `#f5f5f5`、深灰文字 `#333`、灰色边框 `1px solid #ddd`
+- **TOC 使用嵌套列表**：h2 为顶层 `<li>`（粗体），连续 h3 用嵌套 `<ul style="list-style-type:circle;">` 实现缩进子列表（字号 14px、颜色 #666）
+- **超链接用 `<span>` 着色**：ProseMirror 会剥离 `<a>` 标签及其内联样式，超链接颜色无法通过 `<a style="...">` 保留。需将 `<a href="http...">text</a>` 转为 `<span style="color:#0080ff;">text</span>`，`<span>` 的颜色可被 ProseMirror 保留
+- **超链接用 `<span>` 着色**：ProseMirror 会剥离 `<a>` 标签及其内联样式，超链接颜色无法通过 `<a style="...">` 保留。需将 `<a href="http...">text</a>` 转为 `<span style="color:#0080ff;">text</span>`，`<span>` 的颜色可被 ProseMirror 保留
 
 **微信公众号文章默认设置：**
 - 作者：从 config.toml `[hugo] author` 读取（默认「曾嵘」）
@@ -357,12 +371,14 @@ url = "https://..."
 | Joplin→Hugo | `![alt](:/resource_id)` | `![alt](/uploads/{year}/{slug}-{n}.{ext})` |
 | Joplin→Hugo | `[text](:/note_id)` | `[text](relref "post/{postid}.md")` |
 | Hugo→Joplin | `[text](relref "post/{postid}.md")` | `[text](:/joplin_id)` |
+| Hugo→微信 | `{{< mermaid >}}` 短代码 | 通过 mermaid.ink 渲染为 PNG → 上传微信 → `<img>` |
 
 **幂等性**：双向同步均为幂等操作。重复执行不会创建重复内容——Hugo→Joplin 通过 `source_url` 匹配已有笔记，Joplin→Hugo 通过 `joplin_id` 匹配已有文章。
 
 ## 注意事项
 
 - 微信公众号发布前**必须先创建为草稿**，让用户确认后再正式发布
+- 微信草稿更新失败（如 501 错误）时，`deploy_wechat()` 已内置自动 fallback：先尝试 `draft/update`，失败后自动删除旧草稿并创建新草稿，无需手动干预
 - 知乎仅生成格式化内容，提示用户手动登录知乎粘贴发布
 - 图片处理：Hugo 本地图片路径 `/uploads/...` 在发布到外部平台时需要替换为公网可访问 URL `https://blog.zengrong.net/uploads/...`
 - Joplin 操作前先 ping 确认服务可用

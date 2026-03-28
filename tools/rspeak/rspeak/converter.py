@@ -55,23 +55,41 @@ def markdown_to_html(md_text: str) -> str:
 
 
 def _generate_toc_html(html: str) -> str:
-    """从 HTML 中提取 h2/h3 标题，生成目录 HTML（Joplin 风格：虚线边框 + 浅灰背景）"""
+    """从 HTML 中提取 h2/h3 标题，生成目录 HTML（Joplin 风格：虚线边框 + 浅灰背景）
+
+    h2 为顶层列表项，连续的 h3 用嵌套 <ul> 实现缩进子列表。
+    标签间无空白避免 ProseMirror 产生空列表项。
+    """
     headings = re.findall(r'<(h[23])[^>]*>(.*?)</\1>', html)
     if not headings:
         return ""
-    toc_items = []
+    parts = []
+    in_sub = False
     for tag, text in headings:
-        # 去除内部 HTML 标签
         clean_text = re.sub(r'<[^>]+>', '', text)
-        indent = "padding-left:0;" if tag == "h2" else "padding-left:1.5em;"
-        toc_items.append(
-            f'<li style="list-style:none;{indent}line-height:2;font-size:15px;">{clean_text}</li>'
-        )
-    items_html = "\n".join(toc_items)
+        if tag == "h2":
+            if in_sub:
+                parts.append("</ul>")
+                in_sub = False
+            parts.append(
+                f'<li style="line-height:2;font-size:15px;font-weight:bold;">{clean_text}</li>'
+            )
+        else:
+            if not in_sub:
+                parts.append(
+                    '<ul style="margin:0;padding-left:1.5em;list-style-type:circle;">'
+                )
+                in_sub = True
+            parts.append(
+                f'<li style="line-height:2;font-size:14px;color:#666;">{clean_text}</li>'
+            )
+    if in_sub:
+        parts.append("</ul>")
+    items_html = "".join(parts)
     return (
         '<section style="border:1px dashed #999;background-color:rgba(222,222,222,0.2);'
         'padding:1em;margin:10px 0;border-radius:4px;">'
-        f'<ul style="margin:0;padding:0;">\n{items_html}\n</ul>'
+        f'<ul style="margin:0;padding-left:1em;list-style-type:disc;">{items_html}</ul>'
         '</section>'
     )
 
@@ -97,23 +115,39 @@ def _inline_styles_for_wechat(html: str) -> str:
         html,
         flags=re.DOTALL,
     )
-    # 代码块 <pre><code> — 微信需要用 <section> 包裹并内联样式
+    # 代码块 <pre><code> — 使用微信公众号原生 code-snippet 结构
     def _replace_pre_code(m):
-        code_content = m.group(1)
+        full_content = m.group(1)
+        # 提取语言标记
+        lang_match = re.search(r'<code[^>]*class="language-(\w+)"[^>]*>', full_content)
+        lang = lang_match.group(1) if lang_match else ''
         # 去掉 <code...> 和 </code> 标签，保留内容
-        code_content = re.sub(r'<code[^>]*>', '', code_content)
+        code_content = re.sub(r'<code[^>]*>', '', full_content)
         code_content = code_content.replace('</code>', '')
+        # 每行包裹为 <code><span leaf="">...</span></code>
+        lines = code_content.rstrip('\n').split('\n')
+        code_lines = []
+        for line in lines:
+            # 先处理前导空格（原始文本，非 HTML 实体）
+            stripped = line.lstrip(' ')
+            lead_spaces = len(line) - len(stripped)
+            prefix = '&nbsp;' * lead_spaces
+            # 处理 tab 和中间的连续空格
+            content = stripped.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')
+            content = content.replace('  ', '&nbsp;&nbsp;')
+            code_lines.append(f'<code><span leaf="">{prefix}{content}</span></code>')
+        code_html = ''.join(code_lines)
+        lang_attr = f' data-lang="{lang}"' if lang else ''
         return (
-            '<section style="background:#f6f8fa;border-radius:4px;padding:14px 16px;'
-            'margin:10px 0;overflow-x:auto;font-size:13px;line-height:1.6;'
-            'font-family:Consolas,Monaco,monospace;white-space:pre-wrap;word-break:break-all;">'
-            f'{code_content}</section>'
+            f'<section class="code-snippet__js">'
+            f'<pre class="code-snippet__js code-snippet code-snippet_nowrap"{lang_attr}>'
+            f'{code_html}</pre></section>'
         )
     html = re.sub(r'<pre>(.*?)</pre>', _replace_pre_code, html, flags=re.DOTALL)
-    # 行内代码（不在 section 内的）
+    # 行内代码（排除 code-snippet 内的 <code><span leaf=""> 结构）
     html = re.sub(
-        r'<code>(.*?)</code>',
-        r'<code style="background:#f5f5f5;padding:2px 6px;border-radius:3px;font-size:13px;color:#c7254e;font-family:Consolas,Monaco,monospace;">\1</code>',
+        r'<code>(?!<span[^>]*leaf[^>]*>)(.*?)</code>',
+        r'<code style="background:#f5f5f5;padding:2px 6px;border-radius:3px;font-size:14px;color:#333;border:1px solid #ddd;font-family:Consolas,Monaco,monospace;">\1</code>',
         html,
     )
     # 引用块
@@ -143,6 +177,40 @@ def _inline_styles_for_wechat(html: str) -> str:
     html = re.sub(r'<td>', '<td style="border:1px solid #ddd;padding:8px;text-align:left;">', html)
     # 粗体（Joplin 风格：#ab1942 强调色）
     html = re.sub(r'<strong>(.*?)</strong>', r'<strong style="font-weight:bold;color:#ab1942;">\1</strong>', html)
+    # 超链接：ProseMirror 会剥离 <a> 的样式，改用 <span> 保留颜色
+    html = re.sub(
+        r'<a href="(https?://[^"]*)"[^>]*>(.*?)</a>',
+        r'<span style="color:#0080ff;">\2</span>',
+        html,
+    )
+    # 纯文本 URL（未被 markdown 转为 <a> 的裸链接）也着色
+    html = re.sub(
+        r'(?<!["\w/])(https?://[^\s<>"\)]+)',
+        r'<span style="color:#0080ff;">\1</span>',
+        html,
+    )
+
+    # 列表处理（微信公众号 ProseMirror 编辑器会将标签间换行符解析为空列表项）
+    # 注意顺序：先剥离 <li> 内的 <p>，再加内联样式，最后压缩标签间空白
+    html = re.sub(r'<li>\s*<p[^>]*>(.*?)</p>\s*</li>', r'<li>\1</li>', html, flags=re.DOTALL)
+    html = re.sub(r'<ul>', '<ul style="margin:10px 0;padding-left:1.5em;">', html)
+    html = re.sub(r'<ol>', '<ol style="margin:10px 0;padding-left:1.5em;">', html)
+    html = re.sub(r'<li>', '<li style="margin:2px 0;line-height:1.8;font-size:17px;">', html)
+    # <li> 内容用 <section> 包裹，防止 ProseMirror 将 <code> 和后续文本拆为独立块级元素
+    # 注意：不能在 <section> 内再用 <span leaf="">，否则 ProseMirror 会剥掉 <code>
+    html = re.sub(
+        r'(<li style="margin:2px 0;line-height:1\.8;font-size:17px;">)(.*?)(</li>)',
+        r'\1<section>\2</section>\3',
+        html,
+        flags=re.DOTALL,
+    )
+    # 压缩列表标签间的换行和空白，避免 ProseMirror 将其解析为空文本节点
+    html = re.sub(r'(</li>)\s*(<li[^>]*>)', r'\1\2', html)
+    html = re.sub(r'(<ul[^>]*>)\s*(<li)', r'\1\2', html)
+    html = re.sub(r'(</li>)\s*(</ul>)', r'\1\2', html)
+    html = re.sub(r'(<ol[^>]*>)\s*(<li)', r'\1\2', html)
+    html = re.sub(r'(</li>)\s*(</ol>)', r'\1\2', html)
+
     return html
 
 
@@ -757,6 +825,50 @@ def _resolve_relref_links(
     return re.sub(r'\{\{<\s*relref\s+"([^"]+)"\s*>\}\}', _replace, body)
 
 
+def _render_mermaid_to_temp(body: str) -> tuple[str, list]:
+    """将 {{< mermaid >}} 短代码渲染为临时 PNG 图片（通过 mermaid.ink）
+
+    渲染失败时回退为 mermaid 代码块。
+
+    Returns:
+        (modified_body, [Path, ...]) — 修改后的 body 和临时文件路径列表
+    """
+    import base64
+    import tempfile
+
+    pattern = re.compile(
+        r'\{\{<\s*mermaid\s*>\}\}\s*\n(.*?)\n\s*\{\{<\s*/mermaid\s*>\}\}',
+        re.DOTALL,
+    )
+    matches = list(pattern.finditer(body))
+    if not matches:
+        return body, []
+
+    import httpx
+
+    temp_files = []
+    for i, match in enumerate(reversed(matches)):
+        mermaid_code = match.group(1).strip()
+        try:
+            encoded = base64.urlsafe_b64encode(mermaid_code.encode()).decode()
+            resp = httpx.get(f'https://mermaid.ink/img/{encoded}', timeout=30)
+            resp.raise_for_status()
+
+            with tempfile.NamedTemporaryFile(
+                suffix='.png', prefix=f'mermaid-{i}-', delete=False,
+            ) as f:
+                f.write(resp.content)
+                temp_path = Path(f.name)
+
+            temp_files.append(temp_path)
+            body = body.replace(match.group(0), f'![mermaid]({temp_path})')
+        except Exception as e:
+            print(f'警告：mermaid 渲染失败: {e}，回退为代码块')
+            body = body.replace(match.group(0), f'```mermaid\n{mermaid_code}\n```')
+
+    return body, temp_files
+
+
 def hugo_to_wechat(
     post: HugoPost,
     author: str = "曾嵘",
@@ -779,6 +891,10 @@ def hugo_to_wechat(
         content_dir=content_dir,
         wechat_account=wechat_account,
     )
+
+    # 渲染 mermaid 短代码为临时 PNG 图片
+    body, mermaid_temps = _render_mermaid_to_temp(body)
+
     html_content = markdown_to_html(body)
 
     # 生成 TOC（如果 Hugo frontmatter 中 toc=true）
@@ -813,6 +929,7 @@ def hugo_to_wechat(
         content_source_url=source_url,
         need_open_comment=1,
         only_fans_can_comment=0,
+        mermaid_temp_files=mermaid_temps,
     )
 
 

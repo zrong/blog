@@ -200,6 +200,9 @@ def deploy_wechat(
         appsecret=wechat_conf["appsecret"],
         access_token=wechat_conf.get("access_token", ""),
     ) as client:
+        # 上传 mermaid 渲染图片（临时文件）
+        article = _upload_mermaid_images(article, client)
+
         # 上传正文图片
         article = _upload_wechat_images(article, client, static_dir, blog_url)
 
@@ -220,10 +223,21 @@ def deploy_wechat(
                 existing_media_id = acct_meta.get("media_id")
 
         if existing_media_id:
-            # 更新已有草稿
-            client.update_draft(existing_media_id, article)
-            draft_media_id = existing_media_id
-            print(f"已更新草稿: {draft_media_id}")
+            # 尝试更新已有草稿（部分账号/场景可能返回 501）
+            try:
+                client.update_draft(existing_media_id, article)
+                draft_media_id = existing_media_id
+                print(f"已更新草稿: {draft_media_id}")
+            except Exception as e:
+                # update 失败，fallback 到删除旧草稿 + 创建新草稿
+                print(f"更新草稿失败({e})，尝试删除旧草稿并重建...")
+                try:
+                    client.delete_draft(existing_media_id)
+                    print(f"已删除旧草稿: {existing_media_id}")
+                except Exception:
+                    print(f"删除旧草稿失败，忽略错误继续创建新草稿")
+                draft_media_id = client.add_draft([article])
+                print(f"已创建新草稿: {draft_media_id}")
         else:
             # 创建新草稿
             draft_media_id = client.add_draft([article])
@@ -365,6 +379,40 @@ def publish_wechat_draft(
             media_id=media_id, timeout=verify_timeout,
         )
 
+    return result
+
+
+def _upload_mermaid_images(article, client):
+    """上传 mermaid 渲染的临时图片到微信公众号，替换 HTML 中的临时路径为微信 URL
+
+    上传后自动清理临时文件。
+    """
+    import copy
+    result = copy.copy(article)
+    content = result.content
+
+    for temp_path in article.mermaid_temp_files:
+        src_str = f'src="{temp_path}"'
+        if src_str not in content:
+            # 也可能被 _inline_styles_for_wechat 处理后路径格式有变化
+            src_str_alt = str(temp_path).replace('/', '&#x2F;')
+            if src_str_alt in content:
+                src_str = src_str_alt
+            else:
+                temp_path.unlink(missing_ok=True)
+                continue
+
+        try:
+            data = client.upload_image(temp_path)
+            wechat_url = data["url"]
+            content = content.replace(src_str, f'src="{wechat_url}"')
+        except Exception as e:
+            print(f"警告：mermaid 图片上传失败: {e}")
+        finally:
+            temp_path.unlink(missing_ok=True)
+
+    result.content = content
+    result.mermaid_temp_files = []
     return result
 
 
