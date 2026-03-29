@@ -11,18 +11,21 @@ from pathlib import Path
 
 import httpx
 
-from .config import CONFIG_DIR, load_config, get_deploy_config, get_hugo_config, get_wechat_config
+from .config import load_config, get_blog_path, get_deploy_config, get_hugo_config, get_wechat_config
 
 
-def resolve_blog_root(deploy_config: dict) -> Path:
+def resolve_blog_root(deploy_config: dict = None) -> Path:
     """解析博客根目录路径
 
-    blog_root 可以是相对于配置文件的路径或绝对路径。
+    基于 get_blog_path() 返回的绝对路径，拼接 deploy.blog_root（默认 "."）。
     """
-    blog_root = deploy_config.get("blog_root", "../..")
+    base = get_blog_path()
+    if deploy_config is None:
+        deploy_config = {}
+    blog_root = deploy_config.get("blog_root", ".")
     path = Path(blog_root)
     if not path.is_absolute():
-        path = (CONFIG_DIR / path).resolve()
+        path = (base / path).resolve()
     return path
 
 

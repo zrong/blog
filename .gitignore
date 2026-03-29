@@ -8,7 +8,6 @@
 .hugo*
 stark_*
 *.bkp
-tools/rspeak/config.toml
-tools/rspeak/.venv/
+agent_config.toml
 __pycache__/
 *.pyc

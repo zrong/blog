@@ -7,6 +7,11 @@ allowed-tools: Bash(uv run *), Read, Grep, Glob, Edit
 
 你是一个博客写作与发布助手。帮助用户校对文章、将博客文章发布到多个平台。
 
+## 路径约定
+
+- `{SKILL_DIR}` = 本文件所在目录
+- `{SCRIPTS_DIR}` = `{SKILL_DIR}/scripts`
+
 ## 支持的功能
 
 1. **文章校对**（错别字、标点、断句、中英文混排）
@@ -103,43 +108,43 @@ allowed-tools: Bash(uv run *), Read, Grep, Glob, Edit
 
 ### 第三步：执行发布
 
-优先使用 CLI 命令，也可以用 Python API。所有命令使用 `uv run --project tools/rspeak rspeak` 前缀。
+优先使用 CLI 命令，也可以用 Python API。所有命令使用 `uv run --project {SCRIPTS_DIR} rspeak` 前缀。
 
 **CLI 命令：**
 
 ```bash
 # 同步 Hugo ↔ Joplin
-uv run --project tools/rspeak rspeak sync -p <postid>
-uv run --project tools/rspeak rspeak sync -t "标题关键词" -s "english-slug"
+uv run --project {SCRIPTS_DIR} rspeak sync -p <postid>
+uv run --project {SCRIPTS_DIR} rspeak sync -t "标题关键词" -s "english-slug"
 
 # 部署博客到远程服务器
-uv run --project tools/rspeak rspeak deploy blog
-uv run --project tools/rspeak rspeak deploy blog --dry-run
-uv run --project tools/rspeak rspeak deploy blog --verify
+uv run --project {SCRIPTS_DIR} rspeak deploy blog
+uv run --project {SCRIPTS_DIR} rspeak deploy blog --dry-run
+uv run --project {SCRIPTS_DIR} rspeak deploy blog --verify
 
 # 微信公众号：创建草稿（默认）
-uv run --project tools/rspeak rspeak deploy wechat -p <postid> [-a <account>]
-uv run --project tools/rspeak rspeak deploy wechat -p <postid> [-a <account>] --verify
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p <postid> [-a <account>]
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p <postid> [-a <account>] --verify
 
 # 微信公众号：创建草稿 + 自动发布
-uv run --project tools/rspeak rspeak deploy wechat -p <postid> -a <account> --publish
-uv run --project tools/rspeak rspeak deploy wechat -p <postid> -a <account> --publish --verify
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p <postid> -a <account> --publish
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p <postid> -a <account> --publish --verify
 
 # 微信公众号：发布已有草稿
-uv run --project tools/rspeak rspeak wechat-publish -m <media_id> -p <postid> [-a <account>]
-uv run --project tools/rspeak rspeak wechat-publish -m <media_id> -p <postid> [-a <account>] --verify
+uv run --project {SCRIPTS_DIR} rspeak wechat-publish -m <media_id> -p <postid> [-a <account>]
+uv run --project {SCRIPTS_DIR} rspeak wechat-publish -m <media_id> -p <postid> [-a <account>] --verify
 
 # 微信公众号：列出配置的账号
-uv run --project tools/rspeak rspeak wechat-accounts
+uv run --project {SCRIPTS_DIR} rspeak wechat-accounts
 
 # 转为知乎格式
-uv run --project tools/rspeak rspeak deploy zhihu -p <postid>
+uv run --project {SCRIPTS_DIR} rspeak deploy zhihu -p <postid>
 
 # 校对文章（基础检查）
-uv run --project tools/rspeak rspeak review -p <postid>
+uv run --project {SCRIPTS_DIR} rspeak review -p <postid>
 ```
 
-**Python API：** 需要更灵活的控制时，用 `uv run --project tools/rspeak python -c "..."` 调用 Python 模块（详见 [reference.md](reference.md)）。调用时需加 `sys.path.insert(0, 'tools/rspeak')`。
+**Python API：** 需要更灵活的控制时，用 `uv run --project {SCRIPTS_DIR} python -c "..."` 调用 Python 模块（详见 [reference.md](reference.md)）。调用时需加 `sys.path.insert(0, '{SCRIPTS_DIR}')`。
 
 **所有发布命令执行后，必须自动执行收尾检查并汇报结果。**
 
@@ -150,7 +155,7 @@ uv run --project tools/rspeak rspeak review -p <postid>
 **Blog 部署收尾检查：**
 
 ```bash
-uv run --project tools/rspeak rspeak deploy blog --verify
+uv run --project {SCRIPTS_DIR} rspeak deploy blog --verify
 ```
 
 检查内容：
@@ -161,7 +166,7 @@ uv run --project tools/rspeak rspeak deploy blog --verify
 **微信草稿收尾检查：**
 
 ```bash
-uv run --project tools/rspeak rspeak deploy wechat -p <postid> [-a <account>] --verify
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p <postid> [-a <account>] --verify
 ```
 
 检查内容：
@@ -172,10 +177,10 @@ uv run --project tools/rspeak rspeak deploy wechat -p <postid> [-a <account>] --
 
 ```bash
 # 方式一：创建草稿后立即发布并检查
-uv run --project tools/rspeak rspeak deploy wechat -p <postid> -a <account> --publish --verify
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p <postid> -a <account> --publish --verify
 
 # 方式二：发布已有草稿并检查
-uv run --project tools/rspeak rspeak wechat-publish -m <media_id> -p <postid> [-a <account>] --verify
+uv run --project {SCRIPTS_DIR} rspeak wechat-publish -m <media_id> -p <postid> [-a <account>] --verify
 ```
 
 检查内容：
@@ -264,7 +269,7 @@ if result["verify_result"]:
 - **超链接用 `<span>` 着色**：ProseMirror 会剥离 `<a>` 标签及其内联样式，超链接颜色无法通过 `<a style="...">` 保留。需将 `<a href="http...">text</a>` 转为 `<span style="color:#0080ff;">text</span>`，`<span>` 的颜色可被 ProseMirror 保留
 
 **微信公众号文章默认设置：**
-- 作者：从 config.toml `[hugo] author` 读取（默认「曾嵘」）
+- 作者：从配置 `[rspeak.hugo] author` 读取（默认「曾嵘」）
 - 留言：默认开启（`need_open_comment=1`）
 - 摘要：从正文智能提取纯文本（去除代码块、图片、标记），非截取开头段落
 - 原创声明/创作来源/合集：API 不支持，需在公众号后台手动操作
@@ -347,7 +352,7 @@ url = "https://..."
 
 ## 配置
 
-配置文件位于 `tools/rspeak/config.toml`（从 `config.example.toml` 复制）。发布前先检查配置是否存在。
+配置文件位于项目根目录的 `agent_config.toml`（从 `{SKILL_DIR}/agent_config.example.toml` 复制）。发布前先检查配置是否存在。
 
 ## 技术实现
 

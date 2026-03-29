@@ -6,8 +6,10 @@ Hugo 博客项目，内容源码在 `content/post/`，静态资源在 `static/up
 
 ## 工具
 
-- `tools/rspeak/`：博客写作与发布工具（校对、Hugo/Joplin 同步、微信公众号、知乎）
-- `.claude/skills/rspeak/`：rspeak skill 定义（SKILL.md、reference.md、style-guide.md）
+- `.claude/skills/rspeak/`：rspeak skill（SKILL.md、reference.md、style-guide.md、scripts/）
+- `.claude/skills/rspeak/scripts/`：博客写作与发布工具代码（校对、Hugo/Joplin 同步、微信公众号、知乎）
+- `agent_config.toml`：多 skill 共用配置文件（.gitignore，含密钥）
+- `.claude/skills/rspeak/agent_config.example.toml`：配置模板
 
 ## 更新日志
 

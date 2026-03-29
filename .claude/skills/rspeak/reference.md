@@ -1,36 +1,44 @@
 # 多平台发布 - 技术参考
 
+## 路径约定
+
+- `{SKILL_DIR}` = SKILL.md 所在目录
+- `{SCRIPTS_DIR}` = `{SKILL_DIR}/scripts`
+
 ## 配置文件格式
 
-`tools/rspeak/config.toml`：
+项目根目录的 `agent_config.toml`（多 skill 共用，按 `[skill名]` 分区）：
 
 ```toml
-[joplin]
+[rspeak]
+blog_path = "/path/to/blog"
+
+[rspeak.joplin]
 token = "你的 Joplin Web Clipper token"
 base_url = "http://localhost:41184"
 notebook_path = "Thought/Writing/Blog"
 
-[wechat]
+[rspeak.wechat]
 default_account = "main"
 
-[wechat.accounts.main]
+[rspeak.wechat.accounts.main]
 name = "主账号"
 appid = "wx..."
 appsecret = "..."
 
 # 添加更多账号：
-# [wechat.accounts.tech]
+# [rspeak.wechat.accounts.tech]
 # name = "技术号"
 # appid = "wx..."
 # appsecret = "..."
 
-[hugo]
+[rspeak.hugo]
 content_dir = "content"
 blog_url = "https://blog.zengrong.net"
 author = "zrong"
 
-[deploy]
-blog_root = "../.."
+[rspeak.deploy]
+blog_root = "."
 output_dir = "public"
 remote_host = ""
 remote_user = "root"
@@ -58,82 +66,82 @@ accounts = list_wechat_accounts()
 
 ## CLI 命令
 
-rspeak 提供 CLI 封装，通过 `uv run --project tools/rspeak rspeak <command>` 调用。
+rspeak 提供 CLI 封装，通过 `uv run --project {SCRIPTS_DIR} rspeak <command>` 调用。
 
 ### 同步 Hugo ↔ Joplin
 
 ```bash
 # 通过 postid 同步
-uv run --project tools/rspeak rspeak sync -p 2850
+uv run --project {SCRIPTS_DIR} rspeak sync -p 2850
 
 # 通过标题搜索同步（Joplin→Hugo 时需提供 slug）
-uv run --project tools/rspeak rspeak sync -t "文章标题" -s "english-slug"
+uv run --project {SCRIPTS_DIR} rspeak sync -t "文章标题" -s "english-slug"
 ```
 
 ### 部署博客
 
 ```bash
 # Hugo 构建 + rsync 部署
-uv run --project tools/rspeak rspeak deploy blog
+uv run --project {SCRIPTS_DIR} rspeak deploy blog
 
 # 模拟运行（不实际传输）
-uv run --project tools/rspeak rspeak deploy blog --dry-run
+uv run --project {SCRIPTS_DIR} rspeak deploy blog --dry-run
 
 # 部署后执行收尾检查（验证站点可访问性）
-uv run --project tools/rspeak rspeak deploy blog --verify
+uv run --project {SCRIPTS_DIR} rspeak deploy blog --verify
 
 # 自定义 URL 验证超时（默认 15 秒）
-uv run --project tools/rspeak rspeak deploy blog --verify --verify-timeout 30
+uv run --project {SCRIPTS_DIR} rspeak deploy blog --verify --verify-timeout 30
 ```
 
 ### 发布到微信公众号
 
 ```bash
 # 创建草稿（默认账号）
-uv run --project tools/rspeak rspeak deploy wechat -p 2850
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p 2850
 
 # 指定账号创建草稿
-uv run --project tools/rspeak rspeak deploy wechat -p 2850 -a main
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p 2850 -a main
 
 # 创建草稿 + 自动发布
-uv run --project tools/rspeak rspeak deploy wechat -p 2850 -a main --publish
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p 2850 -a main --publish
 
 # 创建草稿后执行收尾检查（验证元数据已写回）
-uv run --project tools/rspeak rspeak deploy wechat -p 2850 -a main --verify
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p 2850 -a main --verify
 
 # 创建草稿 + 自动发布 + 收尾检查（验证永久链接可访问）
-uv run --project tools/rspeak rspeak deploy wechat -p 2850 -a main --publish --verify
+uv run --project {SCRIPTS_DIR} rspeak deploy wechat -p 2850 -a main --publish --verify
 
 # 发布已有草稿
-uv run --project tools/rspeak rspeak wechat-publish -m MEDIA_ID -p 2850 -a main
+uv run --project {SCRIPTS_DIR} rspeak wechat-publish -m MEDIA_ID -p 2850 -a main
 
 # 发布已有草稿 + 收尾检查
-uv run --project tools/rspeak rspeak wechat-publish -m MEDIA_ID -p 2850 -a main --verify
+uv run --project {SCRIPTS_DIR} rspeak wechat-publish -m MEDIA_ID -p 2850 -a main --verify
 
 # 列出配置的微信账号
-uv run --project tools/rspeak rspeak wechat-accounts
+uv run --project {SCRIPTS_DIR} rspeak wechat-accounts
 ```
 
 ### 转知乎格式
 
 ```bash
 # 输出到终端供复制粘贴
-uv run --project tools/rspeak rspeak deploy zhihu -p 2850
+uv run --project {SCRIPTS_DIR} rspeak deploy zhihu -p 2850
 ```
 
 ### 校对文章（基础检查）
 
 ```bash
-uv run --project tools/rspeak rspeak review -p 2850
+uv run --project {SCRIPTS_DIR} rspeak review -p 2850
 ```
 
 > **注意**：`review` 命令只做基础格式检查（中英文空格、标点混用、多余空行）。完整校对（错别字、语义、风格）由 Claude 在 skill 工作流中完成。
 
 ## Python API 调用
 
-需要更灵活控制时，通过 `uv run --project tools/rspeak python -c "..."` 调用 Python 模块。
+需要更灵活控制时，通过 `uv run --project {SCRIPTS_DIR} python -c "..."` 调用 Python 模块。
 
-> **重要**：在 Git Bash 环境中需添加 `sys.path.insert(0, 'tools/rspeak')`，并设置 UTF-8 输出：`sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')`。
+> **重要**：在 Git Bash 环境中需添加 `sys.path.insert(0, '{SCRIPTS_DIR}')`，并设置 UTF-8 输出：`sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')`。
 
 ### 搜索 Joplin 笔记
 
@@ -427,20 +435,26 @@ Joplin 内部链接语法：`(:/note_id)`，Joplin 客户端自动解析为笔�
 ## 模块结构
 
 ```
-tools/rspeak/
-├── pyproject.toml          # uv 项目配置（CLI 入口：rspeak = "rspeak.cli:app"）
-├── config.toml             # 实际配置（.gitignore）
-├── config.example.toml     # 配置模板
-└── rspeak/
-    ├── __init__.py
-    ├── cli.py              # CLI: deploy wechat/blog/zhihu, sync, review, wechat-publish, wechat-accounts
-    ├── config.py           # 配置加载（含多账号支持）
-    ├── deploy.py           # 部署：Hugo 构建、微信完整发布流程（图片上传/轮询/回写）、知乎
-    ├── hugo.py             # Hugo 文章解析/写入/搜索
-    ├── joplin.py           # Joplin REST API 客户端
-    ├── converter.py        # 跨平台格式转换、Joplin frontmatter、链接转换
-    ├── wechat.py           # 微信公众号 API 客户端
-    └── zhihu.py            # 知乎格式转换
+{SKILL_DIR}/
+├── SKILL.md                # Skill 定义
+├── reference.md            # 本文件
+├── style-guide.md          # 写作风格指南
+├── agent_config.example.toml  # 配置模板
+└── scripts/
+    ├── pyproject.toml          # uv 项目配置（CLI 入口：rspeak = "rspeak.cli:app"）
+    └── rspeak/
+        ├── __init__.py
+        ├── cli.py              # CLI: deploy wechat/blog/zhihu, sync, review, wechat-publish, wechat-accounts
+        ├── config.py           # 配置加载（含多账号支持）
+        ├── deploy.py           # 部署：Hugo 构建、微信完整发布流程（图片上传/轮询/回写）、知乎
+        ├── hugo.py             # Hugo 文章解析/写入/搜索
+        ├── joplin.py           # Joplin REST API 客户端
+        ├── converter.py        # 跨平台格式转换、Joplin frontmatter、链接转换
+        ├── wechat.py           # 微信公众号 API 客户端
+        └── zhihu.py            # 知乎格式转换
+
+项目根目录/
+├── agent_config.toml           # 实际配置（.gitignore，含密钥）
 ```
 
 ### deploy.py 关键函数

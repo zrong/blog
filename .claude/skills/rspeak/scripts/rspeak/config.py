@@ -1,7 +1,8 @@
 """配置文件加载
 
-配置文件路径：tools/rspeak/config.toml
-从 config.example.toml 复制并填入实际值。
+配置文件路径：项目根目录/agent_config.toml
+从 skill 目录下的 agent_config.example.toml 复制并填入实际值。
+所有 rspeak 配置收纳在 [rspeak] 命名空间下。
 """
 
 from pathlib import Path
@@ -12,17 +13,26 @@ except ImportError:
     import tomli as tomllib
 
 
-# 配置文件在项目根目录（tools/rspeak/），而非 Python 包目录（tools/rspeak/rspeak/）
-CONFIG_DIR = Path(__file__).parent.parent
-CONFIG_PATH = CONFIG_DIR / "config.toml"
-CONFIG_EXAMPLE_PATH = CONFIG_DIR / "config.example.toml"
+# 定位项目根（向上查找 .git）
+def _find_project_root() -> Path:
+    p = Path(__file__).resolve()
+    for parent in p.parents:
+        if (parent / ".git").exists():
+            return parent
+    raise FileNotFoundError("无法定位项目根目录（未找到 .git）")
+
+
+PROJECT_ROOT = _find_project_root()
+CONFIG_PATH = PROJECT_ROOT / "agent_config.toml"
+SKILL_DIR = Path(__file__).resolve().parent.parent.parent  # rspeak/ -> scripts/ -> skill 目录
+CONFIG_EXAMPLE_PATH = SKILL_DIR / "agent_config.example.toml"
 
 
 def load_config(path: Path = CONFIG_PATH) -> dict:
     """加载配置文件
 
     Args:
-        path: 配置文件路径，默认为 tools/rspeak/config.toml
+        path: 配置文件路径，默认为项目根目录/agent_config.toml
 
     Returns:
         配置字典
@@ -35,18 +45,29 @@ def load_config(path: Path = CONFIG_PATH) -> dict:
     return tomllib.loads(path.read_text(encoding="utf-8"))
 
 
+def _get_rspeak_config(config: dict | None = None) -> dict:
+    """提取 [rspeak] 子字典"""
+    config = config or load_config()
+    return config.get("rspeak", {})
+
+
+def get_blog_path(config: dict | None = None) -> Path:
+    """获取博客项目绝对路径"""
+    rspeak = _get_rspeak_config(config)
+    return Path(rspeak.get("blog_path", str(PROJECT_ROOT)))
+
+
 def get_joplin_config(config: dict | None = None) -> dict:
     """获取 Joplin 配置"""
-    config = config or load_config()
-    return config.get("joplin", {})
+    return _get_rspeak_config(config).get("joplin", {})
 
 
 def get_wechat_config(config: dict | None = None, account: str | None = None) -> dict:
     """获取微信公众号配置
 
     支持两种格式：
-    1. 旧格式（单账号）：[wechat] appid = ... appsecret = ...
-    2. 新格式（多账号）：[wechat.accounts.main] appid = ... appsecret = ...
+    1. 旧格式（单账号）：[rspeak.wechat] appid = ... appsecret = ...
+    2. 新格式（多账号）：[rspeak.wechat.accounts.main] appid = ... appsecret = ...
 
     Args:
         config: 配置字典，None 时自动加载
@@ -55,8 +76,7 @@ def get_wechat_config(config: dict | None = None, account: str | None = None) ->
     Returns:
         {"appid", "appsecret", "account_name", "name", ...}
     """
-    config = config or load_config()
-    wechat = config.get("wechat", {})
+    wechat = _get_rspeak_config(config).get("wechat", {})
 
     # 新格式：存在 accounts 子键
     if "accounts" in wechat:
@@ -92,8 +112,7 @@ def list_wechat_accounts(config: dict | None = None) -> list[dict]:
     Returns:
         [{"key": "main", "name": "主账号", "appid": "wx..."}, ...]
     """
-    config = config or load_config()
-    wechat = config.get("wechat", {})
+    wechat = _get_rspeak_config(config).get("wechat", {})
     if "accounts" not in wechat:
         if wechat.get("appid"):
             return [{"key": "default", "name": "默认账号", "appid": wechat["appid"]}]
@@ -106,11 +125,9 @@ def list_wechat_accounts(config: dict | None = None) -> list[dict]:
 
 def get_hugo_config(config: dict | None = None) -> dict:
     """获取 Hugo 配置"""
-    config = config or load_config()
-    return config.get("hugo", {})
+    return _get_rspeak_config(config).get("hugo", {})
 
 
 def get_deploy_config(config: dict | None = None) -> dict:
     """获取部署配置"""
-    config = config or load_config()
-    return config.get("deploy", {})
+    return _get_rspeak_config(config).get("deploy", {})

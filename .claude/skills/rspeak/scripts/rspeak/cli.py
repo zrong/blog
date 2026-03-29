@@ -10,8 +10,12 @@
 
 import re
 import subprocess
+from pathlib import Path
 
 import typer
+
+# scripts 目录（pyproject.toml 所在目录）
+SCRIPTS_DIR = str(Path(__file__).resolve().parent.parent)
 
 app = typer.Typer(
     name="rspeak",
@@ -111,7 +115,7 @@ def deploy_wechat(
             acct_flag = f" -a {account}" if account else ""
             typer.echo("请登录微信公众号后台确认并发布，或使用以下命令发布：")
             typer.echo(
-                f"  uv run --project tools/rspeak rspeak wechat-publish"
+                f"  uv run --project {SCRIPTS_DIR} rspeak wechat-publish"
                 f" -m {result['media_id']} -p {postid}{acct_flag}"
             )
         elif result["status"] == "published":
@@ -234,7 +238,7 @@ def wechat_accounts():
 
     accounts = list_wechat_accounts()
     if not accounts:
-        typer.echo("未配置任何微信公众号账号。请编辑 tools/rspeak/config.toml。")
+        typer.echo("未配置任何微信公众号账号。请编辑项目根目录的 agent_config.toml。")
         return
 
     for acc in accounts:

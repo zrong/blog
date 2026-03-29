@@ -1,20 +1,24 @@
-# 多平台发布工具配置文件
-# 复制为 config.toml 并填入实际值
+# Skill 配置文件（多 skill 共用，按 [skill名] 分区）
+# 复制到项目根目录为 agent_config.toml 并填入实际值
 
-[joplin]
+[rspeak]
+# 博客项目绝对路径
+blog_path = "/path/to/blog"
+
+[rspeak.joplin]
 # 在 Joplin 中通过 工具 -> 选项 -> Web Clipper 获取 token
 token = ""
 base_url = "http://localhost:41184"
 # 同步到 Joplin 时的笔记本路径（嵌套用 / 分隔）
 notebook_path = "Thought/Writing/Blog"
 
-[wechat]
+[rspeak.wechat]
 # 默认使用的账号名称（对应下方 accounts 中的 key）
 default_account = "main"
 
 # 微信公众号账号配置（支持多个）
 # 在微信公众号后台 -> 开发 -> 基本配置 获取 appid 和 appsecret
-[wechat.accounts.main]
+[rspeak.wechat.accounts.main]
 name = "主账号"
 appid = ""
 appsecret = ""
@@ -22,19 +26,19 @@ appsecret = ""
 # access_token = ""
 
 # 添加更多账号：
-# [wechat.accounts.tech]
+# [rspeak.wechat.accounts.tech]
 # name = "技术号"
 # appid = ""
 # appsecret = ""
 
-[hugo]
+[rspeak.hugo]
 content_dir = "content"
 blog_url = "https://blog.zengrong.net"
 author = "zrong"
 
-[deploy]
-# 博客仓库根目录（相对于此配置文件的路径，或绝对路径）
-blog_root = "../.."
+[rspeak.deploy]
+# 博客根目录（相对于 blog_path）
+blog_root = "."
 # Hugo 构建输出目录（相对于 blog_root）
 output_dir = "public"
 # 远程服务器
