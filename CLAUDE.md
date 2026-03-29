@@ -6,13 +6,13 @@ Hugo 博客项目，内容源码在 `content/post/`，静态资源在 `static/up
 
 ## 工具
 
-- `.claude/skills/rspeak/`：rspeak skill（SKILL.md、reference.md、style-guide.md、scripts/）
-- `.claude/skills/rspeak/scripts/`：博客写作与发布工具代码（校对、Hugo/Joplin 同步、微信公众号、知乎）
-- `.claude/skills/image-generation/`：image-generation skill（SKILL.md、reference.md、scripts/）
-- `.claude/skills/image-generation/scripts/`：AI 图片生成工具（OpenAI/Gemini 兼容 API）
+- `~/.claude/skills/rspeak/`：rspeak skill（SKILL.md、reference.md、style-guide.md、scripts/）
+- `~/.claude/skills/rspeak/scripts/`：博客写作与发布工具代码（校对、Hugo/Joplin 同步、微信公众号、知乎）
+- `~/.claude/skills/image-generation/`：image-generation skill（SKILL.md、reference.md、scripts/）
+- `~/.claude/skills/image-generation/scripts/`：AI 图片生成工具（OpenAI/Gemini 兼容 API）
 - `agent_config.toml`：多 skill 共用配置文件（.gitignore，含密钥）
-- `.claude/skills/rspeak/agent_config.example.toml`：rspeak 配置模板
-- `.claude/skills/image-generation/agent_config.example.toml`：image-generation 配置模板
+- `~/.claude/skills/rspeak/agent_config.example.toml`：rspeak 配置模板
+- `~/.claude/skills/image-generation/agent_config.example.toml`：image-generation 配置模板
 
 ## 更新日志
 
