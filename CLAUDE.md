@@ -8,11 +8,15 @@ Hugo 博客项目，内容源码在 `content/post/`，静态资源在 `static/up
 
 - `.claude/skills/rspeak/`：rspeak skill（SKILL.md、reference.md、style-guide.md、scripts/）
 - `.claude/skills/rspeak/scripts/`：博客写作与发布工具代码（校对、Hugo/Joplin 同步、微信公众号、知乎）
+- `.claude/skills/image-generation/`：image-generation skill（SKILL.md、reference.md、scripts/）
+- `.claude/skills/image-generation/scripts/`：AI 图片生成工具（OpenAI/Gemini 兼容 API）
 - `agent_config.toml`：多 skill 共用配置文件（.gitignore，含密钥）
-- `.claude/skills/rspeak/agent_config.example.toml`：配置模板
+- `.claude/skills/rspeak/agent_config.example.toml`：rspeak 配置模板
+- `.claude/skills/image-generation/agent_config.example.toml`：image-generation 配置模板
 
 ## 更新日志
 
+- **26.11.2**: 新增 image-generation skill（AI 图片生成，支持 OpenAI/Gemini 兼容 API，多 provider 配置）
 - **26.11.1**: rspeak 新增微信公众号账号配置支持；新增文章 2855《使用OpenClaw龙虾操作腾讯文档，分析合同+计算小说转漫剧的时长》
 - **26.10.2**: 新增文章 2854《居然可以免费领一台 2C4G 主机安装 OpenClaw 养龙虾……免费！》，包含飞书机器人配置教程
 - **26.10.1**: rspeak 修复两个 converter.py bug：`joplin_to_hugo` 自动移除 `[toc]` 标记、时间戳竞争导致校对后被 Joplin 覆盖；SKILL.md 补充校对后直接调用 `hugo_to_joplin` 的说明；新增文章 2852

@@ -677,27 +677,39 @@ def _upload_hugo_images(body, client, static_dir, note_id=None):
     """将 Hugo 图片上传为 Joplin 资源，返回替换后的 body
 
     去重机制：资源 title 设为 blog:/uploads/... 前缀，
-    更新已有笔记时通过 get_note_resources() 匹配跳过已上传的。
+    更新已有笔记时通过 get_note_resources() 匹配。
+    若同名资源已存在但本地文件大小不同（图片被替换），则重新上传。
     """
     pattern = re.compile(r"!\[([^\]]*)\]\((/uploads/[^\)]+)\)")
     matches = list(pattern.finditer(body))
     if not matches:
         return body
 
-    # 构建已有资源的 title→id 索引
+    # 构建已有资源的 title→{id, size} 索引
     existing = {}
     if note_id:
         for r in client.get_note_resources(note_id):
-            existing[r["title"]] = r["id"]
+            existing[r["title"]] = {"id": r["id"], "size": r.get("size", 0)}
 
     for match in matches:
         img_path = match.group(2)               # /uploads/2024/slug-1.png
         resource_title = f"blog:{img_path}"     # blog:/uploads/2024/slug-1.png
+        file_path = static_dir / img_path.lstrip("/")
 
         if resource_title in existing:
-            resource_id = existing[resource_title]
+            local_size = file_path.stat().st_size if file_path.exists() else -1
+            remote_size = existing[resource_title]["size"]
+            if local_size == remote_size:
+                # 文件未变，复用已有资源
+                resource_id = existing[resource_title]["id"]
+            else:
+                # 文件已变，重新上传
+                if not file_path.exists():
+                    resource_id = existing[resource_title]["id"]
+                else:
+                    resource = client.upload_resource(file_path, title=resource_title)
+                    resource_id = resource["id"]
         else:
-            file_path = static_dir / img_path.lstrip("/")
             if not file_path.exists():
                 continue
             resource = client.upload_resource(file_path, title=resource_title)

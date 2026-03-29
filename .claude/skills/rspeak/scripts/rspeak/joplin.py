@@ -264,7 +264,7 @@ class JoplinClient:
 
     def get_note_resources(self, note_id: str) -> list[dict]:
         """获取笔记关联的资源列表"""
-        data = self._get(f"/notes/{note_id}/resources", fields="id,title,mime,file_extension")
+        data = self._get(f"/notes/{note_id}/resources", fields="id,title,mime,file_extension,size")
         items = data.get("items", data) if isinstance(data, dict) else data
         return items
 

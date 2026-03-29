@@ -1,0 +1,41 @@
+# image-generation skill 配置
+# 在 [image-generation] 命名空间下配置
+
+[image-generation]
+# 默认使用的 provider（对应下方 providers 中的 key）
+default_provider = "apiyi"
+
+# Provider：共享 name + api_key，endpoints 按 API 类型区分
+# endpoints 的 key 即 API 类型：openai / gemini
+
+[image-generation.providers.apiyi]
+name = "API易"
+api_key = "sk-xxx"
+
+[image-generation.providers.apiyi.endpoints.openai]
+base_url = "https://api.apiyi.com/v1"
+default_model = "gpt-image-1"
+
+[image-generation.providers.apiyi.endpoints.gemini]
+base_url = "https://api.apiyi.com"
+default_model = "gemini-2.0-flash-exp"
+
+# 单端点 provider 示例：
+
+# [image-generation.providers.siliconflow]
+# name = "SiliconFlow"
+# api_key = "sk-xxx"
+#
+# [image-generation.providers.siliconflow.endpoints.openai]
+# base_url = "https://api.siliconflow.cn/v1"
+# default_model = "black-forest-labs/FLUX.1-schnell"
+
+# Google 原生 API 示例：
+
+# [image-generation.providers.google]
+# name = "Google AI"
+# api_key = "xxx"
+#
+# [image-generation.providers.google.endpoints.gemini]
+# base_url = "https://generativelanguage.googleapis.com/v1beta"
+# default_model = "gemini-2.5-flash-image"

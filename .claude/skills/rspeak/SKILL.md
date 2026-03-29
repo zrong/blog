@@ -225,6 +225,7 @@ if result["verify_result"]:
 
 **Hugo→Joplin 方向特殊步骤：**
 - **链接自动转换**：`hugo_to_joplin()` 会自动将 relref 链接还原为 Joplin 内部链接 `(:/joplin_id)`。若目标文章没有 `joplin_id`，打印警告并保留原始链接
+- **图片变更检测**：同步时通过文件大小比较检测图片是否被替换。若本地文件与 Joplin 已有资源大小不同，自动重新上传替换
 - 传入 `static_dir=Path("static")` 以支持图片上传到 Joplin
 - 首次同步后 `joplin_id` 自动写回 Hugo frontmatter，后续同步通过 `source_url` 匹配已有笔记进行更新
 - **Frontmatter 同步**：Hugo `extra` 中的共享字段（`wechat`, `postid`, `slug`）自动写入 Joplin 笔记 body 顶部的 TOML frontmatter
@@ -237,6 +238,22 @@ if result["verify_result"]:
 - 自动通过 `joplin_id` 检测已有文章，更新而非创建重复内容
 - 每次同步后自动回写到 Joplin：`source_url`（博客文章 URL）、标签（category/tag → Joplin 标签）
 - **Frontmatter 同步**：Joplin body 顶部的共享 frontmatter 字段合并到 Hugo `extra`
+
+**封面图生成（缺图时自动触发）：**
+
+发布到微信公众号时需要封面图（frontmatter `featureImage`）。若文章没有题图可作为封面，应自动使用 `image-generation` skill 生成一张：
+
+1. 根据文章标题和内容提炼封面图的英文 prompt
+2. 使用 `image-generation` skill 生成图片，**封面比例固定为 2.35:1**（如 `1024x436`）
+3. 将图片复制到 `static/uploads/{year}/{slug}-cover.{ext}`
+4. 在 Hugo frontmatter 中设置 `featureImage = "/uploads/{year}/{slug}-cover.{ext}"`
+5. 在正文最前方（`<!--more-->` 之前）插入 `![封面](/uploads/{year}/{slug}-cover.{ext})`
+
+```bash
+# image-generation skill 的 CLI 位于 {SKILL_DIR}/../image-generation/scripts
+IMGGEN_DIR={SKILL_DIR}/../image-generation/scripts
+uv run --project $IMGGEN_DIR imggen generate "prompt" -p apiyi -e openai -m nano-banana-2 -s 1024x436 -o /tmp/cover.png
+```
 
 **微信公众号发布流程：**
 1. 创建或更新草稿：上传正文图片 + 封面图 + 创建/更新草稿 → `media_id`
