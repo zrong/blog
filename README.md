@@ -2,13 +2,9 @@
 
 下载 hugo_extended >= 0.158.0: <https://github.com/gohugoio/hugo/releases/tag/v0.158.0>
 
-使用 [rspeak][rspeak]（博客写作与发布工具）一键构建并部署：
+使用 rspeak skill （博客写作与发布工具）一键构建并部署，详见 rspeak skill 文档（内部工具）。
 
-```shell
-uv run --project tools/rspeak rspeak deploy blog
-```
-
-也可以手动执行：
+针对hugo部分可以手动执行：
 
 ```shell
 hugo && rsync -avz --delete public/ ubuntu@zengrong-net:/srv/www/blog.zengrong.net
@@ -19,36 +15,18 @@ hugo && rsync -avz --delete public/ ubuntu@zengrong-net:/srv/www/blog.zengrong.n
 > hugo -d public && cd public && tar czf - . | ssh ubuntu@zengrong-net "cd /srv/www/blog.zengrong.net && tar xzf -"
 > ```
 
-### 其他 rspeak 命令
+## [blog.zengrong.net](https://blog.zengrong.net) 的历史
 
-```shell
-# Hugo ↔ Joplin 双向同步
-uv run --project tools/rspeak rspeak sync -p <postid>
+### 2026年3月29日
 
-# 发布到微信公众号（创建草稿）
-uv run --project tools/rspeak rspeak deploy wechat -p <postid> [-a <account>]
+- 移除 rspeak skill，将其移动到内部 skill 仓库。
+- 创建 image-generation 技能，详见 <https://github.com/zrong/skills>
 
-# 创建草稿并自动发布
-uv run --project tools/rspeak rspeak deploy wechat -p <postid> -a <account> --publish
+### 2026年3月1日
 
-# 发布已有草稿
-uv run --project tools/rspeak rspeak wechat-publish -m <media_id> -p <postid> [-a <account>]
+引入 AI 辅助写作流程。使用 [Claude Code][claudecode] 的 skill 机制，将博客校对、Hugo/Joplin 同步、多平台发布封装为自然语言指令。rspeak skill 提供 CLI 和 Python API，支持一键部署到远程服务器、微信公众号和知乎。
 
-# 列出配置的微信公众号账号
-uv run --project tools/rspeak rspeak wechat-accounts
-
-# 转为知乎格式
-uv run --project tools/rspeak rspeak deploy zhihu -p <postid>
-
-# 基础校对检查
-uv run --project tools/rspeak rspeak review -p <postid>
-```
-
-## AI 辅助写作
-
-本项目配置了 [Claude Code][claudecode] skill（`.claude/skills/rspeak/`），可以通过自然语言指令完成博客写作流程。
-
-### 可用指令
+**可用指令：**
 
 - **校对文章**：`校对 2850` 或 `校对这篇 Joplin 文章：标题关键词`
   自动定位文章，对照[风格指南][styleguide]逐段检查错别字、标点、中英文混排等问题，逐个修改并展示差异。
@@ -56,29 +34,6 @@ uv run --project tools/rspeak rspeak review -p <postid>
   Hugo ↔ Joplin 双向同步，自动比较更新时间判断方向，处理图片和内部链接转换。
 - **发布文章**：`发布博客` / `发到公众号` / `转知乎格式`
   Hugo 构建部署、微信公众号完整发布流程（多账号、图片上传、发布轮询、永久链接回写）、知乎格式转换。
-
-### Skill 文件结构
-
-```
-.claude/skills/rspeak/
-├── SKILL.md          # 工作流定义（校对、同步、发布流程）
-├── reference.md      # 技术参考（CLI 命令、Python API、模块结构）
-└── style-guide.md    # 写作风格指南（标点、混排、段落规范）
-```
-
-## [blog.zengrong.net](https://blog.zengrong.net) 的历史
-
-### 2026年3月27日
-
-文章 2857《沉不住气了！微信终于接入龙虾 OpenClaw》补充微信公众号草稿元数据，记录 `wechat.rongspeak.status = "draft"` 与对应 `media_id`，便于后续通过 rspeak 继续发布流程。
-
-### 2026年3月19日
-
-新增文章 2856《腾讯2025财报：营销服务营收达1450亿元，「AI赋能+全域协同」筑牢增长底盘》。校对文章修正标点（中英文弯引号→直角引号）、中英文混排空格、「第四季」→「第四季度」等问题，同步到 Hugo 并部署到博客。
-
-### 2026年3月1日
-
-引入 AI 辅助写作流程。使用 [Claude Code][claudecode] 的 skill 机制，将博客校对、Hugo/Joplin 同步、多平台发布封装为自然语言指令。配套工具 [rspeak][rspeak] 提供 CLI 和 Python API，支持一键部署到远程服务器、微信公众号和知乎。
 
 ### 2019年8月29日
 
@@ -125,6 +80,5 @@ Hexo 的生成速度无法满足博客近千篇文章的更新，我放弃了 [H
 [isso]: https://github.com/posativ/isso
 [wordpress]: https://wordpress.org
 [cc]: https://blog.zengrong.net/post/creative-commons/
-[rspeak]: tools/rspeak/
 [claudecode]: https://claude.com/claude-code
 [styleguide]: .claude/skills/rspeak/style-guide.md
