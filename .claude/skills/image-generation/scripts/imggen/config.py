@@ -1,11 +1,11 @@
 """配置文件加载
 
-配置文件路径：项目根目录/agent_config.toml
-所有 image-generation 配置收纳在 [image-generation] 命名空间下。
+配置查找策略（按优先级）：
+1. 当前工作目录（CWD）/agent_config.toml
+2. Skill 目录（SKILL_DIR）/agent_config.toml
+3. 向上查找 .git 所在目录/agent_config.toml
 
-配置格式：
-  provider 共享 name + api_key，endpoints 按 API 类型（key 即 type）区分端点。
-  单端点 provider 也使用 endpoints 子键，保持格式统一。
+这样无论 skill 安装在项目内还是全局都能找到配置。
 """
 
 from pathlib import Path
@@ -16,17 +16,38 @@ except ImportError:
     import tomli as tomllib
 
 
-def _find_project_root() -> Path:
-    p = Path(__file__).resolve()
-    for parent in p.parents:
+def _find_config() -> tuple[Path, Path]:
+    """查找配置文件和 skill 目录
+
+    Returns:
+        (config_path, skill_dir)
+    """
+    skill_dir = Path(__file__).resolve().parent.parent.parent
+
+    # 候选配置路径（优先级从高到低）
+    candidates = [
+        Path.cwd() / "agent_config.toml",
+        skill_dir / "agent_config.toml",
+    ]
+
+    # 向上查找 .git 目录
+    for parent in Path.cwd().parents:
         if (parent / ".git").exists():
-            return parent
-    raise FileNotFoundError("无法定位项目根目录（未找到 .git）")
+            candidates.append(parent / "agent_config.toml")
+            break
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate, skill_dir
+
+    raise FileNotFoundError(
+        f"未找到 agent_config.toml\n"
+        f"搜索了: {', '.join(str(c) for c in candidates)}\n"
+        f"请复制 {skill_dir / 'agent_config.example.toml'} 为 agent_config.toml 并填入实际值"
+    )
 
 
-PROJECT_ROOT = _find_project_root()
-CONFIG_PATH = PROJECT_ROOT / "agent_config.toml"
-SKILL_DIR = Path(__file__).resolve().parent.parent.parent
+CONFIG_PATH, SKILL_DIR = _find_config()
 CONFIG_EXAMPLE_PATH = SKILL_DIR / "agent_config.example.toml"
 
 
@@ -35,7 +56,7 @@ def load_config(path: Path = CONFIG_PATH) -> dict:
     if not path.exists():
         raise FileNotFoundError(
             f"配置文件不存在: {path}\n"
-            f"请复制 {CONFIG_EXAMPLE_PATH} 为 {CONFIG_PATH} 并填入实际值"
+            f"请复制 {CONFIG_EXAMPLE_PATH} 为 agent_config.toml 并填入实际值"
         )
     return tomllib.loads(path.read_text(encoding="utf-8"))
 

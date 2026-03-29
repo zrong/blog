@@ -1,8 +1,11 @@
 """配置文件加载
 
-配置文件路径：项目根目录/agent_config.toml
-从 skill 目录下的 agent_config.example.toml 复制并填入实际值。
-所有 rspeak 配置收纳在 [rspeak] 命名空间下。
+配置查找策略（按优先级）：
+1. 当前工作目录（CWD）/agent_config.toml
+2. Skill 目录（SKILL_DIR）/agent_config.toml
+3. 向上查找 .git 所在目录/agent_config.toml
+
+这样无论 skill 安装在项目内还是全局都能找到配置。
 """
 
 from pathlib import Path
@@ -13,18 +16,39 @@ except ImportError:
     import tomli as tomllib
 
 
-# 定位项目根（向上查找 .git）
-def _find_project_root() -> Path:
-    p = Path(__file__).resolve()
-    for parent in p.parents:
+def _find_config() -> tuple[Path, Path]:
+    """查找配置文件和 skill 目录
+
+    Returns:
+        (config_path, skill_dir)
+    """
+    skill_dir = Path(__file__).resolve().parent.parent.parent
+
+    # 候选配置路径（优先级从高到低）
+    candidates = [
+        Path.cwd() / "agent_config.toml",
+        skill_dir / "agent_config.toml",
+    ]
+
+    # 向上查找 .git 目录
+    for parent in Path.cwd().parents:
         if (parent / ".git").exists():
-            return parent
-    raise FileNotFoundError("无法定位项目根目录（未找到 .git）")
+            candidates.append(parent / "agent_config.toml")
+            break
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate, skill_dir
+
+    raise FileNotFoundError(
+        f"未找到 agent_config.toml\n"
+        f"搜索了: {', '.join(str(c) for c in candidates)}\n"
+        f"请复制 {skill_dir / 'agent_config.example.toml'} 为 agent_config.toml 并填入实际值"
+    )
 
 
-PROJECT_ROOT = _find_project_root()
-CONFIG_PATH = PROJECT_ROOT / "agent_config.toml"
-SKILL_DIR = Path(__file__).resolve().parent.parent.parent  # rspeak/ -> scripts/ -> skill 目录
+CONFIG_PATH, SKILL_DIR = _find_config()
+PROJECT_ROOT = CONFIG_PATH.parent
 CONFIG_EXAMPLE_PATH = SKILL_DIR / "agent_config.example.toml"
 
 
@@ -32,7 +56,7 @@ def load_config(path: Path = CONFIG_PATH) -> dict:
     """加载配置文件
 
     Args:
-        path: 配置文件路径，默认为项目根目录/agent_config.toml
+        path: 配置文件路径，默认为自动查找到的 agent_config.toml
 
     Returns:
         配置字典
@@ -74,7 +98,7 @@ def get_wechat_config(config: dict | None = None, account: str | None = None) ->
         account: 账号名称，None 使用 default_account 或旧格式
 
     Returns:
-        {"appid", "appsecret", "account_name", "name", ...}
+        {"appid", "appsecret", "access_token", "account_name", "name", ...}
     """
     wechat = _get_rspeak_config(config).get("wechat", {})
 
