@@ -1,0 +1,11 @@
+{{- $url := .Get 0 }}
+{{- $title := default "Video" (.Get "title") }}
+<div class="video">
+  <iframe
+    src="https://www.youtube.com/embed/{{ $url }}?controls=1&rel=0"
+    title="{{ $title }}"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+    loading="lazy">
+  </iframe>
+</div>
