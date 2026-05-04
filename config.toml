@@ -9,6 +9,9 @@ theme = "clarity"
 # Ignore the WARNING when build site: found no layout file for "HTML" for "section"
 disableKinds = ['section']
 
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+
 
 [author]
   name = "zrong"

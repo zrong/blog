@@ -1,0 +1,15 @@
+{{- $data := slice -}}
+{{- range .Site.RegularPages -}}
+{{- $data = $data | append (dict
+    "slug"        .Slug
+    "url"         .Permalink
+    "date"        (.Date.UTC.Format "2006-01-02")
+    "lastmod"     (.Lastmod.UTC.Format "2006-01-02T15:04:05Z")
+    "title"       .Title
+    "description" .Description
+    "categories"  (.Params.category | default slice)
+    "tags"        (.Params.tag | default slice)
+    "content"     .Plain
+) -}}
+{{- end -}}
+{{- $data | jsonify -}}
