@@ -1,0 +1,12 @@
+{{ if or .Site.Params.disqus.enable .Site.Params.aid.messageboard_enable }}
+<div id="comments">
+  {{ if .Site.Params.disqus.enable }}
+  <!-- disqus -->
+  {{ template "_internal/disqus.html" . }}
+  {{ end }}
+
+  {{ if .Site.Params.aid.messageboard_enable }}
+  <aid-messageboard uri="{{ .Params.postid }}" page-title="{{ .Params.title }}"></aid-messageboard>
+  {{ end }}
+</div>
+{{ end }}
