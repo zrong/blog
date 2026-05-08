@@ -1,0 +1,27 @@
+# 补充上游缺失的翻译（单数形式的 taxonomy key）
+[tag]
+other = "标签"
+
+[category]
+other = "分类"
+
+[all_tag]
+other = "所有标签"
+
+[all_category]
+other = "所有分类"
+
+[views]
+other = "次浏览"
+
+[archive]
+other = "归档"
+
+[file]
+other = "文件"
+
+[files]
+other = "文件"
+
+[download]
+other = "下载"

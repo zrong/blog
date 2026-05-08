@@ -1,0 +1,83 @@
+@use 'variables' as *
+@use 'sass:color'
+// add customs styles and general overrides here
+// due to the cascading nature of css, if you try to override theme css variables in this file, those changes will not apply. Instead, override css variables in the `override.sass` file
+// we recommend not editing this file directly. Instead, create an `assets/sass/_custom.sass` file at the root level of your site.
+// if you edit this file directly, you will have to resolve git conflicts when and if you decide to pull changes we make on the theme
+
+%message-shared
+  border: 2px solid #e0e0e0a1
+  background-color: #c9ecffa1
+  border-radius: .5em
+
+%button
+  background-color: $theme
+  color: $light
+  border: 1px solid $theme
+  &:hover, &:focus
+    background-color: color.adjust($theme, $lightness: -20%)
+    color: $light
+    border: 1px solid color.adjust($theme, $lightness: -20%)
+
+.message
+  @extend %message-shared
+  padding: 1em
+
+#search
+  padding: 1em 0
+  input
+    padding: 1em 2em .75em 1em
+    box-sizing: border-box
+    outline: none
+    border: 2px solid #e0e0e0
+  button
+    @extend %button
+    padding: 0.5rem .5rem
+
+.aid-download
+  @extend %message-shared
+  display: block
+  padding: 0 1em 1em 1em
+
+  details
+    background-color: #f0f0f0;
+  &-container
+    display: grid
+    grid-gap: .5rem
+    align-self: center
+    @media screen and (min-width: 769px)
+      grid-template-columns: 2fr 2fr 2fr
+  &-item
+    display: flex
+    flex-direction: column
+    align-items: center
+    button
+      @extend %button
+      padding: 0.5rem 1rem
+      border-radius: .5rem
+
+.post_copyright
+  @extend %message-shared
+  padding: 1em
+  ul li
+    word-break: break-all
+
+.label_info
+  @extend %button
+  padding: .5em
+  margin: 1em 0
+  text-align: center
+
+.aid_pageview
+  color: #777777
+
+.aid_postid
+  color: #777777
+
+// 评论跳转按钮定位（位于返回顶部按钮上方）
+.to-top.to_comment
+  bottom: 4.75rem
+  @media screen and (max-width: 667px)
+    bottom: 4rem
+  svg
+    width: 1.25rem

@@ -1,0 +1,7 @@
+<script src='{{ absURL "js/mermaid.min.js" }}'></script>
+<script>
+  if (typeof mermaid !== 'undefined' && document.getElementsByClassName('mermaid').length) {
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+    mermaid.run({ querySelector: '.mermaid' });
+  }
+</script>

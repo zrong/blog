@@ -1,11 +1,11 @@
 {{- $hasCommentsBackend := or .Site.Params.disqus.enable .Site.Params.aid.messageboard_enable }}
 {{- if and .IsPage $hasCommentsBackend (ne .Site.Params.comment false) (ne .Params.comment false) }}
-<a class="to_top to_comment" href="#comments" title="跳到评论" aria-label="跳到评论">
-  <svg viewBox="0 0 24 24" fill="white" width="1.25rem" height="1.25rem" aria-hidden="true">
+<a class="to-top to_comment" href="#comments" title="跳到评论" aria-label="跳到评论">
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
   </svg>
 </a>
 {{- end }}
-<a class="to_top" href="#documentTop" aria-label="返回顶部">
-  {{ partialCached "sprite" (dict "icon" "arrow")  }}
+<a class="to-top" href="#documentTop" aria-label="返回顶部">
+  {{ partial "sprite" (dict "icon" "to-top") }}
 </a>
