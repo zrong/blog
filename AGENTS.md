@@ -4,7 +4,7 @@ This file provides guidance to a AI Agent when working with code in this reposit
 
 ## 项目概述
 
-Hugo 博客（https://blog.zengrong.net），内容源码在 `content/post/`，静态资源在 `static/uploads/`。需要 **Hugo Extended >= 0.158.0**，主题为 `clarity`（位于 `themes/clarity/`）。
+Hugo 博客（https://blog.zengrong.net），内容源码在 `content/post/`，静态资源在 `static/uploads/`。需要 **Hugo Extended >= 0.158.0** 和 **Dart Sass**，主题为 `clarity`（位于 `themes/clarity/`）。
 
 ## 常用命令
 
@@ -91,4 +91,3 @@ url = "https://www.xiaohongshu.com/..."
 ### 主题 Shortcodes
 
 `themes/clarity/layouts/shortcodes/` 中提供：`alert`、`label`、`mermaid`、`video`、`rawhtml`、`download`、`flash`
-

@@ -1,4 +1,4 @@
-set shell := ["bash", "-euo", "pipefail"]
+set shell := ["bash", "-euo", "pipefail", "-c"]
 
 remote_dir := "/srv/www/blog.zengrong.net"
 aid_url := "https://aid.zengrong.net"

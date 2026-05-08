@@ -2,6 +2,13 @@
 
 下载 hugo_extended >= 0.158.0: <https://github.com/gohugoio/hugo/releases/tag/v0.158.0>
 
+还需要安装 `Dart Sass`。当前主题的主样式使用了 Sass `@use` 语法，若仍使用 Hugo 默认的 `libsass`，会生成未编译的 `@use ...` 残留，导致代码高亮等样式失效。
+
+```shell
+brew install sass/sass/sass
+sass --version
+```
+
 使用 rspeak skill （博客写作与发布工具）一键构建并部署，详见 rspeak skill 文档（内部工具）。
 
 针对hugo部分可以手动执行：
