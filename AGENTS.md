@@ -10,16 +10,36 @@ Hugo 博客（https://blog.zengrong.net），内容源码在 `content/post/`，�
 
 ```bash
 # 本地预览
-hugo server
+just dev
 
 # 构建
-hugo
+just build
 
-# 构建并部署（Linux/macOS）
-hugo && rsync -avz --delete public/ ubuntu@zengrong-net:/srv/www/blog.zengrong.net
+# 构建并部署
+just deploy
 
-# 构建并部署（Windows）
-hugo -d public && cd public && tar czf - . | ssh ubuntu@zengrong-net "cd /srv/www/blog.zengrong.net && tar xzf -"
+# 推送搜索索引到 aid（需设置 AID_TOKEN 环境变量）
+just push-index
+
+# 部署 + 推送索引（一步完成）
+just deploy-all
+```
+
+## 环境变量
+
+- `AID_TOKEN`: API token，用于推送搜索索引到 aid.zengrong.net
+
+## 部署
+
+```bash
+# 完整部署 + 索引推送
+just deploy-all
+
+# 仅部署（不更新索引）
+just deploy
+
+# 仅推送索引
+just push-index
 ```
 
 ## 内容结构
