@@ -1,0 +1,47 @@
+{{- $params := .Site.Params }}
+{{- $centerLogo := $params.centerLogo }}
+{{ $logo := $params.logo }}
+<header class="nav_header" >
+  <nav class="nav">
+    {{- if $centerLogo }}
+      {{- partialCached "logo" (dict "logo" $logo "class" "nav_hide") }}
+    {{- else }}
+      {{- partialCached "logo" (dict "logo" $logo) }}
+    {{- end }}
+    <div class='nav_body nav_body_{{ default "left" $params.mobileNavigation }}'>
+      {{ $context := . }}
+      {{ $menuData := hugo.Data.menu }}
+      {{ with $menuData }}
+        {{ partial "nav" (dict "context" $context "menu" $menuData) }}
+      {{- else }}
+        {{ partial "nav" (dict "context" . "menu" .Site.Menus.main) }}
+      {{- end }}
+      {{ if hugo.IsMultilingual }}
+      <div class="nav_parent">
+        <a href="#" class="nav_item">{{ $params.languageMenuName }}</a>
+        <div class="nav_sub">
+          <span class="nav_child"></span>
+          {{ range .Site.Home.AllTranslations }}
+          <a href="{{ .Permalink }}" class="nav_child nav_item">{{ .Language.LanguageName }}</a>
+          {{ end }}
+        </div>
+      </div>
+      {{- end }}
+      {{- if $centerLogo }}
+        {{- partial "logo" (dict "logo" $logo "class" "nav_center") }}
+      {{- end }}
+      {{- partialCached "follow" . }}
+      <div class="nav_search">
+        <button id="search-btn" class="nav_search_btn" title="搜索 (Ctrl+K)">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+              <path d="m21 21l-4.34-4.34"/><circle cx="11" cy="11" r="8"/>
+            </g>
+          </svg>
+          <span class="nav_search_text">搜索</span>
+          <kbd class="nav_search_kbd">⌘K</kbd>
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>

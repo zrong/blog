@@ -1,4 +1,8 @@
+{{- if hugo.IsProduction }}
 {{- with .Site.Params.aid.api_js }}
 <script src="{{ . }}"></script>
+{{- end }}
+{{- else }}
+<script src="http://localhost:8000/static/aidapi.js"></script>
 {{- end }}
 {{- partial "mermaid" . }}

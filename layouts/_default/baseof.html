@@ -34,6 +34,14 @@
     </main>
 
     {{- partialCached "icons" . }}
+    {{- if .Site.Params.aid }}
+    <aid-search-modal
+      trigger="#search-btn"
+      limit="20"
+      search-page="{{ "search/" | absURL }}"
+      placeholder="搜索文章..."
+    ></aid-search-modal>
+    {{- end }}
     {{- partial "footer" . }}
     {{- partialCached "scripts/index" . }}
     {{- partialCached "hooks/body-end" . }}

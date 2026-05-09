@@ -83,6 +83,16 @@ url = "https://www.xiaohongshu.com/..."
 
 ## 架构要点
 
+### Aid 集成
+
+blog 通过 `aidapi.js`（Web Components）集成 aid 后端服务：
+- `hooks/body-end.html`：加载 aidapi.js（开发环境自动切换到 `http://localhost:8000`）
+- `<aid-search-modal>`：导航栏弹窗搜索（触发按钮 `#search-btn`）
+- `<aid-search-page>`：`/search/` 搜索页（无限滚动）
+- `<aid-pageview>`：文章 PV 统计
+- `<aid-messageboard>`：文章留言板
+- `<aid-download>`：下载列表
+
 ### 自定义覆盖
 
 - `layouts/_default/single.html`：文章单页布局，调用自定义 copyright partial
@@ -91,3 +101,23 @@ url = "https://www.xiaohongshu.com/..."
 ### 主题 Shortcodes
 
 `themes/clarity/layouts/shortcodes/` 中提供：`alert`、`label`、`mermaid`、`video`、`rawhtml`、`download`、`flash`
+
+## 本地测试
+
+测试搜索功能需要先启动 aid 后端：
+
+```bash
+# 1. 启动 aid（端口 8000）
+cd ../aid && just dev
+
+# 2. 启动 blog（端口 1313）
+just dev    # 自动从 localhost:8000 加载 aidapi.js
+
+# 3. 测试检查项
+# - 导航栏右侧搜索按钮 → 点击打开弹窗
+# - 输入关键词 → 弹窗显示 20 条结果
+# - "显示更多" 链接 → 跳转 /search/?q=...
+# - 搜索页自动搜索 + 无限滚动
+# - 文章页 PV + 留言板
+# - DevTools Console 无报错
+```
