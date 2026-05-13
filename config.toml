@@ -60,7 +60,7 @@ home = ["HTML", "RSS", "JSON"]
   [[menu.main]]
     identifier = "search"
     name = "搜索"
-    url = "/search/"
+    url = "https://zengrong.net/search/"
     weight = 7
 
   [[menu.social]]

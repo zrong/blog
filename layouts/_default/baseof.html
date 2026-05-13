@@ -38,8 +38,9 @@
     <aid-search-modal
       trigger="#search-btn"
       limit="20"
-      search-page="{{ "search/" | absURL }}"
-      placeholder="搜索文章..."
+      r="-1"
+      search-page="https://zengrong.net/search/"
+      placeholder="搜索（博客 + 主页）..."
     ></aid-search-modal>
     {{- end }}
     {{- partial "footer" . }}
