@@ -19,7 +19,6 @@ home = ["HTML", "RSS", "JSON"]
 [taxonomies]
   category = "category"
   tag = "tag"
-  archive = "archive"
 
 [menu]
   [[menu.main]]

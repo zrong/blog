@@ -1,0 +1,21 @@
+{{ define "main" }}
+{{- $posts := where site.RegularPages "Type" "post" }}
+<div class="grid-inverse wrap content">
+  <div>
+    <h1>{{ .Title }}</h1>
+    <p class="pale">{{ len $posts }} 篇文章</p>
+    {{- range $posts.GroupByDate "2006" }}
+    <h2 id="{{ .Key }}">{{ .Key }}</h2>
+    <ul class="archive_list">
+      {{- range .Pages }}
+      <li class="archive_item">
+        <time class="archive_date">{{ .Date.Format "01-02" }}</time>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+      </li>
+      {{- end }}
+    </ul>
+    {{- end }}
+  </div>
+  {{- partial "sidebar" . }}
+</div>
+{{ end }}

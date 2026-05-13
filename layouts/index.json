@@ -9,6 +9,7 @@
     "description" .Description
     "categories"  (.Params.category | default slice)
     "tags"        (.Params.tag | default slice)
+    "thumbnail"   (.Params.thumbnail | default "")
     "content"     .Plain
 ) -}}
 {{- end -}}
