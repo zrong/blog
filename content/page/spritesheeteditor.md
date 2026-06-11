@@ -81,7 +81,14 @@ Sprite sheet Editor有许多缺点，因此我必须推荐两个优秀的软件�
 
 ## 界面截图
 
-[gallery link="file"]
+<div class="sse-gallery" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 1.5rem 0;">
+  <a href="/uploads/2011/08/sse1.png" style="display: block;"><img src="/uploads/2011/08/sse1.png" alt="Sprite Sheet Editor 主界面" loading="lazy" style="display: block; width: 100%; height: auto;"></a>
+  <a href="/uploads/2011/08/sse2.png" style="display: block;"><img src="/uploads/2011/08/sse2.png" alt="Sprite Sheet Editor 导入 SWF 界面" loading="lazy" style="display: block; width: 100%; height: auto;"></a>
+  <a href="/uploads/2011/08/sse3.png" style="display: block;"><img src="/uploads/2011/08/sse3.png" alt="Sprite Sheet Editor 编辑 SpriteSheet 界面" loading="lazy" style="display: block; width: 100%; height: auto;"></a>
+  <a href="/uploads/2011/08/sse4.png" style="display: block;"><img src="/uploads/2011/08/sse4.png" alt="Sprite Sheet Editor 设置界面" loading="lazy" style="display: block; width: 100%; height: auto;"></a>
+  <a href="/uploads/2011/08/sse5.png" style="display: block;"><img src="/uploads/2011/08/sse5.png" alt="Sprite Sheet Editor 处理图像文件界面" loading="lazy" style="display: block; width: 100%; height: auto;"></a>
+  <a href="/uploads/2011/08/sse6.png" style="display: block;"><img src="/uploads/2011/08/sse6.png" alt="Sprite Sheet Editor 保存 SpriteSheet 界面" loading="lazy" style="display: block; width: 100%; height: auto;"></a>
+</div>
 
 [1]: https://github.com/zrong/sprite_sheet_editor
 [2]: https://blog.zengrong.net/anetoolkit/
