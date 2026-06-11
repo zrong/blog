@@ -118,7 +118,8 @@
   color: var(--text)
 
 @media screen and (min-width: 668px)
-  .nav_search_kbd
+  html.mac .nav_search_kbd_cmd,
+  html.non-mac .nav_search_kbd_ctrl
     display: inline
 
 @media screen and (max-width: 667px)

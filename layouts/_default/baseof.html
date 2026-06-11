@@ -18,6 +18,16 @@
   {{ end -}}
 >
   <head>
+    <script>
+      (function() {
+        var isMac = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
+        document.documentElement.classList.add(isMac ? 'mac' : 'non-mac');
+        document.addEventListener('DOMContentLoaded', function() {
+          var searchBtn = document.getElementById('search-btn');
+          if (searchBtn) searchBtn.title = '搜索 (' + (isMac ? '⌘K' : 'Ctrl+K') + ')';
+        });
+      })();
+    </script>
     {{- partial "head" . }}
     {{- partial "hooks/head-end" . }}
   </head>
