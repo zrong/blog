@@ -19,7 +19,11 @@ attachments = "1358, 1359, 1360"
 
 {{< download 86 >}}
 
-[gallery link="file" columns="3"]
+<div class="gallery-grid" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 1.5rem 0;">
+  <a href="/uploads/2011/04/sprite_sheet_packer11.png" style="display: block;"><img src="/uploads/2011/04/sprite_sheet_packer11.png" alt="SpriteSheetPacker 界面 1" loading="lazy" style="display: block; width: 100%; height: auto;"></a>
+  <a href="/uploads/2011/04/sprite_sheet_packer21.png" style="display: block;"><img src="/uploads/2011/04/sprite_sheet_packer21.png" alt="SpriteSheetPacker 界面 2" loading="lazy" style="display: block; width: 100%; height: auto;"></a>
+  <a href="/uploads/2011/04/sprite_sheet_packer3.png" style="display: block;"><img src="/uploads/2011/04/sprite_sheet_packer3.png" alt="SpriteSheetPacker 界面 3" loading="lazy" style="display: block; width: 100%; height: auto;"></a>
+</div>
 
 **2011-06-30：v0.4版发布**
 
