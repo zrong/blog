@@ -13,10 +13,6 @@
     {{ with .Params.featureImage }}
     <img src="{{ . }}" class="image_featured" loading="lazy" alt="{{ $.Title }}">
     {{ end }}
-    {{ if .Params.toc }}
-    <h2>{{ T "overview" }}</h2>
-    {{ .TableOfContents }}
-    {{ end }}
     {{- .Content }}
     {{ if and (isset .Site.Params "cc")  (in site.Params.mainSections .Type) }}
       {{- partial "copyright" .}}
