@@ -1,0 +1,3 @@
+{{- if or .Params.katex .Params.math .Site.Params.math }}
+{{ partial "math.html" . }}
+{{- end }}

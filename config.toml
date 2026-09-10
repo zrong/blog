@@ -125,6 +125,11 @@ home = ["HTML", "RSS", "JSON"]
       xhtml = false
     [markup.goldmark.extensions]
       typographer = false
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block = [['\[', '\]'], ['$$', '$$']]
+          inline = [['\(', '\)']]
   [markup.highlight]
     codeFences = true
     guessSyntax = true
