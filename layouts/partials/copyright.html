@@ -3,19 +3,54 @@
         <li><strong>文章ID：</strong>{{ .Params.postid }}</li>
         <li><strong>原文作者：</strong><a rel="author" href="{{ .Site.BaseURL}}">{{ with .Site.Params.author }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}</a></li>
         <li><strong>原文链接：</strong><a href="{{ .Permalink }}">{{ .Permalink }}</a></li>
-        {{- range $key, $value := .Params.wechat }}
-          {{- if and (eq $value.status "published") $value.url }}
-            {{- $name := index $.Site.Params.wechat_accounts $key }}
-            {{- if not $name }}{{- $name = "微信公众号" }}{{- end }}
-        <li><strong>{{ $name }}：</strong><a href="{{ $value.url }}" target="_blank" rel="noopener">{{ $value.url }}</a></li>
+        {{- with .Params.wechat }}
+          {{- range $key, $value := . }}
+            {{- if reflect.IsMap $value }}
+              {{- $url := index $value "url" }}
+              {{- if and (eq (index $value "status") "published") $url }}
+                {{- $name := index $.Site.Params.wechat_accounts $key }}
+                {{- if not $name }}{{- $name = $key }}{{- end }}
+        <li><strong>【公众号】{{ $name }}：</strong><a href="{{ $url }}" target="_blank" rel="noopener">{{ $url }}</a></li>
+              {{- end }}
+            {{- end }}
           {{- end }}
         {{- end }}
-        {{- with .Params.zhihu }}{{- with .url }}
-        <li><strong>知乎链接：</strong><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></li>
-        {{- end }}{{- end }}
-        {{- with .Params.xiaohongshu }}{{- with .url }}
-        <li><strong>小红书链接：</strong><a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a></li>
-        {{- end }}{{- end }}
+        {{- with .Params.zhihu }}
+          {{- $legacyUrl := index . "url" }}
+          {{- $legacyStatus := index . "status" | default "published" }}
+          {{- if and (eq $legacyStatus "published") $legacyUrl }}
+            {{- $name := $.Site.Params.zhihu_account_name | default "知乎" }}
+        <li><strong>【知乎】{{ $name }}：</strong><a href="{{ $legacyUrl }}" target="_blank" rel="noopener">{{ $legacyUrl }}</a></li>
+          {{- end }}
+          {{- range $key, $value := . }}
+            {{- if reflect.IsMap $value }}
+              {{- $url := index $value "url" }}
+              {{- if and (eq (index $value "status") "published") $url }}
+                {{- $name := index $.Site.Params.zhihu_accounts $key }}
+                {{- if not $name }}{{- $name = $key }}{{- end }}
+        <li><strong>【知乎】{{ $name }}：</strong><a href="{{ $url }}" target="_blank" rel="noopener">{{ $url }}</a></li>
+              {{- end }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+        {{- with .Params.xiaohongshu }}
+          {{- $legacyUrl := index . "url" }}
+          {{- $legacyStatus := index . "status" | default "published" }}
+          {{- if and (eq $legacyStatus "published") $legacyUrl }}
+            {{- $name := $.Site.Params.xiaohongshu_account_name | default "小红书" }}
+        <li><strong>【小红书】{{ $name }}：</strong><a href="{{ $legacyUrl }}" target="_blank" rel="noopener">{{ $legacyUrl }}</a></li>
+          {{- end }}
+          {{- range $key, $value := . }}
+            {{- if reflect.IsMap $value }}
+              {{- $url := index $value "url" }}
+              {{- if and (eq (index $value "status") "published") $url }}
+                {{- $name := index $.Site.Params.xiaohongshu_accounts $key }}
+                {{- if not $name }}{{- $name = $key }}{{- end }}
+        <li><strong>【小红书】{{ $name }}：</strong><a href="{{ $url }}" target="_blank" rel="noopener">{{ $url }}</a></li>
+              {{- end }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
         <li><strong>版权声明：</strong>本作品采用 <a rel="license noopener" href="{{ .Site.Params.cc.link }}" target="_blank">{{ .Site.Params.cc.name }}</a> 进行许可，非商业转载请注明出处（原文作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
