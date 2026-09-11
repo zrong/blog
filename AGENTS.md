@@ -102,7 +102,7 @@ blog 通过 `aidapi.js`（Web Components）集成 aid 后端服务：
 ### 自定义覆盖
 
 - `layouts/_default/single.html`：文章单页布局，调用自定义 copyright partial
-- `layouts/partials/copyright.html`：显示文章 ID、多平台发布链接（微信/知乎/小红书，均支持多账号 frontmatter；旧的知乎/小红书单账号格式仍兼容）
+- `layouts/partials/copyright.html`：显示文章 ID、多平台发布链接（微信/知乎/头条/小红书，均支持多账号 frontmatter；旧的知乎/小红书单账号格式仍兼容）
 
 ### 主题 Shortcodes
 

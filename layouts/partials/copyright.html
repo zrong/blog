@@ -51,6 +51,18 @@
             {{- end }}
           {{- end }}
         {{- end }}
+        {{- with .Params.toutiao }}
+          {{- range $key, $value := . }}
+            {{- if reflect.IsMap $value }}
+              {{- $url := index $value "url" }}
+              {{- if and (eq (index $value "status") "published") $url }}
+                {{- $name := index $.Site.Params.toutiao_accounts $key }}
+                {{- if not $name }}{{- $name = $key }}{{- end }}
+        <li><strong>【头条】{{ $name }}：</strong><a href="{{ $url }}" target="_blank" rel="noopener">{{ $url }}</a></li>
+              {{- end }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
         <li><strong>版权声明：</strong>本作品采用 <a rel="license noopener" href="{{ .Site.Params.cc.link }}" target="_blank">{{ .Site.Params.cc.name }}</a> 进行许可，非商业转载请注明出处（原文作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>

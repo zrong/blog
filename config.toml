@@ -106,6 +106,9 @@ home = ["HTML", "RSS", "JSON"]
   [params.zhihu_accounts]
     zrong = "zrong(Jacky)"
 
+  [params.toutiao_accounts]
+    huchegames = "胡扯游戏"
+
   [params.xiaohongshu_accounts]
     huchegames = "胡扯游戏"
 
