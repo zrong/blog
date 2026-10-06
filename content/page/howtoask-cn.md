@@ -7,6 +7,10 @@ toc = true
 type = "page"
 slug = "howtoask-cn"
 aliases = [ "/howtoask/cn/",]
+
+[wechat.rongspeak]
+status = "published"
+url = "https://mp.weixin.qq.com/s/xtEtY--hYp32OtJ-Dq2UBg"
 +++
 
 # 提问的智慧
