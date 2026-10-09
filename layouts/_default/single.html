@@ -17,6 +17,9 @@
     {{ if and (isset .Site.Params "cc")  (in site.Params.mainSections .Type) }}
       {{- partial "copyright" .}}
     {{ end }}
+    {{- if in site.Params.mainSections .Type }}
+      {{- partial "promotion" . }}
+    {{- end }}
     {{ if and .IsPage ( ne .Site.Params.comment false ) ( ne .Params.comment false ) }}
       {{ partial "comments" . }}
     {{ end }}

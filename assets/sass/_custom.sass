@@ -62,6 +62,21 @@
   ul li
     word-break: break-all
 
+// 文末广告（rspeak promotion sync-hugo 导出，partial/promotion.html 渲染）
+.post_promotion
+  @extend %message-shared
+  margin-top: 1.5em
+  padding: 1em
+  img
+    display: block
+    max-width: 260px
+    margin: 0.5em auto
+  h2
+    font-size: 1.1em
+    margin: 0.2em 0 0.6em
+  p
+    margin: 0.4em 0
+
 .label_info
   @extend %button
   padding: .5em

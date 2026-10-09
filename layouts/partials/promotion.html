@@ -1,0 +1,14 @@
+{{- /* 文末广告：按文章 frontmatter promotion = [ad_id, ...] 依序渲染 headless 广告页 */}}
+{{- /* 内容由 rspeak promotion sync-hugo 从 Joplin 模板笔记本导出至 content/promotion/ */}}
+{{- $ads := slice }}
+{{- with .Params.promotion }}
+  {{- range . }}
+    {{- $ad := $.Site.GetPage (printf "/promotion/%s" .) }}
+    {{- with $ad }}{{- $ads = $ads | append . }}{{- end }}
+  {{- end }}
+{{- end }}
+{{- with $ads }}
+<section class="post_promotion">
+  {{- range . }}{{ .Content }}{{ end }}
+</section>
+{{- end }}
