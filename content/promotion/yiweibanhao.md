@@ -2,8 +2,11 @@
 title = "广告-版号咨询-完整版"
 ad_id = "yiweibanhao"
 variant = "rich"
-content_hash = "32fc52b6139556edf80bc3e3f91fc09d460968165fb34aa49fdd92f94b47acc1"
+content_hash = "7b45fdc80947b151e1b486980bb14cbc31e9c8c4637c15c2422372b173e88424"
 version = "3"
+platforms = [
+    "wechat",
+]
 
 [build]
 list = "never"

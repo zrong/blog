@@ -2,7 +2,7 @@
 title = "广告-胡扯社群-完整版"
 ad_id = "huche-community"
 variant = "rich"
-content_hash = "83adc0e91a6ea683e6e2425855e584e12c2be7a17b862ee4153d99198f137d49"
+content_hash = "d83c6c3d40a6066d2d8879c3ef26e51cb2975133c40f3f4bd38cb93091948c0b"
 version = "2"
 
 [build]
